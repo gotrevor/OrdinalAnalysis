@@ -324,8 +324,60 @@ private lemma map_vebMono_body :
                     (formulaAt nfCode₁ (#0 : Semiterm LX ℕ 5) ⋏
                       (vebAt vebCode₁ (#3 : Semiterm LX ℕ 5) #4 #0 ⋏
                         precAt precCode₁ #0 #2))))))))) := by
-  simp [arithNfAt, arithVebBaseAt, arithVebAt, arithPrecAt, formulaAt, precAt, vebAt,
-    nfCode₁, vebBaseCode₁, vebCode₁, precCode₁, liftCode, Semiformula.lMap_subst]
+  -- a full `simp` unfolds the concrete coded formulas and runs away in memory (W7)
+  simp only [arithNfAt, arithVebBaseAt, arithVebAt, arithPrecAt, formulaAt, precAt, vebAt,
+    nfCode₁, vebBaseCode₁, vebCode₁, precCode₁, liftCode, Semiformula.lMap_all,
+    Semiformula.lMap_exs, LogicalConnective.HomClass.map_or,
+    LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_and,
+    Semiformula.lMap_subst]
+  have h₁ : (Semiterm.lMap toLX ∘ ![(#3 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#3 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₂ : (Semiterm.lMap toLX ∘ ![(#3 : Semiterm ℒₒᵣ ℕ 4), (#2 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#3 : Semiterm LX ℕ 4), (#2 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have h₃ : (Semiterm.lMap toLX ∘ ![(#1 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#1 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₄ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 4), (#3 : Semiterm ℒₒᵣ ℕ 4), (#1 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#0 : Semiterm LX ℕ 4), (#3 : Semiterm LX ℕ 4), (#1 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+  have h₅ : (Semiterm.lMap toLX ∘ ![(#2 : Semiterm ℒₒᵣ ℕ 4), (#0 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#2 : Semiterm LX ℕ 4), (#0 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have h₆ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 5)]) =
+      ![(#0 : Semiterm LX ℕ 5)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₇ : (Semiterm.lMap toLX ∘ ![(#3 : Semiterm ℒₒᵣ ℕ 5), (#4 : Semiterm ℒₒᵣ ℕ 5), (#0 : Semiterm ℒₒᵣ ℕ 5)]) =
+      ![(#3 : Semiterm LX ℕ 5), (#4 : Semiterm LX ℕ 5), (#0 : Semiterm LX ℕ 5)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+  have h₈ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 5), (#2 : Semiterm ℒₒᵣ ℕ 5)]) =
+      ![(#0 : Semiterm LX ℕ 5), (#2 : Semiterm LX ℕ 5)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  rw [h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈]
 
 private lemma map_vebCover_body :
     Semiformula.lMap toLX
@@ -347,9 +399,56 @@ private lemma map_vebCover_body :
                   (addAt addCode₁ #2 #3 ((gamma0Code 1 : ℕ) : Semiterm LX ℕ 6) ⋏
                     (vebTowAt vebTowCode₁ #0 #1 #5 #2 ⋏
                       precAt precCode₁ #4 #0)))))))) := by
-  simp [arithNfAt, arithVebTowBaseAt, arithPrecAt, arithLeqAt, arithAddAt, arithVebTowAt,
+  -- same runaway (W7): push `lMap` through the connectives, then the substitutions by hand
+  simp only [arithNfAt, arithVebTowBaseAt, arithPrecAt, arithLeqAt, arithAddAt, arithVebTowAt,
     formulaAt, precAt, addAt, vebTowAt, nfCode₁, vebTowBaseCode₁, precCode₁, leqCode₁,
-    addCode₁, vebTowCode₁, liftCode, Semiformula.lMap_subst, lMap_numeral]
+    addCode₁, vebTowCode₁, liftCode, Semiformula.lMap_all, Semiformula.lMap_exs,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    LogicalConnective.HomClass.map_and, Semiformula.lMap_subst]
+  have k₁ : (Semiterm.lMap toLX ∘ ![(#1 : Semiterm ℒₒᵣ ℕ 2)]) =
+      ![(#1 : Semiterm LX ℕ 2)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have k₂ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 2)]) =
+      ![(#0 : Semiterm LX ℕ 2)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have k₃ : (Semiterm.lMap toLX ∘ ![(#5 : Semiterm ℒₒᵣ ℕ 6), (#3 : Semiterm ℒₒᵣ ℕ 6)]) =
+      ![(#5 : Semiterm LX ℕ 6), (#3 : Semiterm LX ℕ 6)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have k₄ : (Semiterm.lMap toLX ∘ ![(#3 : Semiterm ℒₒᵣ ℕ 6), (#4 : Semiterm ℒₒᵣ ℕ 6)]) =
+      ![(#3 : Semiterm LX ℕ 6), (#4 : Semiterm LX ℕ 6)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have k₅ : (Semiterm.lMap toLX ∘ ![(#2 : Semiterm ℒₒᵣ ℕ 6), (#3 : Semiterm ℒₒᵣ ℕ 6), ((gamma0Code 1 : ℕ) : Semiterm ℒₒᵣ ℕ 6)]) =
+      ![(#2 : Semiterm LX ℕ 6), (#3 : Semiterm LX ℕ 6), ((gamma0Code 1 : ℕ) : Semiterm LX ℕ 6)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => exact lMap_numeral (gamma0Code 1)
+  have k₆ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 6), (#1 : Semiterm ℒₒᵣ ℕ 6), (#5 : Semiterm ℒₒᵣ ℕ 6), (#2 : Semiterm ℒₒᵣ ℕ 6)]) =
+      ![(#0 : Semiterm LX ℕ 6), (#1 : Semiterm LX ℕ 6), (#5 : Semiterm LX ℕ 6), (#2 : Semiterm LX ℕ 6)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+    | 3 => rfl
+  have k₇ : (Semiterm.lMap toLX ∘ ![(#4 : Semiterm ℒₒᵣ ℕ 6), (#0 : Semiterm ℒₒᵣ ℕ 6)]) =
+      ![(#4 : Semiterm LX ℕ 6), (#0 : Semiterm LX ℕ 6)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  rw [k₁, k₂, k₃, k₄, k₅, k₆, k₇]
 
 lemma models_vebMono_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
