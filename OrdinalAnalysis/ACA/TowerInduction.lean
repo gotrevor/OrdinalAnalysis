@@ -478,6 +478,20 @@ def thetaInner {n : ℕ} (k c : FirstOrder.Semiterm LX ℕ n) : Semiproposition 
 def thetaAt {n : ℕ} (k : FirstOrder.Semiterm LX ℕ n) : Semiproposition ℒₒᵣ 0 n :=
   ∀¹ (thetaInner (FirstOrder.Rew.bShift k) (#0 : FirstOrder.Semiterm LX ℕ (n + 1)))
 
+/-- `thetaAt` unfolded, stated at a *variable* term: a `show` that asks the elaborator to
+unfold `thetaAt` at a concrete term runs away in memory (it goes on through the coded
+formulas inside `towerSO`), so rewrite with this instead. -/
+theorem thetaAt_eq {n : ℕ} (k : FirstOrder.Semiterm LX ℕ n) :
+    thetaAt k =
+      ∀¹ (thetaInner (FirstOrder.Rew.bShift k)
+        (#0 : FirstOrder.Semiterm LX ℕ (n + 1))) := rfl
+
+/-- `thetaInner` unfolded, at a *variable* term (see `thetaAt_eq`). -/
+theorem thetaInner_eq {n : ℕ} (k c : FirstOrder.Semiterm LX ℕ n) :
+    thetaInner k c =
+      ∀¹ (stepBody (#0 : FirstOrder.Semiterm LX ℕ (n + 1))
+        (FirstOrder.Rew.bShift k) (FirstOrder.Rew.bShift c)) := rfl
+
 /-- `θ` itself, with the induction variable in the innermost bound slot. -/
 def theta : Semiproposition ℒₒᵣ 0 1 := thetaAt (#0 : FirstOrder.Semiterm LX ℕ 1)
 
@@ -921,14 +935,23 @@ theorem towerStepTI_inst (tu tk tc : FirstOrder.Semiterm LX ℕ 0) :
         (q_hf (hf_subst _)),
       rew_tiJSO (ω := (FirstOrder.Rew.subst ![tu, tk, tc]).q) (q_hb (hb_subst _))
         (q_hf (hf_subst _))]
-    simp [FirstOrder.Rew.q_subst]
+    -- a full `simp` here revisits the coded formulas inside `towerSO` and runs away (W7)
+    simp only [FirstOrder.Rew.q_subst, FirstOrder.Rew.subst_bvar, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons,
+      Matrix.cons_val_succ, Matrix.cons_val_fin_one, Function.comp_apply]
+    have t1 : Matrix.vecHead (Matrix.vecTail
+        (⇑(FirstOrder.Rew.bShift : FirstOrder.Rew LX ℕ 0 ℕ 1) ∘ ![tu, tk, tc])) =
+        FirstOrder.Rew.bShift tk := rfl
+    have t2 : ((#0 : FirstOrder.Semiterm LX ℕ 1) :>
+        ⇑(FirstOrder.Rew.bShift : FirstOrder.Rew LX ℕ 0 ℕ 1) ∘ ![tu, tk, tc]) 3 =
+        FirstOrder.Rew.bShift tc := rfl
+    rw [t1, t2]
   rwa [e] at h
 
 /-! ### The base case -/
 
 theorem towerBase : Provable ACA (thetaAt zeroLX) := by
-  show Provable ACA (∀¹ (thetaInner (FirstOrder.Rew.bShift zeroLX)
-    (#0 : FirstOrder.Semiterm LX ℕ 1)))
+  rw [thetaAt_eq]
   refine gen₁ ACA_shift₀_invariant ?_
   have e1 : Semiproposition.free₀ (thetaInner (FirstOrder.Rew.bShift zeroLX)
       (#0 : FirstOrder.Semiterm LX ℕ 1)) =
@@ -938,10 +961,7 @@ theorem towerBase : Provable ACA (thetaAt zeroLX) := by
     rw [rew_thetaInner (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
       hb_free hf_free]
     simp
-  rw [e1]
-  show Provable ACA (∀¹ (stepBody (#0 : FirstOrder.Semiterm LX ℕ 1)
-    (FirstOrder.Rew.bShift zeroLX)
-    (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))))
+  rw [e1, thetaInner_eq]
   refine gen₁ ACA_shift₀_invariant ?_
   have e2 : Semiproposition.free₀ (stepBody (#0 : FirstOrder.Semiterm LX ℕ 1)
       (FirstOrder.Rew.bShift zeroLX)
