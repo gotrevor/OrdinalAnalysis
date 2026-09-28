@@ -53,20 +53,32 @@ def fieldInI0 (F : OrderFormulas) (n : ℕ) (hn : 0 < n) (a : ThetaWNoteD) : Sen
 
 /-! ### The well-ordering forms mention no `X` -/
 
+/-- `NoXN` at a conjunction, stated with *variable* subformulas: the anonymous constructor
+`⟨_, _⟩` against a concrete coded formula makes the elaborator unfold `NoXN` through the whole
+formula (and its `lMap`s), which runs away in memory. -/
+theorem noXN_and {ξ : Type*} {m : ℕ} (φ ψ : Semiformula (LXIn n) ξ m) :
+    NoXN (φ ⋏ ψ) ↔ NoXN φ ∧ NoXN ψ := Iff.rfl
+
+/-- `NoXN` at a universal quantifier, stated with a *variable* subformula (see `noXN_and`). -/
+theorem noXN_all {ξ : Type*} {m : ℕ} (φ : Semiformula (LXIn n) ξ (m + 1)) :
+    NoXN (∀¹ φ) ↔ NoXN φ := Iff.rfl
+
 /-- `DF` (for the specific level map `ixFin hn` used by `WForms`) mentions no `X`. -/
 theorem noXN_DF (F : OrderFormulas) (hn : 0 < n) :
     ∀ j : ℕ, NoXN (DF F (ixFin hn) j : Semisentence (LXIn n) 1)
   | 0 => noXN_lMap_toLXIN _
-  | j + 1 => ⟨noXN_DF F hn j, (noXN_imp _ _).mpr ⟨noXN_lMap_toLXIN _, noXN_Iat _ _⟩⟩
+  | j + 1 => (noXN_and _ _).mpr ⟨noXN_DF F hn j,
+      (noXN_all _).mpr ((noXN_imp _ _).mpr ⟨noXN_lMap_toLXIN _, noXN_Iat _ _⟩)⟩
 
 /-- `wForm` (for the specific level map `ixFin hn` used by `WForms`) mentions no `X`. -/
 theorem noXN_wForm (F : OrderFormulas) (hn : 0 < n) :
     ∀ k : ℕ, NoXN (wForm F (ixFin hn) k : Semisentence (LXIn n) 1)
-  | 0 => (noXN_imp _ _).mpr ⟨noXN_lMap_toLXIN _, noXN_Iat _ _⟩
+  | 0 => (noXN_all _).mpr ((noXN_imp _ _).mpr ⟨noXN_lMap_toLXIN _, noXN_Iat _ _⟩)
   | k + 1 =>
-    ⟨noXN_DF F hn (k + 1), noXN_lMap_toLXIN _,
-      (noXN_imp _ _).mpr ⟨⟨(noXN_rew _ _).mpr (noXN_DF F hn (k + 1)),
-        noXN_lMap_toLXIN _⟩, noXN_Iat _ _⟩⟩
+    (noXN_and _ _).mpr ⟨noXN_DF F hn (k + 1), (noXN_and _ _).mpr ⟨noXN_lMap_toLXIN _,
+      (noXN_all _).mpr ((noXN_imp _ _).mpr
+        ⟨(noXN_and _ _).mpr ⟨(noXN_rew _ _).mpr (noXN_DF F hn (k + 1)),
+          noXN_lMap_toLXIN _⟩, noXN_Iat _ _⟩)⟩⟩
 
 variable (F : OrderFormulas)
 

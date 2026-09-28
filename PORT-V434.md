@@ -146,6 +146,16 @@ W8. `T ⊢! σ` no longer parses as provability (it elaborates the sentence at `
    `h : T ⊢! σ` becomes `h : T ⊢ σ`, and the `⟨h⟩`/`rintro ⟨h⟩` wrappers that turned a proof into
    a `Provable` go away → `Ramified/InfTools.lean`, `Ramified/LowerBound.lean` (15 sites).
 
+W7b. the same runaway from an anonymous constructor in a *structurally recursive proof*, where
+   the diverging declaration is not the one the error points at (there is no error at all): a
+   `⟨_, _⟩` proof of `NoXN (DF F ix (j+1))` / `NoXN (wForm F ix (k+1))` makes the elaborator unfold
+   `NoXN` through the concrete coded formula and OOMs the *whole file*, so even `#check` after it
+   dies.  Fix: `noXN_and`/`noXN_all` (`Iff.rfl`, stated with *variable* subformulas) and
+   `(noXN_and _ _).mpr ⟨…⟩` at each node → `OrdinalAnalysis/IDn/LowerBoundAux2.lean:59,63,67,74`.
+   Bisect note: `lake env lean f | tail` hides the kill — read `$?` of the *unpiped* command, and
+   a `sorry`-truncated variant that prints no "declaration uses 'sorry'" warning was killed, not
+   accepted.
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 
