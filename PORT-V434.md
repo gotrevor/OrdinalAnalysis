@@ -213,6 +213,26 @@ W9. **the *kernel* — not the elaborator — runs out of memory on a big deriva
      not any more.  Expect this wherever a theorem closes a goal about a concrete code by
      `rfl`/`exact`, or assembles a long `PSeq`/`Derivation` chain over concrete codes.
 
+W9b. **a `set`-introduced local is enough to trigger W9.**  In
+   `Ramified/DescentBetaAux4.lean` the module died on `step2` and `descentOne`, and the
+   `sorry`-bisect pinned it to one bullet each — both of the form
+
+   ```lean
+   set μ : Lv := Gamma0Note.nadd L 1 with hμdef      -- goal: `rank A < blkTop μ`
+   …
+   · exact rank_lt_of_lvlOf_le h                     -- gives `rank A < blkTop (nadd L 1)`
+   ```
+
+   The two types are defeq only through the `set` local, so the kernel runs `isDefEq` on
+   `rank A < blkTop μ` ≟ `rank A < blkTop (nadd L 1)`; `<` on `Gamma0Note` unfolds to a
+   computable comparison, and whnf'ing it forces `rank A` — a structural recursion — at the
+   *concrete* `A`.  >12 GB.  The sibling bullet `exact rank_nameIff_lt hμ0 hFμ w`, whose
+   conclusion already mentions `μ`, is syntactic and always passed.
+   Fix: `rw [hμdef]` (resp. `rw [hρdef]`) *before* the `exact`, so nothing is left to `isDefEq`.
+   General rule: **when a goal about a concrete coded formula and the lemma you are about to
+   `exact` differ only by a `set`/`let` local, rewrite it away first.**
+   → `Ramified/DescentBetaAux4.lean:399,460,461`.
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 

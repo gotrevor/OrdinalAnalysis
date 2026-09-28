@@ -396,7 +396,9 @@ theorem step2 {L : Lv} {F : Semiformula LRA ℕ 1} (hFc : F.freeVariables = ∅)
       simp only [List.mem_cons, List.not_mem_nil, or_false] at hA
       rcases hA with rfl | rfl
       · exact rank_nameIff_lt hμ0 hFμ w
-      · exact rank_lt_of_lvlOf_le (by rw [lvlOf_progR]; exact hFl))
+      -- W9: unfold the `set` local first (see `descentOne`).
+      · rw [hμdef]
+        exact rank_lt_of_lvlOf_le (by rw [lvlOf_progR]; exact hFl))
     (by
       intro A hA
       simp only [List.mem_cons, List.not_mem_nil, or_false] at hA
@@ -457,8 +459,13 @@ theorem descentOne {L : Lv} (hL : 0 < L) (c : Gamma0Note) :
       intro A hA
       simp only [List.mem_cons, List.not_mem_nil, or_false] at hA
       rcases hA with rfl | rfl
-      · exact rank_lt_of_lvlOf_le (by rw [lvlOf_subst₁]; exact lvlOf_psiR_le L)
-      · exact rank_lt_of_lvlOf_le (by rw [lvlOf_epsA]; exact gamma0_zero_le L))
+      · rw [hρdef]
+        exact rank_lt_of_lvlOf_le (by rw [lvlOf_subst₁]; exact lvlOf_psiR_le L)
+      -- W9: unfold the `set` local first, so the `exact` is syntactic; leaving
+      -- `blkTop μ` vs `blkTop (nadd L 1)` to `isDefEq` makes the kernel whnf
+      -- `rank <concrete formula>` and blow up.
+      · rw [hρdef]
+        exact rank_lt_of_lvlOf_le (by rw [lvlOf_epsA]; exact gamma0_zero_le L))
     (by
       intro A hA
       simp only [List.mem_cons, List.not_mem_nil, or_false] at hA

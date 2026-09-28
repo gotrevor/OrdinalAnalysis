@@ -1,7 +1,12 @@
 # PORT-V434 — state during lap 3 (2026-09-28)
 
-`lake build` reaches **1594/1599 jobs**.  Three modules are OOM-killed (exit 137):
-`ACA/OmegaJumpDepth`, `ACA/EpsProg`, `Ramified/UpperBound`.
+`lake build` reached **1597/1599** after the first four W9 fixes (lap start: 1594).
+Cleared this lap, each verified by `lake env lean -M 12000 -j 2 <file>` exiting 0:
+`ACA/EpsProg`, `ACA/OmegaJumpDepth`, `Ramified/UpperBound`, `ACA/OmegaJumpUpperBound`.
+
+Still open (no `.olean` yet): `Ramified/DescentBetaAux4` (exit 137, W9 in `step2` and
+`descentOne`), and behind it `Ramified/{DescentBetaAux5,DescentBetaAux6,DescentBeta,
+FefermanSchutte,SemiformalUpper}`, not yet reached.
 
 ## The lap-3 finding: **W9 — it is the KERNEL, not the elaborator**
 
