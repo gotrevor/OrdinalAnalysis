@@ -156,15 +156,46 @@ private lemma map_succGeneral_body :
             (∼(precAt precCode₁ #0 #1) ⋎
               (precAt precCode₁ #0 #2 ⋎
                 (“#0 = #2” : Semiformula LX ℕ 3)))))) := by
-  simp [arithBaseAt, arithAddAt, arithPrecAt, formulaAt, addAt, precAt,
-    baseCode₁, addCode₁, precCode₁, liftCode, Semiformula.lMap_subst]
-  refine ⟨?_, ?_⟩
-  · rw [lMap_numeral (gamma0Code 1)]
-  · simp [Semiformula.Operator.operator,
-      Semiformula.Operator.Eq.sentence_eq, toLX]
-    apply funext
+  -- a full `simp` unfolds the concrete coded formulas and runs away in memory (W7)
+  simp only [arithBaseAt, arithAddAt, arithPrecAt, formulaAt, addAt, precAt,
+    baseCode₁, addCode₁, precCode₁, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    Semiformula.lMap_subst]
+  have hw₁ : (Semiterm.lMap toLX ∘ ![(#2 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#2 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have hw₂ : (Semiterm.lMap toLX ∘
+      ![(#1 : Semiterm ℒₒᵣ ℕ 3), (#2 : Semiterm ℒₒᵣ ℕ 3),
+        ((gamma0Code 1 : ℕ) : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#1 : Semiterm LX ℕ 3), (#2 : Semiterm LX ℕ 3),
+        ((gamma0Code 1 : ℕ) : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => exact lMap_numeral (gamma0Code 1)
+  have hw₃ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 3), (#1 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#0 : Semiterm LX ℕ 3), (#1 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have hw₄ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 3), (#2 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#0 : Semiterm LX ℕ 3), (#2 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have hq : Semiformula.lMap toLX (“#0 = #2” : Semiformula ℒₒᵣ ℕ 3) =
+      (“#0 = #2” : Semiformula LX ℕ 3) := by
+    simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
+    funext x
+    revert x
     rw [Fin.forall_fin_two]
     exact ⟨rfl, rfl⟩
+  rw [hw₁, hw₂, hw₃, hw₄, hq]
 
 lemma models_succGeneral_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
