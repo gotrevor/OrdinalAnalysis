@@ -604,6 +604,112 @@ theorem free₁_axBody :
 
 open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
 open OrdinalAnalysis.Gamma0Note (epsilonNote) in
+/-- `TI(χ_Y, b̄)`, by arithmetical comprehension (W9 split of `epsJump_plus`). -/
+private theorem epsJump_plus_hchi (b : Gamma0Note) (h : Provable ACAplus (allTI (gamma0Term b))) :
+    Provable ACAplus (toSOAt yWitFree
+      (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) := by
+  have h2 := spec₂ h (arith_toSOAt arith_segWitness ColumnTower.chiLX)
+  rw [subst₁_tiBody_gen] at h2
+  exact h2
+
+open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
+open OrdinalAnalysis.Gamma0Note (epsilonNote) in
+/-- `H(Y) → TI(col_0 Y, ε̄_b)` (W9 split of `epsJump_plus`). -/
+private theorem epsJump_plus_J1 (b : Gamma0Note) (h : Provable ACAplus (allTI (gamma0Term b))) :
+    PSeq ACAplus [∼(toSOAt yWitFree ColumnTower.stepHypLX),
+      toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+        (gamma0Term (epsilonNote b)))] := by
+  have hj : PSeq ACAplus [∼(toSOAt yWitFree ColumnTower.stepHypLX),
+      (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) ⋎
+        toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b))))] :=
+    PSeq.orInv (PSeq.of_provable (Provable_mono_ACAplus (colEpsJump_lifted b)))
+  have hj1 : PSeq ACAplus
+      [(∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) ⋎
+        toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b)))), ∼(toSOAt yWitFree ColumnTower.stepHypLX)] :=
+    PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hj
+  have hj2 : PSeq ACAplus
+      [∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))),
+        toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b))), ∼(toSOAt yWitFree ColumnTower.stepHypLX)] :=
+    PSeq.orInv hj1
+  refine PSeq.cut (toSOAt yWitFree
+    (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b)))
+    (PSeq.ofProvable (epsJump_plus_hchi b h) _) ?_
+  exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hj2
+
+open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
+open OrdinalAnalysis.Gamma0Note (epsilonNote) in
+/-- `col_0 Y = Z → TI(col_0 Y, ε̄_b) → TI(Z, ε̄_b)` (W9 split of `epsJump_plus`). -/
+private theorem epsJump_plus_J2 (b : Gamma0Note) :
+    PSeq ACAplus
+      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
+        ∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b)))),
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
+  have hx : Provable ACAplus
+      (∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))) ⋎
+        (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b)))) ⋎
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b))))) :=
+    tiExt ACAplus_shift₀_invariant yWitFree wZ1 ColumnTower.freeVariables_hierBaseColLX
+      (TowerSyntax.freeVariables_XatZero (n := 0))
+      (Gentzen.VNoteBridge.gamma0Code (epsilonNote b))
+  have hx1 : PSeq ACAplus
+      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
+        (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b)))) ⋎
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b))))] :=
+    PSeq.orInv (PSeq.of_provable hx)
+  have hx2 : PSeq ACAplus
+      [(∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+          (gamma0Term (epsilonNote b)))) ⋎
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))),
+        ∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)))] :=
+    PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hx1
+  exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) (PSeq.orInv hx2)
+
+open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
+open OrdinalAnalysis.Gamma0Note (epsilonNote) in
+/-- `¬(col_0 Y = Z ∧ H(Y)) ∨ TI(Z, ε̄_b)` at `Y = 0`, `Z = 1` (W9 split). -/
+private theorem epsJump_plus_J3 (b : Gamma0Note) (h : Provable ACAplus (allTI (gamma0Term b))) :
+    PSeq ACAplus
+      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)) ⋏
+          toSOAt yWitFree ColumnTower.stepHypLX),
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
+  have c : PSeq ACAplus
+      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
+        ∼(toSOAt yWitFree ColumnTower.stepHypLX),
+        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] :=
+    PSeq.cut (toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
+        (gamma0Term (epsilonNote b))))
+      (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) (epsJump_plus_J1 b h))
+      (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) (epsJump_plus_J2 b))
+  exact PSeq.or c
+
+open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
+open OrdinalAnalysis.Gamma0Note (epsilonNote) in
+/-- The `∀²`-introduction over the omega-jump witness (W9 split of `epsJump_plus`). -/
+private theorem epsJump_plus_J4 (b : Gamma0Note) (h : Provable ACAplus (allTI (gamma0Term b))) :
+    PSeq ACAplus [∀² (∼((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump)),
+      toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] := by
+  refine PSeq.all₂ ACAplus_shift₁_invariant ?_
+  have e1 : Semiproposition.free₁ (∼((SecondOrder.Rew.subst ![freeWitness]).q.app
+      IsOmegaJump)) =
+      ∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)) ⋏
+        toSOAt yWitFree ColumnTower.stepHypLX) := by
+    rw [← free₁_axBody]
+    exact LogicalConnective.HomClass.map_neg _ _
+  have e2 : SecondOrder.Sequent.shift₁ [toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] =
+      [toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
+    simp only [SecondOrder.Sequent.shift₁, List.map_cons, List.map_nil,
+      shift₁_toSOAt_segWitness]
+  rw [e1, e2]
+  exact epsJump_plus_J3 b h
+
+open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term) in
+open OrdinalAnalysis.Gamma0Note (epsilonNote) in
 /-- **The ε-jump in `ACA^+`**: transfinite induction up to `b̄` for all sets gives
 transfinite induction up to `ε̄_b` for all sets.
 
@@ -615,97 +721,25 @@ give `TI(≺₁, col_0 Y, ε̄_b)` from the step condition; the base condition
 theorem epsJump_plus (b : Gamma0Note)
     (h : Provable ACAplus (allTI (gamma0Term b))) :
     Provable ACAplus (allTI (gamma0Term (epsilonNote b))) := by
-  -- `TI(χ_Y, b̄)`, by arithmetical comprehension
-  have hχ : Provable ACAplus (toSOAt yWitFree
-      (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) := by
-    have h2 := spec₂ h (arith_toSOAt arith_segWitness ColumnTower.chiLX)
-    rw [subst₁_tiBody_gen] at h2
-    exact h2
-  -- `H(Y) → TI(col_0 Y, ε̄_b)`
-  have J1 : PSeq ACAplus [∼(toSOAt yWitFree ColumnTower.stepHypLX),
-      toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-        (gamma0Term (epsilonNote b)))] := by
-    have hj : PSeq ACAplus [∼(toSOAt yWitFree ColumnTower.stepHypLX),
-        (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) ⋎
-          toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b))))] :=
-      PSeq.orInv (PSeq.of_provable (Provable_mono_ACAplus (colEpsJump_lifted b)))
-    have hj1 : PSeq ACAplus
-        [(∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) ⋎
-          toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b)))), ∼(toSOAt yWitFree ColumnTower.stepHypLX)] :=
-      PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hj
-    have hj2 : PSeq ACAplus
-        [∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))),
-          toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b))), ∼(toSOAt yWitFree ColumnTower.stepHypLX)] :=
-      PSeq.orInv hj1
-    refine PSeq.cut (toSOAt yWitFree
-      (Gentzen.tiUptoAt precCode₁ ColumnTower.chiLX (gamma0Term b))) (PSeq.ofProvable hχ _) ?_
-    exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hj2
-  -- `col_0 Y = Z → TI(col_0 Y, ε̄_b) → TI(Z, ε̄_b)`
-  have J2 : PSeq ACAplus
-      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
-        ∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-          (gamma0Term (epsilonNote b)))),
-        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
-    have hx : Provable ACAplus
-        (∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))) ⋎
-          (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b)))) ⋎
-          toSOAt wZ1 (tiX (gamma0Term (epsilonNote b))))) :=
-      tiExt ACAplus_shift₀_invariant yWitFree wZ1 ColumnTower.freeVariables_hierBaseColLX
-        (TowerSyntax.freeVariables_XatZero (n := 0))
-        (Gentzen.VNoteBridge.gamma0Code (epsilonNote b))
-    have hx1 : PSeq ACAplus
-        [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
-          (∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b)))) ⋎
-          toSOAt wZ1 (tiX (gamma0Term (epsilonNote b))))] :=
-      PSeq.orInv (PSeq.of_provable hx)
-    have hx2 : PSeq ACAplus
-        [(∼(toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-            (gamma0Term (epsilonNote b)))) ⋎
-          toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))),
-          ∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)))] :=
-      PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hx1
-    exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) (PSeq.orInv hx2)
-  -- combine: `¬(col_0 Y = Z ∧ H(Y)) ∨ TI(Z, ε̄_b)` at `Y = 0`, `Z = 1`
-  have J3 : PSeq ACAplus
-      [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)) ⋏
-          toSOAt yWitFree ColumnTower.stepHypLX),
-        toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
-    have c : PSeq ACAplus
-        [∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1))),
-          ∼(toSOAt yWitFree ColumnTower.stepHypLX),
-          toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] :=
-      PSeq.cut (toSOAt yWitFree (Gentzen.tiUptoAt precCode₁ hierBaseColLX
-          (gamma0Term (epsilonNote b))))
-        (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) J1)
-        (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) J2)
-    exact PSeq.or c
-  -- open the `∃²Y` of the axiom instance at `Z := 0`
-  have hax : Provable ACAplus
-      (∃² ((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump)) :=
-    spec₂ (ofAxiom omegaJumpAxiom_mem_ACAplus) arith_freeWitness
-  have J4 : PSeq ACAplus [∀² (∼((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump)),
-      toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] := by
-    refine PSeq.all₂ ACAplus_shift₁_invariant ?_
-    have e1 : Semiproposition.free₁ (∼((SecondOrder.Rew.subst ![freeWitness]).q.app
-        IsOmegaJump)) =
-        ∼(extHyp yWitFree wZ1 hierBaseColLX (Xat (#0 : FirstOrder.Semiterm LX ℕ 1)) ⋏
-          toSOAt yWitFree ColumnTower.stepHypLX) := by
-      rw [← free₁_axBody]
-      exact LogicalConnective.HomClass.map_neg _ _
-    have e2 : SecondOrder.Sequent.shift₁ [toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] =
-        [toSOAt wZ1 (tiX (gamma0Term (epsilonNote b)))] := by
-      simp only [SecondOrder.Sequent.shift₁, List.map_cons, List.map_nil,
-        shift₁_toSOAt_segWitness]
-    rw [e1, e2]
-    exact J3
+  -- open the `∃²Y` of the axiom instance at `Z := 0`.  **W9**: `spec₂` returns the
+  -- substitution *unpushed*, and ascribing the pushed form directly makes the kernel take
+  -- `SecondOrder.Rew.app` through the concrete `IsOmegaJump`; `app_exs₁` is that step at a
+  -- variable.
+  have hax := spec₂ (ofAxiom omegaJumpAxiom_mem_ACAplus) arith_freeWitness
+  have e : Semiproposition.subst₁ (∃² IsOmegaJump) ![freeWitness]
+      = ∃² ((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump) :=
+    SecondOrder.Rew.app_exs₁ (SecondOrder.Rew.subst ![freeWitness]) IsOmegaJump
+  rw [e] at hax
+  -- **W9**: `PSeq.cut` wants `∼(∃² …)`, and letting the kernel take the `∼` through the
+  -- concrete `IsOmegaJump` costs >12 GB.  `Semiformula.neg_exs₂` is that step at a variable.
+  have J4' : PSeq ACAplus
+      [∼(∃² ((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump)),
+        toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] := by
+    rw [Semiformula.neg_exs₂]
+    exact epsJump_plus_J4 b h
   have J5 : PSeq ACAplus [toSOAt segWitness (tiX (gamma0Term (epsilonNote b)))] :=
     PSeq.cut (∃² ((SecondOrder.Rew.subst ![freeWitness]).q.app IsOmegaJump))
-      (PSeq.ofProvable hax _) J4
+      (PSeq.ofProvable hax _) J4'
   refine gen₂ ACAplus_shift₁_invariant ?_
   rw [free₁_tiBody]
   exact PSeq.to_provable J5
