@@ -1,44 +1,41 @@
-# PORT-V434 — state after lap 1 (2026-09-28)
+# PORT-V434 — state after lap 2 (2026-09-28)
 
-`lake build` reaches **1546/1599 jobs** (was 851 errors at lap start).  Not green yet.
-Three WIP commits on `v4.34` (all made with `--no-verify`, each labelled NOT green; the repo's
-pre-commit hook runs `lake build`, so a green commit is only possible at the end).
+`lake build` reaches **1597/1599 jobs**.  Not green yet: exactly two modules remain, both
+OOM-killed (exit 137) *alone*, i.e. genuine runaways, not build concurrency:
 
-## What is done
+* `OrdinalAnalysis/Gentzen/InternalEpsMonoCode.lean`
+* `OrdinalAnalysis/Gentzen/InternalVeblenCode.lean`
 
-All of the churn patterns are identified, fixed and logged in `PORT-V434.md`
-("Wu-only churn patterns", W1–W8).  The two structural ones:
+## Closed this lap
 
-* **the one-sided LK calculus went from list to multiset sequents.**  `OrdinalAnalysis/Compat.lean`
-  keeps the list sequent type and its coercion lemmas, `OrdinalAnalysis/FinLK.lean` is the list
-  calculus `⊢ᶠ¹` together with the *proved* translations to and from upstream's `⊢ᴸᴷ¹`
-  (`FinDerivation.ofDerivation`, `.toUpstream`, `isCutFree_ofDerivation`), and
-  `OrdinalAnalysis/CompatSO.lean` is the second-order copy.  Nothing is axiomatised, and the
-  headline theorems still hang off upstream's own calculus: `Proof/Bridge.lean` exposes
-  `cutFree_of_upstreamDerivation` and `toUpstreamDerivation`.
-* **elaboration of concrete coded formulas got much more expensive.**  A full `simp` that unfolds a
-  `𝚺₁.Semisentence`/`PR.Blueprint` definition, or an anonymous constructor against a
-  syntax-recursive predicate at a concrete formula, now runs away in memory (13 GB, OOM-killed with
-  no error).  157 sites were rewritten mechanically (`simp only [<def>, val_mkSigma]` then the
-  original simp), and five proofs by hand (W5b, W7).  `PORT-V434.md` has the bisect recipe, which
-  matters because a diverging `simp` prints nothing at all.
+* `Ramified/LowerBound.lean` — a lap-1 sed had eaten the `replay_of_provable` header line;
+  restored, plus `set d' := FinDerivation.ofDerivation …` (a `have` forgets the body, so
+  `isCutFree_ofDerivation` no longer typechecked against `d'`).
+* `IDn/LowerBoundAux2.lean` — **W7b**, new: an anonymous constructor in the *structurally
+  recursive* `noXN_DF`/`noXN_wForm` proofs unfolds `NoXN` through a concrete coded formula and
+  OOMs the whole file (even a `#check` after it dies).  Added `noXN_and`/`noXN_all` (`Iff.rfl`,
+  variable subformulas) and used `.mpr` at each node.
+* `ACAOmega/CodedOrder₂.lean`, `ACAOmega/Gamma0Order₂.lean` — **W5c**: `simp [precSeg₀, h]` for a
+  `freeVariables` read-off → spelled `rw [precSeg₀, …freeVariables_and, …, Finset.union_empty]`.
+* `Gentzen/Epsilon1UpperBound.lean` (`map_succ_body`), `Gentzen/VeblenTower.lean`
+  (`map_towerZero_body`, `map_towerSucc_body`), `Gentzen/VeblenSuccStep.lean`
+  (`map_succGeneral_body`) — **W7c**: the `lMap`-body family; `simp only [… lMap_all,
+  HomClass.map_or/neg/and, lMap_subst]` + one `have` per substitution vector + one `rw`.
+* `Ramified/{TransfiniteLower,SemiformalLower,DescentBetaAux2}.lean` — W8 leftovers
+  (`rintro ⟨h⟩` → `intro h`, drop `obtain ⟨h⟩ := h`).
 
-## What is left (in order)
+## Next attack
 
-1. `Ramified/LowerBound.lean` — 21 errors, the last of them just fixed (`⊢!` → `⊢`, the `hauptsatz`
-   result translated with `FinDerivation.ofDerivation`); rebuild and finish.
-2. `IDn/LowerBoundAux2.lean` and `ACAOmega/CodedOrder₂.lean` — OOM-killed (exit 137).  Both were
-   killed while three other 2–4 GB files were compiling, so try them **alone** first
-   (`lake build <module>`); if they still die, bisect by truncation as in W5b/W7 — they are the
-   same family.
-3. the ~50 jobs after those, not yet reached.
-4. then `lake env lean scripts/AxiomCheck.lean`, and only once *both* are green create
-   `PORT-V434-GREEN.md` (the host's stop condition) and delete `PORT-REF-gi-Compat.lean.txt`.
+1. Bisect the two remaining files by truncation.  **Read `$?` of an *unpiped* `lake env lean`** —
+   piping into `tail` hides the kill, and a `sorry`-truncated variant that prints no
+   "declaration uses 'sorry'" warning was killed, not accepted (this cost an hour of this lap).
+   Expect the same two shapes: a full `simp` unfolding a `𝚺₁.Semisentence`/`PR.Blueprint`, or an
+   anonymous constructor / `Iff.rfl` against a concrete coded formula.
+2. Then `lake build` whole repo, then `lake env lean scripts/AxiomCheck.lean` (frozen).
+3. Only once both are green: create `PORT-V434-GREEN.md` (host stop condition), delete
+   `PORT-REF-gi-Compat.lean.txt`, commit.
 
 ## Box note
 
-The box has ~20 GB and no `-j` flag on Lake 5, so **never leave two `lake build`s running**: the
-first three OOM waves of this lap were my own overlapping builds, not the code (the reference
-corpus's `lean-box-oom-and-scrambled-relay-false-green.md` says exactly this).  Kill stale `lean`
-processes before judging an OOM, and verify green from scalars in their own call
-(`grep -c 'Build completed successfully'`, `grep -cE '^error'`).
+~20 GB RAM, no `-j` on Lake 5 — never two `lake build`s at once.  Verify green from scalars in
+their own call: `grep -c 'Build completed successfully'` (want 1), `grep -cE '^error'` (want 0).
