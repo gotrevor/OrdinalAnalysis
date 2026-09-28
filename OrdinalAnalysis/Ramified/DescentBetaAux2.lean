@@ -167,7 +167,6 @@ theorem cutHyp {A : Proposition LRA} {Γ Δ : Sequent LRA} {H H' : Gamma0Note}
 theorem of_RAlt {ν : Lv} (hν : 1 ≤ ν) {φ : Proposition LRA} (hφ : φ.freeVariables = ∅)
     (h : RAlt ν ⊢ Semiformula.univCl φ) (hρ : Gamma0Note.blkTop ν ≤ ρ) {H : Gamma0Note}
     (hH : Gamma0Note.epsilonNote 0 ≤ H) : DerLt ρ [evR φ] H := by
-  obtain ⟨h⟩ := h
   obtain ⟨ν', k, α, hν', hα, hd⟩ := provable_rank_height_of_exists (RAlt ν)
     (fun τ hτ => RAlt_axiom_derivable_lt_epsilon hν τ hτ) h
   have hν'lt : ν' < ν := by
@@ -194,9 +193,8 @@ theorem of_valid {φ : Proposition LRA} (hφ : φ.freeVariables = ∅)
     rw [models_iff_proposition]
     intro f
     exact hv M f
-  obtain ⟨h⟩ := hprov
   obtain ⟨ν', k, α, hν', hα, hd⟩ := provable_rank_height_of_exists (∅ : Theory LRA)
-    (fun τ hτ => absurd hτ (Set.notMem_empty τ)) h
+    (fun τ hτ => absurd hτ (Set.notMem_empty τ)) hprov
   have h0 : ν' = 0 := by
     rcases hν' with h0 | ⟨τ, hτ, -⟩
     · exact h0

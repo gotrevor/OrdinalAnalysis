@@ -117,7 +117,7 @@ theorem ramified_lower_bound_omegaPow {n : ℕ} (hn : 1 ≤ n) :
     RAlt (Gamma0Note.omegaPow (Gamma0Note.ofNat n)) ⊬
       (Semiformula.univCl (TIR (vebSegOrderR (Gamma0Note.ofNat (n + 1)) 0
         (zero_lt_ofNat_of_pos (Nat.succ_pos n))).prec) : Sentence LRA) := by
-  rintro ⟨h⟩
+  intro h
   set L := Gamma0Note.omegaPow (Gamma0Note.ofNat n) with hLdef
   set C := vebSegOrderR (Gamma0Note.ofNat (n + 1)) 0 (zero_lt_ofNat_of_pos (Nat.succ_pos n))
     with hCdef

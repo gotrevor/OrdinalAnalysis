@@ -244,14 +244,26 @@ private lemma map_towerZero_body :
       (∀¹ ∀¹
         (∼(towerAt towerCode₁ #0 ((0 : ℕ) : Semiterm LX ℕ 2) #1) ⋎
           (“#0 = #1” : Semiformula LX ℕ 2))) := by
-  simp [arithTowerAt, towerAt, towerCode₁, liftCode, Semiformula.lMap_subst]
-  constructor
-  · rw [lMap_zero]
-  · simp [Semiformula.Operator.operator,
-      Semiformula.Operator.Eq.sentence_eq, toLX]
-    apply funext
+  -- a full `simp` unfolds the concrete coded formula and runs away in memory (W7)
+  simp only [arithTowerAt, towerAt, towerCode₁, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    Semiformula.lMap_subst]
+  have hw : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 2), ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 2), (#1 : Semiterm ℒₒᵣ ℕ 2)]) =
+      ![(#0 : Semiterm LX ℕ 2), ((0 : ℕ) : Semiterm LX ℕ 2), (#1 : Semiterm LX ℕ 2)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_zero
+    | 2 => rfl
+  have hq : Semiformula.lMap toLX (“#0 = #1” : Semiformula ℒₒᵣ ℕ 2) =
+      (“#0 = #1” : Semiformula LX ℕ 2) := by
+    simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
+    funext x
+    revert x
     rw [Fin.forall_fin_two]
     exact ⟨rfl, rfl⟩
+  rw [hw, hq]
 
 private lemma map_towerSucc_body :
     Semiformula.lMap toLX
@@ -262,9 +274,35 @@ private lemma map_towerSucc_body :
         (∼(towerAt towerCode₁ #0 (‘(#1 + 1)’ : Semiterm LX ℕ 3) #2) ⋎
           (∃¹ (towerAt towerCode₁ #0 #2 #3 ⋏
             omegaPowAt omegaPowCode₁ #1 #0)))) := by
-  simp [arithTowerAt, arithOmegaPowAt, towerAt, omegaPowAt, towerCode₁,
-    omegaPowCode₁, liftCode, Semiformula.lMap_subst]
-  rw [lMap_succ_three]
+  -- same runaway as `map_towerZero_body` (W7): push `lMap` through the connectives only
+  simp only [arithTowerAt, arithOmegaPowAt, towerAt, omegaPowAt, towerCode₁,
+    omegaPowCode₁, liftCode, Semiformula.lMap_all, Semiformula.lMap_exs,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    LogicalConnective.HomClass.map_and, Semiformula.lMap_subst]
+  have hw₁ : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 3), (‘(#1 + 1)’ : Semiterm ℒₒᵣ ℕ 3), (#2 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#0 : Semiterm LX ℕ 3), (‘(#1 + 1)’ : Semiterm LX ℕ 3), (#2 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_succ_three
+    | 2 => rfl
+  have hw₂ : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 4), (#2 : Semiterm ℒₒᵣ ℕ 4), (#3 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#0 : Semiterm LX ℕ 4), (#2 : Semiterm LX ℕ 4), (#3 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+  have hw₃ : (Semiterm.lMap toLX ∘
+      ![(#1 : Semiterm ℒₒᵣ ℕ 4), (#0 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#1 : Semiterm LX ℕ 4), (#0 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  rw [hw₁, hw₂, hw₃]
 
 lemma models_towerZero_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :

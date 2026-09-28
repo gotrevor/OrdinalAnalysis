@@ -216,7 +216,7 @@ theorem ramified_lower_bound_omegaPow' (γ : Gamma0Note) (hγ : (1 : Gamma0Note)
     RAlt (Gamma0Note.omegaPow γ) ⊬
       (Semiformula.univCl (TIR (vebSegOrderR (Gamma0Note.nadd γ 1) 0
         (Gamma0Note.zero_lt_nadd_one γ)).prec) : Sentence LRA) := by
-  rintro ⟨h⟩
+  intro h
   set L := Gamma0Note.omegaPow γ with hLdef
   set C := vebSegOrderR (Gamma0Note.nadd γ 1) 0 (Gamma0Note.zero_lt_nadd_one γ) with hCdef
   have hL1 : 1 ≤ L := (Gamma0Note.one_lt_omegaPow hγ).le
