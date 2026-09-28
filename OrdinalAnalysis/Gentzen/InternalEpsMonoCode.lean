@@ -184,8 +184,52 @@ private lemma map_epsMono_body :
                   (formulaAt nfCode₁ (#0 : Semiterm LX ℕ 4) ⋏
                     (epsAt epsCode₁ (#3 : Semiterm LX ℕ 4) #0 ⋏
                       precAt precCode₁ #0 #2)))))))) := by
-  simp [arithFixAt, arithNfAt, arithEpsAt, arithPrecAt, formulaAt, epsAt, precAt,
-    fixCode₁, nfCode₁, epsCode₁, precCode₁, liftCode, Semiformula.lMap_subst]
+  -- a full `simp` unfolds the concrete coded formulas and runs away in memory (W7)
+  simp only [arithFixAt, arithNfAt, arithEpsAt, arithPrecAt, formulaAt, epsAt, precAt,
+    fixCode₁, nfCode₁, epsCode₁, precCode₁, liftCode, Semiformula.lMap_all,
+    Semiformula.lMap_exs, LogicalConnective.HomClass.map_or,
+    LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_and,
+    Semiformula.lMap_subst]
+  have h₁ : (Semiterm.lMap toLX ∘ ![(#2 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#2 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₂ : (Semiterm.lMap toLX ∘ ![(#1 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#1 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₃ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 3), (#1 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#0 : Semiterm LX ℕ 3), (#1 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have h₄ : (Semiterm.lMap toLX ∘ ![(#2 : Semiterm ℒₒᵣ ℕ 3), (#0 : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![(#2 : Semiterm LX ℕ 3), (#0 : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have h₅ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#0 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+  have h₆ : (Semiterm.lMap toLX ∘ ![(#3 : Semiterm ℒₒᵣ ℕ 4), (#0 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#3 : Semiterm LX ℕ 4), (#0 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  have h₇ : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 4), (#2 : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![(#0 : Semiterm LX ℕ 4), (#2 : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+  rw [h₁, h₂, h₃, h₄, h₅, h₆, h₇]
 
 lemma models_epsMono_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
