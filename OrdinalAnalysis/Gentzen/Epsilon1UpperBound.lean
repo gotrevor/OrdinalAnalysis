@@ -341,17 +341,38 @@ private lemma map_succ_body :
             ((gamma0Code (epsilonNote 0) : ℕ) : Semiterm LX ℕ 1) ⋎
             (“#0 = !!((gamma0Code (epsilonNote 0) : ℕ) : Semiterm LX ℕ 1)” :
               Semiformula LX ℕ 1)))) := by
-  simp [arithPrecAt, precAt, precCode₁, liftCode, Semiformula.lMap_subst]
-  refine ⟨?_, ?_, ?_⟩
-  · rw [lMap_numeral]
-  · rw [lMap_numeral]
-  · simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
-    apply funext
+  -- a full `simp` here unfolds the concrete coded formula and runs away in memory (W7):
+  -- push `lMap` through the connectives only, then rewrite the three leaves by hand.
+  simp only [arithPrecAt, precAt, precCode₁, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    Semiformula.lMap_subst]
+  have hw₁ : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 1), ((gamma0Code eps0succ : ℕ) : Semiterm ℒₒᵣ ℕ 1)]) =
+      ![(#0 : Semiterm LX ℕ 1), ((gamma0Code eps0succ : ℕ) : Semiterm LX ℕ 1)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_numeral _
+  have hw₂ : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 1),
+        ((gamma0Code (epsilonNote 0) : ℕ) : Semiterm ℒₒᵣ ℕ 1)]) =
+      ![(#0 : Semiterm LX ℕ 1),
+        ((gamma0Code (epsilonNote 0) : ℕ) : Semiterm LX ℕ 1)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_numeral _
+  have hq : Semiformula.lMap toLX
+      (“#0 = !!((gamma0Code (epsilonNote 0) : ℕ) : Semiterm ℒₒᵣ ℕ 1)” :
+        Semiformula ℒₒᵣ ℕ 1) =
+      (“#0 = !!((gamma0Code (epsilonNote 0) : ℕ) : Semiterm LX ℕ 1)” :
+        Semiformula LX ℕ 1) := by
+    simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
+    funext x
+    revert x
     rw [Fin.forall_fin_two]
-    constructor
-    · simp [Function.comp_def]
-    · simp [Function.comp_def]
-      exact lMap_numeral _
+    exact ⟨rfl, lMap_numeral _⟩
+  rw [hw₁, hw₂, hq]
 
 lemma models_succ_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :

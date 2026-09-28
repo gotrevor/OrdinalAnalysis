@@ -161,6 +161,12 @@ W5c. same divergence for a `freeVariables` read-off: `simp [precSeg₀, h]` on a
    `rw [precSeg₀, FirstOrder.Semiformula.freeVariables_and, freeVariables_precFO₁, h,
    Finset.union_empty]` → `OrdinalAnalysis/ACAOmega/CodedOrder₂.lean:513`.
 
+W7c. third instance of the `lMap`-body runaway, in a file whose *other* `map_…_body` lemmas are
+   fine: `simp [arithPrecAt, precAt, precCode₁, liftCode, Semiformula.lMap_subst]` OOMs →
+   `simp only [… , Semiformula.lMap_all, LogicalConnective.HomClass.map_or, …map_neg,
+   Semiformula.lMap_subst]` then `have hw₁/hw₂/hq` for the three leaves and one `rw`
+   (the `map_iterZero_body` template) → `Gentzen/Epsilon1UpperBound.lean:330` (`map_succ_body`).
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 
