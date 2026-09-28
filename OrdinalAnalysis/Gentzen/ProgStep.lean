@@ -308,7 +308,13 @@ theorem concrete_progCover : paLX ⊢ progCoverStatement := by
       (∼(precAt precCode₁ (#0 : Semiterm LX ℕ 3) #1) ⋎
         (∼progHypBody ⋎ Xat (#0 : Semiterm LX ℕ 3))))).univCl
   rw [models_iff]
-  simp [progHypBody, hypBodyAt]
+  -- a full `simp` here runs away in memory (W7): spell the evaluation lemmas instead
+  simp only [progHypBody, hypBodyAt, Semiformula.eval_univCl, Semiformula.eval_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    eval_epsAt, eval_precAt, eval_goodAt, eval_towerAt, Idiom.eval_Xat,
+    Semiterm.val_bvar, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
+    Matrix.head_cons, Matrix.tail_cons, Semiterm.val_bShift,
+    LogicalConnective.Prop.or_eq, LogicalConnective.Prop.neg_eq]
   intro f g u x
   by_cases hX : Idiom.Xrel M x
   · exact Or.inr (Or.inr (Or.inr hX))
@@ -316,7 +322,8 @@ theorem concrete_progCover : paLX ⊢ progCoverStatement := by
     · by_cases hp : (Semiformula.Eval ![x, u] f) precCode₁
       · refine Or.inr (Or.inr (Or.inl ?_))
         obtain ⟨s, n, w, hg, ht, hpw⟩ := hC' f g u x he hp
-        exact ⟨s, hg, n, w, ht, hpw, hX⟩
+        push_neg
+        exact ⟨s, n, w, hg, ht, hpw, hX⟩
       · exact Or.inr (Or.inl hp)
     · exact Or.inl he
 
