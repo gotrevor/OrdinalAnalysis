@@ -127,6 +127,19 @@ W5b. **`simp [<a PR.Blueprint>]` now diverges** -- 13 GB of elaboration and an O
    boundaries into a scratch copy and `lake env lean` each prefix to localise, then replace the
    tactic by `simp only [<blueprint>]` so the *unsolved goal* is printed.
 
+W7. **anonymous constructors and `simp` against a *concrete* formula term run away in memory.**
+   A predicate defined by recursion on formula syntax (`IDn/Theory.lean`'s `PositiveIn`,
+   `LevelBounded`) used to accept `exact ⟨h₁, h₂, trivial⟩` at a concrete `DF F ix (j+1)`; the
+   elaborator now unfolds the predicate *through* the concrete formula (including `∼`, `🡒`, and the
+   `lMap` inside it) and never comes back -- `IDn/Theorem.lean` died at 12.7 GB with no error.
+   Fix: name the sequent shape with `show` and take the recursion steps with the existing
+   `positiveIn_and`/`_all`/`_or`/`_exs` (+ `Semiformula.imp_eq`,
+   `LogicalConnective.DeMorgan.and`/`.or`) simp lemmas, which are stated with *variable*
+   subformulas and so are cheap.  197 s OOM → 8 s → `IDn/Theorem.lean:106,127,145,160`.
+   Same root cause, same remedy, for `simp [<a code def>, …]` where the def expands into blueprint
+   machinery: keep the big formula opaque and rewrite with small `have`s instead
+   (`Gentzen/JumpArithmetic.lean:146`, `map_iterZero_body`).
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 

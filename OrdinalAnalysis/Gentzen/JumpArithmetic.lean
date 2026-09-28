@@ -127,12 +127,13 @@ private lemma lMap_succ_four :
       (‘(#1 + 1)’ : Semiterm LX ℕ 4) := by
   simp [Semiterm.Operator.operator, Semiterm.Operator.numeral,
     Semiterm.Operator.One.term_eq, Semiterm.Operator.Add.term_eq, toLX]
-  apply funext
+  simp [Semiterm.Operator.operator, Semiterm.Operator.numeral,
+    Semiterm.Operator.One.term_eq, Semiterm.Operator.Add.term_eq, toLX,
+    Rew.func, Semiterm.lMap_func, Matrix.empty_eq, Function.comp_def]
+  funext x
+  revert x
   rw [Fin.forall_fin_two]
-  constructor
-  · simp [Function.comp_def]
-  · simp [Function.comp_def]
-    exact Matrix.empty_eq _
+  exact ⟨rfl, by simp [Semiterm.lMap_func, Matrix.empty_eq]⟩
 
 private lemma map_iterZero_body :
     Semiformula.lMap toLX
@@ -142,15 +143,25 @@ private lemma map_iterZero_body :
       (∀¹ ∀¹ ∀¹
         (∼(iterAt safeIterCode #0 #2 #1 ((0 : ℕ) : Semiterm LX ℕ 3)) ⋎
           (“#0 = #2” : Semiformula LX ℕ 3))) := by
-  simp [arithIterAt, iterAt, safeIterCode, liftCode,
+  simp only [arithIterAt, iterAt, safeIterCode, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
     Semiformula.lMap_subst]
-  constructor
-  · rw [lMap_zero]
-  · simp [Semiformula.Operator.operator,
-      Semiformula.Operator.Eq.sentence_eq, toLX]
-    apply funext
+  have hw : (Semiterm.lMap toLX ∘ ![#0, #2, #1, ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![#0, #2, #1, ((0 : ℕ) : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+    | 3 => exact lMap_zero
+  have hq : Semiformula.lMap toLX (“#0 = #2” : Semiformula ℒₒᵣ ℕ 3) =
+      (“#0 = #2” : Semiformula LX ℕ 3) := by
+    simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
+    funext x
+    revert x
     rw [Fin.forall_fin_two]
     exact ⟨rfl, rfl⟩
+  rw [hw, hq]
 
 private lemma map_iterSucc_body :
     Semiformula.lMap toLX

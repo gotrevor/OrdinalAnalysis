@@ -103,11 +103,19 @@ theorem positiveIn_DF (k : ι) : ∀ j : ℕ, PositiveIn k (DF F ix j) ∧
   | 0 => ⟨(positive_lMap_toLXIN k _).1, fun _ => (positive_lMap_toLXIN k _).2⟩
   | j + 1 => by
     obtain ⟨h1, h2⟩ := positiveIn_DF k j
-    refine ⟨⟨h1, (positive_lMap_toLXIN k _).2, trivial⟩, fun hne => ?_⟩
-    refine ⟨h2 fun i hi => hne i (by omega), ?_, hne j (by omega)⟩
-    show PositiveIn k (∼∼(lm (inEAt j)))
-    rw [TildeInvolutive.tilde_involutive]
-    exact (positive_lMap_toLXIN k _).1
+    -- the `show`s and `simp only`s are load-bearing: letting the elaborator unfold
+    -- `PositiveIn` through a concrete `DF …` term runs away in memory (see PORT-V434.md W7)
+    refine ⟨?_, fun hne => ?_⟩
+    · show PositiveIn k (DF F ix j ⋏ (∀¹ (lm (inEAt j) 🡒 Iat (ix j) #0)))
+      simp only [positiveIn_and, positiveIn_all, Semiformula.imp_eq, positiveIn_or]
+      exact ⟨h1, (positive_lMap_toLXIN k _).2, trivial⟩
+    · show PositiveIn k (∼(DF F ix j ⋏ (∀¹ (lm (inEAt j) 🡒 Iat (ix j) #0))))
+      simp only [LogicalConnective.DeMorgan.and, positiveIn_or, Semiformula.neg_all,
+        positiveIn_exs, Semiformula.imp_eq, LogicalConnective.DeMorgan.or, positiveIn_and]
+      refine ⟨h2 fun i hi => hne i (by omega), ?_, hne j (by omega)⟩
+      show PositiveIn k (∼∼(lm (inEAt j)))
+      rw [TildeInvolutive.tilde_involutive]
+      exact (positive_lMap_toLXIN k _).1
 
 /-- `D_j` mentions only the predicates of the levels `< j`. -/
 theorem levelBounded_DF [PartialOrder ι] (k : ι) :
@@ -115,10 +123,17 @@ theorem levelBounded_DF [PartialOrder ι] (k : ι) :
   | 0, _ => ⟨(levelBounded_lMap_toLXIN k _).1, (levelBounded_lMap_toLXIN k _).2⟩
   | j + 1, hle => by
     obtain ⟨h1, h2⟩ := levelBounded_DF k j fun i hi => hle i (by omega)
-    refine ⟨⟨h1, (levelBounded_lMap_toLXIN k _).2, hle j (by omega)⟩, ⟨h2, ?_, hle j (by omega)⟩⟩
-    show LevelBounded k (∼∼(lm (inEAt j)))
-    rw [TildeInvolutive.tilde_involutive]
-    exact (levelBounded_lMap_toLXIN k _).1
+    refine ⟨?_, ?_⟩
+    · show LevelBounded k (DF F ix j ⋏ (∀¹ (lm (inEAt j) 🡒 Iat (ix j) #0)))
+      simp only [levelBounded_and, levelBounded_all, Semiformula.imp_eq, levelBounded_or]
+      exact ⟨h1, (levelBounded_lMap_toLXIN k _).2, hle j (by omega)⟩
+    · show LevelBounded k (∼(DF F ix j ⋏ (∀¹ (lm (inEAt j) 🡒 Iat (ix j) #0))))
+      simp only [LogicalConnective.DeMorgan.and, levelBounded_or, Semiformula.neg_all,
+        levelBounded_exs, Semiformula.imp_eq, LogicalConnective.DeMorgan.or, levelBounded_and]
+      refine ⟨h2, ?_, hle j (by omega)⟩
+      show LevelBounded k (∼∼(lm (inEAt j)))
+      rw [TildeInvolutive.tilde_involutive]
+      exact (levelBounded_lMap_toLXIN k _).1
 
 /-- **The form of level `k` is positive in its own predicate** (the lower predicates are
 distinct from it). -/
@@ -127,7 +142,11 @@ theorem positiveIn_wForm (k : ℕ) (hne : ∀ i < k, ix i ≠ ix k) :
   cases k with
   | zero => exact ⟨(positive_lMap_toLXIN _ _).2, trivial⟩
   | succ k =>
+    show PositiveIn (ix (k + 1)) (DF F ix (k + 1) ⋏ (lm (ltOmegaAt F (k + 1)) ⋏
+      (∀¹ ((DF F ix (k + 1) ⇜ ![#0]) ⋏ lm F.ltDef.val 🡒 Iat (ix (k + 1)) #0))))
+    simp only [positiveIn_and, positiveIn_all, Semiformula.imp_eq, positiveIn_or]
     refine ⟨(positiveIn_DF F ix (ix (k + 1)) (k + 1)).1, (positive_lMap_toLXIN _ _).1, ?_, trivial⟩
+    simp only [LogicalConnective.DeMorgan.and, positiveIn_or]
     refine ⟨?_, (positive_lMap_toLXIN _ _).2⟩
     show PositiveIn (ix (k + 1)) (∼(Rew.subst ![#0] ▹ DF F ix (k + 1)))
     rw [← LogicalConnective.HomClass.map_neg]
@@ -140,7 +159,11 @@ theorem levelBounded_wForm [PartialOrder ι] (k : ℕ) (hle : ∀ i ≤ k, ix i 
   | zero => exact ⟨(levelBounded_lMap_toLXIN _ _).2, le_rfl⟩
   | succ k =>
     have hD := levelBounded_DF F ix (ix (k + 1)) (k + 1) fun i hi => hle i (by omega)
+    show LevelBounded (ix (k + 1)) (DF F ix (k + 1) ⋏ (lm (ltOmegaAt F (k + 1)) ⋏
+      (∀¹ ((DF F ix (k + 1) ⇜ ![#0]) ⋏ lm F.ltDef.val 🡒 Iat (ix (k + 1)) #0))))
+    simp only [levelBounded_and, levelBounded_all, Semiformula.imp_eq, levelBounded_or]
     refine ⟨hD.1, (levelBounded_lMap_toLXIN _ _).1, ?_, le_rfl⟩
+    simp only [LogicalConnective.DeMorgan.and, levelBounded_or]
     refine ⟨?_, (levelBounded_lMap_toLXIN _ _).2⟩
     show LevelBounded (ix (k + 1)) (∼(Rew.subst ![#0] ▹ DF F ix (k + 1)))
     rw [← LogicalConnective.HomClass.map_neg]
