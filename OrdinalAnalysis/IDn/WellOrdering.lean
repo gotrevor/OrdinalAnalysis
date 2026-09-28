@@ -32,14 +32,17 @@
     (`W_theta_C`).
   * At level `0` and `α = τ`: **`ϑ₀(τ_m) ∈ W 0`** for every standard `m` (`W_theta_tau`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.UpperAuxForms
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option linter.unusedSectionVars false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.IDn.Internal OrdinalAnalysis.IDn.Lift InternalOrderFacts
 
 /-! ### Definability in `LXIN ι` -/

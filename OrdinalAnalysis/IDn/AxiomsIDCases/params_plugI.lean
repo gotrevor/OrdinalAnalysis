@@ -20,11 +20,11 @@ variable {n : ℕ} (k : Fin n)
 namespace IDn
 
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
 
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 
 /-! ### The two plugged forms -/

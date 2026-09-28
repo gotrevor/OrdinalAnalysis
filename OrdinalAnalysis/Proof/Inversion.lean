@@ -11,11 +11,12 @@
   statement the `contraction` case is unprovable: from `Δ ⊆ (φ ⋎ ψ) :: Γ'` one
   learns nothing about the shape of `Δ`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Proof.Weakening
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 open ONote
 
 variable {L : Language}
@@ -82,14 +83,14 @@ theorem inv_or {r : ℕ} :
         rcases hmem with h | h
         · exact absurd h (by simp)
         · exact h
-      have hshift : (Rewriting.shift φ ⋎ Rewriting.shift ψ) ∈ Γ'⁺ := by
-        have h0 : (Rewriting.shift (φ ⋎ ψ)) ∈ Γ'⁺ :=
-          LawfulSyntacticRewriting.mem_shifts_iff.mpr hmemΓ
+      have hshift : (Rewriting.shift φ ⋎ Rewriting.shift ψ) ∈ Γ'ˡ⁺ := by
+        have h0 : (Rewriting.shift (φ ⋎ ψ)) ∈ Γ'ˡ⁺ :=
+          LawfulSyntacticRewriting.mem_lshifts_iff.mpr hmemΓ
         simpa using h0
       have key := ih (by simp only [List.mem_cons]; exact Or.inr hshift)
-      have step : BoundedDerivable r β (χ.free :: (φ :: ψ :: Γ')⁺) := by
+      have step : BoundedDerivable r β (χ.free :: (φ :: ψ :: Γ')ˡ⁺) := by
         refine .contraction ?_ key
-        intro x hx; simp only [Rewriting.shifts_cons, List.mem_cons] at hx ⊢; tauto
+        intro x hx; simp only [Rewriting.lshifts_cons, List.mem_cons] at hx ⊢; tauto
       refine .contraction ?_ (BoundedDerivable.all hlt step)
       intro x hx; simp only [List.mem_cons] at hx ⊢; tauto
   | @exs α β χ Γ' t hlt hd ih =>
@@ -206,14 +207,14 @@ theorem inv_and_left {r : ℕ} :
         rcases hmem with h | h
         · exact absurd h (by simp)
         · exact h
-      have hshift : (Rewriting.shift φ ⋏ Rewriting.shift ψ) ∈ Γ'⁺ := by
-        have h0 : (Rewriting.shift (φ ⋏ ψ)) ∈ Γ'⁺ :=
-          LawfulSyntacticRewriting.mem_shifts_iff.mpr hmemΓ
+      have hshift : (Rewriting.shift φ ⋏ Rewriting.shift ψ) ∈ Γ'ˡ⁺ := by
+        have h0 : (Rewriting.shift (φ ⋏ ψ)) ∈ Γ'ˡ⁺ :=
+          LawfulSyntacticRewriting.mem_lshifts_iff.mpr hmemΓ
         simpa using h0
       have key := ih (by simp only [List.mem_cons]; exact Or.inr hshift)
-      have step : BoundedDerivable r β (χ.free :: (φ :: Γ')⁺) := by
+      have step : BoundedDerivable r β (χ.free :: (φ :: Γ')ˡ⁺) := by
         refine .contraction ?_ key
-        intro x hx; simp only [Rewriting.shifts_cons, List.mem_cons] at hx ⊢; tauto
+        intro x hx; simp only [Rewriting.lshifts_cons, List.mem_cons] at hx ⊢; tauto
       refine .contraction ?_ (BoundedDerivable.all hlt step)
       intro x hx; simp only [List.mem_cons] at hx ⊢; tauto
   | @exs α β χ Γ' t hlt hd ih =>
@@ -321,14 +322,14 @@ theorem inv_and_right {r : ℕ} :
         rcases hmem with h | h
         · exact absurd h (by simp)
         · exact h
-      have hshift : (Rewriting.shift φ ⋏ Rewriting.shift ψ) ∈ Γ'⁺ := by
-        have h0 : (Rewriting.shift (φ ⋏ ψ)) ∈ Γ'⁺ :=
-          LawfulSyntacticRewriting.mem_shifts_iff.mpr hmemΓ
+      have hshift : (Rewriting.shift φ ⋏ Rewriting.shift ψ) ∈ Γ'ˡ⁺ := by
+        have h0 : (Rewriting.shift (φ ⋏ ψ)) ∈ Γ'ˡ⁺ :=
+          LawfulSyntacticRewriting.mem_lshifts_iff.mpr hmemΓ
         simpa using h0
       have key := ih (by simp only [List.mem_cons]; exact Or.inr hshift)
-      have step : BoundedDerivable r β (χ.free :: (ψ :: Γ')⁺) := by
+      have step : BoundedDerivable r β (χ.free :: (ψ :: Γ')ˡ⁺) := by
         refine .contraction ?_ key
-        intro x hx; simp only [Rewriting.shifts_cons, List.mem_cons] at hx ⊢; tauto
+        intro x hx; simp only [Rewriting.lshifts_cons, List.mem_cons] at hx ⊢; tauto
       refine .contraction ?_ (BoundedDerivable.all hlt step)
       intro x hx; simp only [List.mem_cons] at hx ⊢; tauto
   | @exs α β χ Γ' t hlt hd ih =>

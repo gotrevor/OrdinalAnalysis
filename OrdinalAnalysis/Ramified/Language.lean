@@ -45,13 +45,15 @@ import Foundation.FirstOrder.Arithmetic.Schemata
 import Mathlib.Tactic.FinCases
 import OrdinalAnalysis.Ordinal.Veblen.OmegaMul
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Levels
 

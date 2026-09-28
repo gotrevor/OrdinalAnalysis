@@ -56,7 +56,7 @@ namespace Gentzen
 
 namespace OmegaTruth
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.StandardLX
 
 /-! ### Finite heights

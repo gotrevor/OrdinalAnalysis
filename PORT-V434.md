@@ -57,7 +57,82 @@ Append NEW patterns (ones not in g-i's list below) under "Wu-only churn patterns
 
 ### Wu-only churn patterns
 
-(none yet)
+W1. `unknown namespace FFL.FirstOrder.Derivation`, then a cascade of "Unknown identifier" for
+   *every* later name in the file → an `open A B C` line fails **as a whole** when one of its
+   namespaces is gone, so one bad namespace hides a hundred real errors.  Fix the `open` first and
+   rebuild before reading anything else.  `FFL.FirstOrder.Derivation` →
+   `FFL.FirstOrder.LK.Derivation`, `FFL.FirstOrder.Arithmetic.HierarchySymbol` →
+   `FFL.FirstOrder.Bounding.HierarchySymbol` → `OrdinalAnalysis/Proof/CutRank.lean:18`,
+   `OrdinalAnalysis/Gentzen/InternalONote.lean:15`.
+   NB `FFL.FirstOrder.Derivation` still *exists* when `LK/Hauptsatz.lean` is imported (it declares
+   `FFL.FirstOrder.Derivation.Canonical`), so the same `open` line errors in one file and not
+   another.
+
+W2. **the one-sided LK calculus went from list to multiset sequents.**
+   `Sequent L = List (Proposition L)` → `LK.Sequent L = Multiset (Proposition L)`, and the single
+   subset rule `contraction : Derivation Δ → Δ ⊆ Γ → Derivation Γ` split into `weakening`
+   (`⊢ Γ → ⊢ Γ + ⦃φ⦄`) and a two-into-one `contraction` (`⊢ Γ + ⦃φ, φ⦄ → ⊢ Γ + ⦃φ⦄`).  This is not
+   a rename: the ordinal analysis is a recursion that reads the principal formula off the *head* of
+   the sequent, and `BoundedDerivable`/`OmegaDerivable`/`IDerivable`/`ACA.Derivation` are all
+   indexed by list sequents.  Fix, in three parts:
+   * `OrdinalAnalysis/Compat.lean` keeps the list sequent type (`FFL.FirstOrder.Sequent`,
+     `Sequent.embed`, `Sequent.newVar`) and the list `shifts`, spelled `Γˡ⁺` because upstream's `Γ⁺`
+     is `scoped` and a `List` coerces to a `Multiset` (so sharing the token makes every `⊢ᴸᴷ¹ Γ`
+     genuinely ambiguous, not resolvable-by-elaboration).  It also proves the coercion lemmas
+     (`coe_sequent_cons/cons₂/append/lshifts/tilde/embed`) and `provable_iff_list` — upstream's
+     `Theory.Proof.provable_iff` now returns a *multiset* of axioms.
+   * `OrdinalAnalysis/FinLK.lean` is the list-sequent calculus itself (`FinDerivation`, `⊢ᶠ¹`,
+     `IsCutFree`), taken verbatim from Foundation `8c6a5c0`, **plus the two translations**
+     `FinDerivation.ofDerivation : ⊢ᴸᴷ¹ Δ → (Γ : Sequent L) → ↑Γ = Δ → ⊢ᶠ¹ Γ` and
+     `FinDerivation.toUpstream : ⊢ᶠ¹ Γ → Nonempty (⊢ᴸᴷ¹ ↑Γ)`, and
+     `isCutFree_ofDerivation`.  Both translations are proved, not assumed: `weakening` and
+     `contraction` become the subset rule, and the subset rule becomes upstream's
+     `Structural.ofSubset` (whose `Multiset.Traversal` arguments come from
+     `Multiset.Traversal.ofList`).  `ofDerivation` must be `noncomputable` (`Multiset.toList` is).
+   * the entry points translate: `Proof/Bridge.lean` gains `cutFree_of_upstreamDerivation` and
+     `toUpstreamDerivation`, and `ID1/Embed.lean`/`IDn/Embed.lean` insert
+     `FinDerivation.ofDerivation d₀ _ rfl` after `provable_iff_list`.  So the headline theorems are
+     still theorems about upstream's own `⊢ᴸᴷ¹`.
+   The same story for `FFL.SecondOrder`: `OrdinalAnalysis/CompatSO.lean` keeps the list
+   `SecondOrder.Sequent` with `shift₀`/`shift₁`, and `ACA/LK.lean`'s `toFull` became a
+   `Nonempty`-valued theorem translating into `⊢ᴸᴷ²` (upstream's second-order `cut` splits the
+   context, so ACA's shared-context `cut` needs one `ofSubset` to contract `Γ + Γ` back to `Γ`).
+
+W3. `instance foo (Γ) : Γ-Function₁ f` no longer elaborates ("typeclass instance problem is stuck,
+   `Tarski.Structure ?m V`") → the hierarchy symbols are now parameterised by the bounding set, so
+   the auto-bound `(Γ)` leaves the language undetermined.  Annotate it:
+   `(Γ : HierarchySymbol)` (26 sites) → `OrdinalAnalysis/Gentzen/InternalONote.lean:48`.
+
+W4. `Definable.ball_le` etc. resolve into `Bounding.HierarchySymbol.Definable` (which is what the
+   bare `Definable` now means), so a `Compat` alias in `Arithmetic.HierarchySymbol.Definable` does
+   *not* catch them → spell the new name at the call site:
+   `Definable.ball_le` → `Definable.arithmetic_ball_le` → `.../InternalONote.lean:334`.
+
+W5b. **`simp [<a PR.Blueprint>]` now diverges** -- 13 GB of elaboration and an OOM kill on a
+   178-line file, with no error to read.  With the hierarchy generalised, unfolding the blueprint
+   *inside* a full `simp` no longer closes the `𝚺ᴬ₁.DefinedFunction` goal, and the default simp set
+   loops on the residue.  Fix: unfold first, then simp --
+   `simp only [<blueprint>, Bounding.HierarchySymbol.Semiformula.val_mkSigma]` followed by the
+   original `simp [...]` (13 s).  Five sites: `Gentzen/CodedNotation.lean:41`,
+   `Gentzen/VeblenTower.lean:52`, `Gentzen/JumpArithmetic.lean:65`,
+   `Gentzen/InternalVebCover.lean:110`, `Gentzen/InternalVNoteJump.lean:823`.
+   The `…Table.blueprint` (`Fixpoint`) sites in `Gentzen/InternalONote.lean` are unaffected.
+   **The same divergence hits the read-off lemmas of any `𝚺₁.Semisentence` built with `.mkSigma`**:
+   `theorem eval_fooDef : fooDef.val.Evalb v ↔ …  := by simp [fooDef, …]` no longer terminates
+   (>10 GB), for the same reason -- unfolding `fooDef` inside a full `simp` leaves the `Hierarchy`
+   side proof in the term and the default simp set explores it.  Same fix, applied to 21 sites by
+   script: `simp only [fooDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]` then the original
+   `simp [rest]` (`ID1/Internal/Codes.lean:1257` is the smallest example: hang → 23 s).
+   Diagnosis recipe, since a diverging `simp` prints nothing: truncate the file at declaration
+   boundaries into a scratch copy and `lake env lean` each prefix to localise, then replace the
+   tactic by `simp only [<blueprint>]` so the *unsolved goal* is printed.
+
+W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
+   `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
+
+W6. my own sed hazard: `Derivation.` → `LK.Derivation.` must **not** touch `ACA/`,
+   where `Derivation` is `OrdinalAnalysis.ACA.Derivation` (it has a `wk` constructor, which
+   Foundation's never had — a good tell).
 
 ### Reference: goodstein-independence's churn log (same Foundation jump)
 

@@ -1,5 +1,6 @@
 /- Source: OrdinalAnalysis\ID1\Elimination.lean (one-level `Omega`/`Stage` generalised to level `k : Fin n`). -/
 
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Reduction
 /-
   Cut elimination for cut ranks other than `Ω_k` (any level `k`), Freund's Exercise 7.1 (c).
@@ -62,7 +63,7 @@ variable {n : ℕ} (k : Fin n)
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Exercise 7.1 (c) -/
 

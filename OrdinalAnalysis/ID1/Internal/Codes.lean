@@ -30,14 +30,17 @@
   agreement with the specification on standard codes are proved here; the order-theoretic
   facts about the internal order in arbitrary models are not.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.CovTable
 import OrdinalAnalysis.Ordinal.Theta.Order
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.ThetaTerm
 
@@ -176,19 +179,23 @@ def kindDef : 𝚺₀.Semisentence 2 := .mkSigma
       ((f = 0 ∧ k = 1) ∨ (f = 1 ∧ k = 2) ∨ (f = 2 ∧ k = 3) ∨ (f ≠ 0 ∧ f ≠ 1 ∧ f ≠ 2 ∧ k = 4)))”
 
 instance tcTheta_defined : 𝚺₁-Function₁ (tcTheta : V → V) via tcThetaDef := .mk fun v ↦ by
-  simp [tcThetaDef, tcTheta, pair_defined.iff]
+  simp only [tcThetaDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tcTheta, pair_defined.iff]
 
 instance tcCons_defined : 𝚺₁-Function₂ (tcCons : V → V → V) via tcConsDef := .mk fun v ↦ by
-  simp [tcConsDef, tcCons, pair_defined.iff]
+  simp only [tcConsDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tcCons, pair_defined.iff]
 
 instance tcArg_defined : 𝚺₀-Function₁ (tcArg : V → V) via sndIdxDef := .mk fun v ↦ by
   simp [tcArg, sndIdx_defined.iff]
 
 instance tcHd_defined : 𝚺₀-Function₁ (tcHd : V → V) via tcHdDef := .mk fun v ↦ by
-  simp [tcHdDef, tcHd, sndIdx_defined.iff, pi₁_defined.iff]
+  simp only [tcHdDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tcHd, sndIdx_defined.iff, pi₁_defined.iff]
 
 instance tcTl_defined : 𝚺₀-Function₁ (tcTl : V → V) via tcTlDef := .mk fun v ↦ by
-  simp [tcTlDef, tcTl, sndIdx_defined.iff, pi₂_defined.iff]
+  simp only [tcTlDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tcTl, sndIdx_defined.iff, pi₂_defined.iff]
 
 instance kind_defined : 𝚺₀-Function₁ (kind : V → V) via kindDef := .mk fun v ↦ by
   simp only [kindDef, kind]
@@ -211,10 +218,10 @@ instance tcArg_definable : 𝚺₀-Function₁ (tcArg : V → V) := tcArg_define
 instance tcHd_definable : 𝚺₀-Function₁ (tcHd : V → V) := tcHd_defined.to_definable
 instance tcTl_definable : 𝚺₀-Function₁ (tcTl : V → V) := tcTl_defined.to_definable
 instance kind_definable : 𝚺₀-Function₁ (kind : V → V) := kind_defined.to_definable
-instance tcArg_definable' (Γ) : Γ-Function₁ (tcArg : V → V) := tcArg_definable.of_zero
-instance tcHd_definable' (Γ) : Γ-Function₁ (tcHd : V → V) := tcHd_definable.of_zero
-instance tcTl_definable' (Γ) : Γ-Function₁ (tcTl : V → V) := tcTl_definable.of_zero
-instance kind_definable' (Γ) : Γ-Function₁ (kind : V → V) := kind_definable.of_zero
+instance tcArg_definable' (Γ : HierarchySymbol) : Γ-Function₁ (tcArg : V → V) := tcArg_definable.of_zero
+instance tcHd_definable' (Γ : HierarchySymbol) : Γ-Function₁ (tcHd : V → V) := tcHd_definable.of_zero
+instance tcTl_definable' (Γ : HierarchySymbol) : Γ-Function₁ (tcTl : V → V) := tcTl_definable.of_zero
+instance kind_definable' (Γ : HierarchySymbol) : Γ-Function₁ (kind : V → V) := kind_definable.of_zero
 
 /-! ### Destructors and shapes of constructor codes -/
 
@@ -352,13 +359,16 @@ def rdExDef : 𝚺₁.Semisentence 4 := .mkSigma
   “r s x y. ∃ i, !pairDef i x y ∧ ∃ e, !znthDef e s i ∧ ∃ q, !pi₂Def q e ∧ !pi₂Def r q”
 
 instance rdLt_defined : 𝚺₁-Function₃ (rdLt : V → V → V → V) via rdLtDef := .mk fun v ↦ by
-  simp [rdLtDef, rdLt, pair_defined.iff, znth_defined.iff, pi₁_defined.iff]
+  simp only [rdLtDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdLt, pair_defined.iff, znth_defined.iff, pi₁_defined.iff]
 
 instance rdAl_defined : 𝚺₁-Function₃ (rdAl : V → V → V → V) via rdAlDef := .mk fun v ↦ by
-  simp [rdAlDef, rdAl, pair_defined.iff, znth_defined.iff, pi₁_defined.iff, pi₂_defined.iff]
+  simp only [rdAlDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdAl, pair_defined.iff, znth_defined.iff, pi₁_defined.iff, pi₂_defined.iff]
 
 instance rdEx_defined : 𝚺₁-Function₃ (rdEx : V → V → V → V) via rdExDef := .mk fun v ↦ by
-  simp [rdExDef, rdEx, pair_defined.iff, znth_defined.iff, pi₂_defined.iff]
+  simp only [rdExDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdEx, pair_defined.iff, znth_defined.iff, pi₂_defined.iff]
 
 /-- The `lt` flag at two cons codes: lexicographic comparison. -/
 noncomputable def ltCC (c1 c2 s : V) : V :=
@@ -392,17 +402,21 @@ def ltTTDef : 𝚺₁.Semisentence 4 := .mkSigma
     !borDef y a r3”
 
 instance ltCC_defined : 𝚺₁-Function₃ (ltCC : V → V → V → V) via ltCCDef := .mk fun v ↦ by
-  simp [ltCCDef, ltCC, tcHd_defined.iff, tcTl_defined.iff, rdLt_defined.iff,
+  simp only [ltCCDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltCC, tcHd_defined.iff, tcTl_defined.iff, rdLt_defined.iff,
     beq_defined.iff, band_defined.iff, bor_defined.iff]
 
 instance ltCP_defined : 𝚺₁-Function₃ (ltCP : V → V → V → V) via ltCPDef := .mk fun v ↦ by
-  simp [ltCPDef, ltCP, tcHd_defined.iff, rdLt_defined.iff]
+  simp only [ltCPDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltCP, tcHd_defined.iff, rdLt_defined.iff]
 
 instance ltPC_defined : 𝚺₁-Function₃ (ltPC : V → V → V → V) via ltPCDef := .mk fun v ↦ by
-  simp [ltPCDef, ltPC, tcHd_defined.iff, rdLt_defined.iff, beq_defined.iff, bor_defined.iff]
+  simp only [ltPCDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltPC, tcHd_defined.iff, rdLt_defined.iff, beq_defined.iff, bor_defined.iff]
 
 instance ltTT_defined : 𝚺₁-Function₃ (ltTT : V → V → V → V) via ltTTDef := .mk fun v ↦ by
-  simp [ltTTDef, ltTT, tcArg, sndIdx_defined.iff, rdLt_defined.iff, rdAl_defined.iff,
+  simp only [ltTTDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltTT, tcArg, sndIdx_defined.iff, rdLt_defined.iff, rdAl_defined.iff,
     rdEx_defined.iff, band_defined.iff, bor_defined.iff]
 
 /-- The `lt` flag at `⟪c1, c2⟫`, by cases on the shapes of the two codes. -/
@@ -427,7 +441,8 @@ def ltStepDef : 𝚺₁.Semisentence 4 := .mkSigma
     ∨ (k1 ≠ 0 ∧ k1 ≠ 3 ∧ k1 ≠ 2 ∧ k2 ≠ 0 ∧ k2 ≠ 3 ∧ y = 0) )”
 
 instance ltStep_defined : 𝚺₁-Function₃ (ltStep : V → V → V → V) via ltStepDef := .mk fun v ↦ by
-  simp [ltStepDef, ltStep, kind_defined.iff, ltCC_defined.iff, ltCP_defined.iff,
+  simp only [ltStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltStep, kind_defined.iff, ltCC_defined.iff, ltCP_defined.iff,
     ltPC_defined.iff, ltTT_defined.iff]
   rcases kind_cases (v 1) with h1 | h1 | h1 | h1 | h1 <;>
     rcases kind_cases (v 2) with h2 | h2 | h2 | h2 | h2 <;> simp [h1, h2]
@@ -460,13 +475,15 @@ def exStepDef : 𝚺₁.Semisentence 5 := .mkSigma
 
 instance alStep_defined : 𝚺₁-Function₄ (alStep : V → V → V → V → V) via alStepDef :=
   .mk fun v ↦ by
-  simp [alStepDef, alStep, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
+  simp only [alStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [alStep, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
     rdAl_defined.iff, band_defined.iff]
   rcases kind_cases (v 1) with h1 | h1 | h1 | h1 | h1 <;> simp [h1]
 
 instance exStep_defined : 𝚺₁-Function₄ (exStep : V → V → V → V → V) via exStepDef :=
   .mk fun v ↦ by
-  simp [exStepDef, exStep, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
+  simp only [exStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [exStep, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
     rdEx_defined.iff, bor_defined.iff, beq_defined.iff]
   rcases kind_cases (v 2) with h2 | h2 | h2 | h2 | h2 <;> simp [h2]
 
@@ -482,7 +499,8 @@ def cmpStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     !pairDef y l p”
 
 instance cmpStep_defined : 𝚺₁-Function₂ (cmpStep : V → V → V) via cmpStepDef := .mk fun v ↦ by
-  simp [cmpStepDef, cmpStep, pi₁_defined.iff, pi₂_defined.iff, ltStep_defined.iff,
+  simp only [cmpStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [cmpStep, pi₁_defined.iff, pi₂_defined.iff, ltStep_defined.iff,
     alStep_defined.iff, exStep_defined.iff, pair_defined.iff]
 
 /-- The entry of the comparison table at position `m`. -/
@@ -512,13 +530,16 @@ def iexDef : 𝚺₁.Semisentence 3 := .mkSigma
   “y c1 c2. ∃ i, !pairDef i c1 c2 ∧ ∃ e, !cmpValDef e i ∧ ∃ q, !pi₂Def q e ∧ !pi₂Def y q”
 
 instance iltb_defined : 𝚺₁-Function₂ (iltb : V → V → V) via iltbDef := .mk fun v ↦ by
-  simp [iltbDef, iltb, pair_defined.iff, cmpVal_defined.iff, pi₁_defined.iff]
+  simp only [iltbDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iltb, pair_defined.iff, cmpVal_defined.iff, pi₁_defined.iff]
 
 instance iall_defined : 𝚺₁-Function₂ (iall : V → V → V) via iallDef := .mk fun v ↦ by
-  simp [iallDef, iall, pair_defined.iff, cmpVal_defined.iff, pi₁_defined.iff, pi₂_defined.iff]
+  simp only [iallDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iall, pair_defined.iff, cmpVal_defined.iff, pi₁_defined.iff, pi₂_defined.iff]
 
 instance iex_defined : 𝚺₁-Function₂ (iex : V → V → V) via iexDef := .mk fun v ↦ by
-  simp [iexDef, iex, pair_defined.iff, cmpVal_defined.iff, pi₂_defined.iff]
+  simp only [iexDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iex, pair_defined.iff, cmpVal_defined.iff, pi₂_defined.iff]
 
 instance iltb_definable : 𝚺₁-Function₂ (iltb : V → V → V) := iltb_defined.to_definable
 instance iall_definable : 𝚺₁-Function₂ (iall : V → V → V) := iall_defined.to_definable
@@ -757,7 +778,8 @@ def sumKDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ k, !kindDef k c ∧ (((k = 0 ∨ k = 3) ∧ y = 1) ∨ (k ≠ 0 ∧ k ≠ 3 ∧ y = 0))”
 
 instance sumK_defined : 𝚺₁-Function₁ (sumK : V → V) via sumKDef := .mk fun v ↦ by
-  simp [sumKDef, sumK, kind_defined.iff]
+  simp only [sumKDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [sumK, kind_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
 
 @[simp] lemma sumK_zero : sumK (0 : V) = 1 := by simp [sumK]
@@ -788,7 +810,8 @@ def wfStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 0 ∧ k ≠ 1 ∧ k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance wfStep_defined : 𝚺₁-Function₂ (wfStep : V → V → V) via wfStepDef := .mk fun v ↦ by
-  simp [wfStepDef, wfStep, kind_defined.iff, tcArg, sndIdx_defined.iff, beq_defined.iff,
+  simp only [wfStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [wfStep, kind_defined.iff, tcArg, sndIdx_defined.iff, beq_defined.iff,
     znth_defined.iff, tcHd_defined.iff, tcTl_defined.iff, sumK_defined.iff, band_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
 
@@ -855,7 +878,8 @@ def sokDef : 𝚺₁.Semisentence 2 := .mkSigma
       ((k ≠ 3 ∨ t ≠ 0 ∨ (kh ≠ 1 ∧ kh ≠ 2)) ∧ y = 1))”
 
 instance sok_defined : 𝚺₁-Function₁ (sok : V → V) via sokDef := .mk fun v ↦ by
-  simp [sokDef, sok, kind_defined.iff, tcTl_defined.iff, tcHd_defined.iff]
+  simp only [sokDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [sok, kind_defined.iff, tcTl_defined.iff, tcHd_defined.iff]
   by_cases h : kind (v 1) = 3 ∧ tcTl (v 1) = 0 ∧ (kind (tcHd (v 1)) = 1 ∨ kind (tcHd (v 1)) = 2)
   · obtain ⟨h1, h2, h3⟩ := h
     rcases h3 with h3 | h3 <;> simp [h1, h2, h3]
@@ -877,7 +901,8 @@ def descOkDef : 𝚺₁.Semisentence 2 := .mkSigma
     ∃ h2, !tcHdDef h2 t ∧ ∃ r, !iltbDef r h2 h ∧ ∃ e, !beqDef e h2 h ∧ !borDef y r e))”
 
 instance descOk_defined : 𝚺₁-Function₁ (descOk : V → V) via descOkDef := .mk fun v ↦ by
-  simp [descOkDef, descOk, tcTl_defined.iff, tcHd_defined.iff, iltb_defined.iff,
+  simp only [descOkDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [descOk, tcTl_defined.iff, tcHd_defined.iff, iltb_defined.iff,
     beq_defined.iff, bor_defined.iff]
   by_cases h : tcTl (v 1) = 0 <;> simp [h]
 
@@ -903,7 +928,8 @@ def nfStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 0 ∧ k ≠ 1 ∧ k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance nfStep_defined : 𝚺₁-Function₂ (nfStep : V → V → V) via nfStepDef := .mk fun v ↦ by
-  simp [nfStepDef, nfStep, kind_defined.iff, tcArg, sndIdx_defined.iff, beq_defined.iff,
+  simp only [nfStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [nfStep, kind_defined.iff, tcArg, sndIdx_defined.iff, beq_defined.iff,
     znth_defined.iff, sok_defined.iff, band_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
     sumK_defined.iff, descOk_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
@@ -925,7 +951,8 @@ def isNFbDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ a, !nfADef a c ∧ ∃ o, !sokDef o c ∧ !bandDef y a o”
 
 instance isNFb_defined : 𝚺₁-Function₁ (isNFb : V → V) via isNFbDef := .mk fun v ↦ by
-  simp [isNFbDef, isNFb, nfA_defined.iff, sok_defined.iff, band_defined.iff]
+  simp only [isNFbDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNFb, nfA_defined.iff, sok_defined.iff, band_defined.iff]
 
 lemma nfA_unfold (c : V) : ∃ S : V, nfA c = nfStep c S ∧ ∀ k < c, znth S k = nfA k :=
   covVal_unfold nfStep nfStepDef c
@@ -1029,7 +1056,8 @@ def lenStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance lenStep_defined : 𝚺₁-Function₂ (lenStep : V → V → V) via lenStepDef := .mk fun v ↦ by
-  simp [lenStepDef, lenStep, kind_defined.iff, tcArg, sndIdx_defined.iff, znth_defined.iff,
+  simp only [lenStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [lenStep, kind_defined.iff, tcArg, sndIdx_defined.iff, znth_defined.iff,
     tcHd_defined.iff, tcTl_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
 
@@ -1085,7 +1113,8 @@ def inEStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance inEStep_defined : 𝚺₁-Function₂ (inEStep : V → V → V) via inEStepDef := .mk fun v ↦ by
-  simp [inEStepDef, inEStep, pi₁_defined.iff, pi₂_defined.iff, kind_defined.iff,
+  simp only [inEStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [inEStep, pi₁_defined.iff, pi₂_defined.iff, kind_defined.iff,
     beq_defined.iff, tcHd_defined.iff, tcTl_defined.iff, pair_defined.iff, znth_defined.iff,
     bor_defined.iff]
   rcases kind_cases (π₂ (v 1)) with h | h | h | h | h <;> simp [h]
@@ -1099,7 +1128,8 @@ def iinEDef : 𝚺₁.Semisentence 3 := .mkSigma
   “y g c. ∃ i, !pairDef i g c ∧ !inEValDef y i”
 
 instance iinE_defined : 𝚺₁-Function₂ (iinE : V → V → V) via iinEDef := .mk fun v ↦ by
-  simp [iinEDef, iinE, pair_defined.iff, (covVal_defined inEStep inEStepDef).iff, inEValDef]
+  simp only [iinEDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iinE, pair_defined.iff, (covVal_defined inEStep inEStepDef).iff, inEValDef]
 
 lemma iinE_unfold (g c : V) :
     ∃ S : V, iinE g c = inEStep ⟪g, c⟫ S ∧
@@ -1160,7 +1190,8 @@ def icmpDef : 𝚺₁.Semisentence 3 := .mkSigma
     (c1 ≠ c2 ∧ ∃ r, !iltbDef r c1 c2 ∧ ((r = 1 ∧ y = 0) ∨ (r ≠ 1 ∧ y = 2)))”
 
 instance icmp_defined : 𝚺₁-Function₂ (icmp : V → V → V) via icmpDef := .mk fun v ↦ by
-  simp [icmpDef, icmp, iltb_defined.iff]
+  simp only [icmpDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [icmp, iltb_defined.iff]
   by_cases h : v 1 = v 2
   · simp [h]
   · by_cases h' : iltb (v 1) (v 2) = 1 <;> simp [h, h']
@@ -1246,36 +1277,45 @@ section Model
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_thTermDef (x : V) : thTermDef.val.Evalb ![x] ↔ isTerm x := by
-  simp [thTermDef, isTerm, isTermb_defined.iff, eq_comm]
+  simp only [thTermDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isTerm, isTermb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thNFDef (x : V) : thNFDef.val.Evalb ![x] ↔ isNF x := by
-  simp [thNFDef, isNF, isNFb_defined.iff, eq_comm]
+  simp only [thNFDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thLenDef (y x : V) : thLenDef.val.Evalb ![y, x] ↔ y = ilen x := by
-  simp [thLenDef, ilen_defined.iff]
+  simp only [thLenDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ilen_defined.iff]
 
 @[simp] theorem eval_thInEDef (g a : V) : thInEDef.val.Evalb ![g, a] ↔ iinE g a = 1 := by
-  simp [thInEDef, iinE_defined.iff, eq_comm]
+  simp only [thInEDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iinE_defined.iff, eq_comm]
 
 @[simp] theorem eval_thLtDef (y x : V) : thLtDef.val.Evalb ![y, x] ↔ iltb y x = 1 := by
-  simp [thLtDef, iltb_defined.iff, eq_comm]
+  simp only [thLtDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iltb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thCmpDef (y c1 c2 : V) :
     thCmpDef.val.Evalb ![y, c1, c2] ↔ y = icmp c1 c2 := by
-  simp [thCmpDef, icmp_defined.iff]
+  simp only [thCmpDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [icmp_defined.iff]
 
 @[simp] theorem eval_thPrecDef (y x : V) :
     thPrecDef.val.Evalb ![y, x] ↔ isNF y ∧ isNF x ∧ iltb y x = 1 := by
-  simp [thPrecDef, isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
+  simp only [thPrecDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thFieldDef (x : V) :
     thFieldDef.val.Evalb ![x] ↔ isNF x ∧ iltb x 1 = 1 := by
-  simp [thFieldDef, isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
+  simp only [thFieldDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thPrecFieldDef (y x : V) :
     thPrecFieldDef.val.Evalb ![y, x] ↔
       (isNF y ∧ iltb y 1 = 1) ∧ (isNF x ∧ iltb x 1 = 1) ∧ iltb y x = 1 := by
-  simp [thPrecFieldDef, isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm, thFieldDef]
+  simp only [thPrecFieldDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm, thFieldDef]
 
 /-! ### The formulas on standard codes, in every model of `IΣ₁` -/
 
@@ -1325,36 +1365,36 @@ section Model
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
-instance tcTheta_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (tcTheta : V → V) :=
+instance tcTheta_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (tcTheta : V → V) :=
   tcTheta_definable.of_sigmaOne
-instance tcCons_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (tcCons : V → V → V) :=
+instance tcCons_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (tcCons : V → V → V) :=
   tcCons_definable.of_sigmaOne
-instance iltb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iltb : V → V → V) :=
+instance iltb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iltb : V → V → V) :=
   iltb_definable.of_sigmaOne
-instance iall_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iall : V → V → V) :=
+instance iall_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iall : V → V → V) :=
   iall_definable.of_sigmaOne
-instance iex_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iex : V → V → V) :=
+instance iex_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iex : V → V → V) :=
   iex_definable.of_sigmaOne
-instance icmp_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (icmp : V → V → V) :=
+instance icmp_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (icmp : V → V → V) :=
   icmp_definable.of_sigmaOne
 
 instance isTermb_definable : 𝚺₁-Function₁ (isTermb : V → V) := isTermb_defined.to_definable
-instance isTermb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (isTermb : V → V) :=
+instance isTermb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (isTermb : V → V) :=
   isTermb_definable.of_sigmaOne
 instance isNFb_definable : 𝚺₁-Function₁ (isNFb : V → V) := isNFb_defined.to_definable
-instance isNFb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (isNFb : V → V) :=
+instance isNFb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (isNFb : V → V) :=
   isNFb_definable.of_sigmaOne
 instance ilen_definable : 𝚺₁-Function₁ (ilen : V → V) := ilen_defined.to_definable
-instance ilen_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (ilen : V → V) :=
+instance ilen_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (ilen : V → V) :=
   ilen_definable.of_sigmaOne
 instance iinE_definable : 𝚺₁-Function₂ (iinE : V → V → V) := iinE_defined.to_definable
-instance iinE_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iinE : V → V → V) :=
+instance iinE_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iinE : V → V → V) :=
   iinE_definable.of_sigmaOne
 
-instance isTerm_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (isTerm : V → Prop) := by
+instance isTerm_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (isTerm : V → Prop) := by
   unfold isTerm; definability
 
-instance isNF_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (isNF : V → Prop) := by
+instance isNF_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (isNF : V → Prop) := by
   unfold isNF; definability
 
 end Model

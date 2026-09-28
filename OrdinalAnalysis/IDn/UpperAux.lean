@@ -22,14 +22,17 @@
   codes (`nf_cases`), exponent lists of normal codes (`sl_itoL`), and the two small order
   lemmas below `⟨β⟩` and below `Ω_{i+1} + 1` (`lt_single_cases`, `lt_Omega_succ_cases`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.UpperAuxCodes
 import OrdinalAnalysis.Ordinal.ThetaW.Dom
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.IDn.Internal
 
 /-- **The internal facts about the order used by the well-ordering proof**, for predicates
@@ -168,7 +171,7 @@ variable [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 instance app_defined' : 𝚺₁-Function₂ (hJ.app : V → V → V) via hJ.appDef := hJ.app_defined
 
 instance app_definable : 𝚺₁-Function₂ (hJ.app : V → V → V) := (app_defined' hJ).to_definable
-instance app_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (hJ.app : V → V → V) :=
+instance app_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (hJ.app : V → V → V) :=
   (app_definable hJ).of_sigmaOne
 
 /-- The axioms in `V`, for the predicates defined by the formulas. -/

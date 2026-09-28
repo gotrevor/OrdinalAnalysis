@@ -19,14 +19,17 @@
   `ϑ₀(τ_m) ∈ I_0` (`WellOrdering.W_theta_tau`), every `x ≺ ⌜a⌝` is in `I_0`; the induction
   scheme of `I_0` at `X` turns `Prog(≺, X)` into `I_0 ⊆ X`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.WellOrdering
 import OrdinalAnalysis.IDn.UpperAuxCof
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Internal OrdinalAnalysis.IDn.Lift InternalOrderFacts
 open ThetaWNoteD (omegaTower)
 

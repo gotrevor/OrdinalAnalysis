@@ -15,6 +15,7 @@
   of `Omega/Transfer.lean`; what has to be checked here is only that `ev`
   respects the rules, and every clause is one of the evaluator's equations.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Omega.Transfer
 import OrdinalAnalysis.Gentzen.Evaluate
 import OrdinalAnalysis.Gentzen.OmegaTruth
@@ -23,7 +24,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.EvInst
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.OmegaTruth
 

@@ -37,6 +37,8 @@
 -/
 import OrdinalAnalysis.Ramified.UpperBound
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
@@ -50,7 +52,7 @@ open OrdinalAnalysis.Ramified.OmegaDerivableR (veblenIter veblenIter_zero)
 /-! ### `φ_2(0)`, restated for the ramified calculus
 
 This section is entirely about `Gamma0Note`/`Ordinal` arithmetic, and deliberately
-does *not* open `LO`/`LO.FirstOrder`/`LO.FirstOrder.Arithmetic` (done further down,
+does *not* open `FFL`/`FFL.FirstOrder`/`FFL.FirstOrder.Arithmetic` (done further down,
 just before the model-theoretic sections that need them): opening those together
 with mathlib's ordinal fixed-point API confuses instance search for `Ordinal`'s
 order structure.
@@ -105,7 +107,7 @@ theorem veblenIter_one_le_succ (n : ℕ) (x : Gamma0Note) :
   rw [veblenIter_succ']
   exact Gamma0Note.le_veblenNote_right 1 _
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### The finite levels

@@ -13,8 +13,11 @@
   `addCode₁ (z, x, y)` says `z = x + y` (totalised outside the normal forms, as
   `safeAddCode`), and `omegaPowCode₁ (u, a)` says `a` is normal and `u = ω ^ a`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVNoteJump
 import OrdinalAnalysis.Gentzen.CodedVeblen
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -22,7 +25,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.CodedVeblenJump
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -40,7 +43,8 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_omegaPowDef₁ (z a : V) :
     omegaPowDef₁.val.Evalb ![z, a] ↔ isNF₁ a ∧ z = iomegaPow a := by
-  simp [omegaPowDef₁, isNF₁, isNFb₁_defined.iff, iomegaPow_defined.iff, eq_comm]
+  simp only [omegaPowDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, iomegaPow_defined.iff, eq_comm]
 
 /-! ## The formulas, in `LX` -/
 

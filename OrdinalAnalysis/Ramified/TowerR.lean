@@ -27,6 +27,8 @@
 -/
 import OrdinalAnalysis.Ramified.LiftRAux
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
@@ -34,7 +36,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen (LX paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.Gentzen.VeblenTower (towerDef₁)

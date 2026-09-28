@@ -7,14 +7,19 @@
   IΣ₁.  Normal-form restrictions remain confined to the notation relations
   used by the jump itself.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.CodedNotation
+
+open scoped FFL.FirstOrder.Bounding
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.JumpArithmetic
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.CodedNotation
 
@@ -32,7 +37,8 @@ def safeIaddDef : 𝚺₁.Semisentence 3 := .mkSigma
     ((q = 1 ∧ !iaddDef z a b) ∨ (q ≠ 1 ∧ z = a))”
 
 instance safeIadd_defined : 𝚺₁-Function₂ (safeIadd : V → V → V) via safeIaddDef := .mk fun v ↦ by
-  simp [safeIaddDef, safeIadd, isNF, isNFb_defined.iff, iadd_defined.iff]
+  simp only [safeIaddDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [safeIadd, isNF, isNFb_defined.iff, iadd_defined.iff]
   by_cases h : isNFb (v 1) = 1 <;> simp [h]
 
 instance safeIadd_definable : 𝚺₁-Function₂ (safeIadd : V → V → V) :=
@@ -57,9 +63,12 @@ noncomputable def safeIterConstruction {V : Type*} [ORingStructure V]
     [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁] : PR.Construction V safeIterBlueprint where
   zero := fun v ↦ v 0
   succ := fun v _ ih ↦ safeIadd ih (v 1)
-  zero_defined := .mk fun v ↦ by simp [safeIterBlueprint]
+  zero_defined := .mk fun v ↦ by
+    simp only [safeIterBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp
   succ_defined := .mk fun v ↦ by
-    simp [safeIterBlueprint, safeIadd_defined.iff]
+    simp only [safeIterBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp [safeIadd_defined.iff]
 
 /-- Result-first graph of `k` successive safe additions of `w` to `b`. -/
 def safeIterDef : 𝚺₁.Semisentence 4 :=

@@ -23,6 +23,8 @@
 import OrdinalAnalysis.ACA.LiftTI
 import OrdinalAnalysis.Gentzen.InternalEpsMonoCode
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
@@ -30,7 +32,7 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA.Relativise
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen
 open OrdinalAnalysis.Gentzen.CodedVeblenJump
@@ -145,10 +147,10 @@ end OrdinalAnalysis.ACA.Relativise
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat TIupto paLX)
 
 /-! ### `∀²`-introduction over the free set variable

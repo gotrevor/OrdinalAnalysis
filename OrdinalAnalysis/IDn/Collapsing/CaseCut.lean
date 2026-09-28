@@ -37,6 +37,7 @@
 
   The statement of `collapse_case_cut` is `Cases.lean`'s, verbatim.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Collapsing.Statement
 
 set_option autoImplicit false
@@ -47,7 +48,7 @@ namespace IDn
 
 namespace Collapsing
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ} {A : Fin n → Semisentence (LXIn n) 1}
 

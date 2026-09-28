@@ -60,8 +60,11 @@
     `IDerivable.inv_all`, `inv_nstage`              Exercise 7.1 (a), inversion
     `ThetaNote.Nice.rk_mem`, `rk_mem_params`        Exercise 5.5 (e), formula half
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Rank
 import OrdinalAnalysis.Ordinal.Theta.Hull
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -69,7 +72,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### The true literals of arithmetic -/
 

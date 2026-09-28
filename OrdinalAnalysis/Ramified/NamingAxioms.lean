@@ -40,6 +40,7 @@
   (`Theory.lean`), `evR` preserves the level, and `Rank.lean`'s
   `rank_lt_blkTop_of_level` turns "level below `ν`" into "rank below `blkTop ν`".
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Theory
 import OrdinalAnalysis.Ramified.AxiomsLogic
 
@@ -49,7 +50,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation FFL.FirstOrder.Arithmetic
 
 /-! ### Closing a variable-free proposition is the identity -/
 

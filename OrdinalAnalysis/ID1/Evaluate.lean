@@ -46,7 +46,10 @@
     `sim_subst_closed`, `sim_subst_numI`     `ψ(s) ~ ψ(t)` for closed `s`, `t` of equal value
     `IDerivable.replace`, `replace_head`     **term replacement**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Calculus
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -54,7 +57,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Numerals denote their values -/
 

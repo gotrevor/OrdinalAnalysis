@@ -32,7 +32,10 @@
   goals carry the normal-form side conditions of every graph, so the disjuncts are not
   propositionally interchangeable and `tauto` does not see the mathematical content.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVebCover
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -40,7 +43,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalVeblenCode
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -67,7 +70,8 @@ def vebDef₁ : 𝚺₁.Semisentence 3 := .mkSigma
 
 @[simp] theorem eval_vebDef₁ (y a g : V) :
     vebDef₁.val.Evalb ![y, a, g] ↔ isNF₁ a ∧ isNF₁ g ∧ y = iveblen a g := by
-  simp [vebDef₁, isNF₁, isNFb₁_defined.iff, iveblen_defined.iff, eq_comm]
+  simp only [vebDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, iveblen_defined.iff, eq_comm]
 
 /-- The Veblen graph, in `LX`. -/
 def vebCode₁ : Semiformula LX ℕ 3 := liftCode vebDef₁
@@ -92,7 +96,8 @@ def vebFixDef₁ : 𝚺₁.Semisentence 2 := .mkSigma
 
 @[simp] theorem eval_vebFixDef₁ (a e : V) :
     vebFixDef₁.val.Evalb ![a, e] ↔ isNF₁ e ∧ vebFixIndic a e = 1 := by
-  simp [vebFixDef₁, isNF₁, isNFb₁_defined.iff, vebFixIndic_defined.iff, eq_comm]
+  simp only [vebFixDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, vebFixIndic_defined.iff, eq_comm]
 
 /-- The fixed-point guard, in `LX`. -/
 def vebFixCode₁ : Semiformula LX ℕ 2 := liftCode vebFixDef₁
@@ -104,7 +109,8 @@ def vebBaseDef₁ : 𝚺₁.Semisentence 2 := .mkSigma
 
 @[simp] theorem eval_vebBaseDef₁ (a e : V) :
     vebBaseDef₁.val.Evalb ![a, e] ↔ isNF₁ e ∧ vebBaseIndic a e = 1 := by
-  simp [vebBaseDef₁, isNF₁, isNFb₁_defined.iff, vebBaseIndic_defined.iff, eq_comm]
+  simp only [vebBaseDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, vebBaseIndic_defined.iff, eq_comm]
 
 /-- The range guard, in `LX`. -/
 def vebBaseCode₁ : Semiformula LX ℕ 2 := liftCode vebBaseDef₁
@@ -116,7 +122,8 @@ def vebTowBaseDef₁ : 𝚺₁.Semisentence 2 := .mkSigma
 
 @[simp] theorem eval_vebTowBaseDef₁ (a e : V) :
     vebTowBaseDef₁.val.Evalb ![a, e] ↔ isNF₁ e ∧ (e = 0 ∨ vebFixIndic a e = 1) := by
-  simp [vebTowBaseDef₁, isNF₁, isNFb₁_defined.iff, vebFixIndic_defined.iff, eq_comm]
+  simp only [vebTowBaseDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, vebFixIndic_defined.iff, eq_comm]
 
 /-- The tower-base guard, in `LX`. -/
 def vebTowBaseCode₁ : Semiformula LX ℕ 2 := liftCode vebTowBaseDef₁
@@ -130,7 +137,8 @@ def vebTowDef₁ : 𝚺₁.Semisentence 4 := .mkSigma
 
 @[simp] theorem eval_vebTowDef₁ (u k a c : V) :
     vebTowDef₁.val.Evalb ![u, k, a, c] ↔ isNF₁ a ∧ isNF₁ c ∧ u = ivebTower a c k := by
-  simp [vebTowDef₁, isNF₁, isNFb₁_defined.iff, ivebTower_defined.iff, eq_comm]
+  simp only [vebTowDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, ivebTower_defined.iff, eq_comm]
 
 /-- The Veblen-tower graph, in `LX`. -/
 def vebTowCode₁ : Semiformula LX ℕ 4 := liftCode vebTowDef₁

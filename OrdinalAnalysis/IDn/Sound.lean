@@ -73,6 +73,8 @@ import Mathlib.Order.FixedPoints
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.FinCases
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option warn.classDefReducibility false
 
@@ -80,7 +82,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 open scoped Classical
 

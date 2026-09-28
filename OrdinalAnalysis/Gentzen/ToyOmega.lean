@@ -34,6 +34,8 @@
 -/
 import OrdinalAnalysis.Gentzen.Idiom
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
@@ -42,7 +44,7 @@ namespace Gentzen
 
 namespace ToyOmega
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.Idiom
 
 /-! ### The ordering -/

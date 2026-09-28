@@ -18,6 +18,7 @@
   whose statements were written to match those fields exactly (see the doc comments there);
   only `positive`, `levelBounded`, `predCut` remain as hypotheses to build a `CollapseHyps`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Collapsing.CaseFix
 import OrdinalAnalysis.IDn.Collapsing.CaseCut
 import OrdinalAnalysis.IDn.Collapsing.CaseStage
@@ -40,7 +41,7 @@ namespace IDn
 
 namespace Collapsing
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ} {A : Fin n → Semisentence (LXIn n) 1}
 

@@ -13,7 +13,10 @@
   the ordinary coded sum `e + 1`, so the step is stated with the addition graph `addCode₁` and
   the closed numeral for the code of `1`, with no new arithmetic function.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.VeblenTower
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -21,7 +24,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.VeblenSuccStep
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -63,7 +66,8 @@ def baseDef₁ : 𝚺₁.Semisentence 1 := .mkSigma
 
 @[simp] theorem eval_baseDef₁ (e : V) :
     baseDef₁.val.Evalb ![e] ↔ isNF₁ e ∧ (e = 0 ∨ fixIndic e = 1) := by
-  simp [baseDef₁, isNF₁, isNFb₁_defined.iff, fixIndic_defined.iff, eq_comm]
+  simp only [baseDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, fixIndic_defined.iff, eq_comm]
 
 /-- The guard, in `LX`. -/
 def baseCode₁ : Semiformula LX ℕ 1 := liftCode baseDef₁

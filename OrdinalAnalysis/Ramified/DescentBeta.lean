@@ -47,6 +47,7 @@
   `hgtD a < ε_b` for `a < ε_b`, `b > 0`, and more generally `hgtD a < λ` for every
   `a < λ`, `λ > ε₀` a fixed point of `ω^·` (`hgtD_lt_of_fixed`).
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.DescentBetaAux6
 import OrdinalAnalysis.Ordinal.Veblen.FundSeq
 import OrdinalAnalysis.Ramified.SemiformalLower
@@ -189,7 +190,7 @@ theorem endsIn_chain {e P : Gamma0Note} (hP : Gamma0Note.PowClosed e P) (m : ℕ
 
 end Notation
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### Heights -/

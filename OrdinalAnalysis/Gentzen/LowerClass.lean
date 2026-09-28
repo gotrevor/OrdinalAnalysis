@@ -65,15 +65,18 @@
     numerals are injective — uses a `private def` of type `Structure LX ℕ`
     passed explicitly as `(str₂ := …)`, so nothing is registered.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.CodedOrder
 import OrdinalAnalysis.Gentzen.Code
 import OrdinalAnalysis.Omega.Calculus
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.LowerClass
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedNotation
 open OrdinalAnalysis.Gentzen.LowerSyntax

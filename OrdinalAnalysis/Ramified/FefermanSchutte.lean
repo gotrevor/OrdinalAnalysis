@@ -74,6 +74,8 @@ import OrdinalAnalysis.Ramified.FSLower
 import OrdinalAnalysis.Ramified.UpperBound
 import OrdinalAnalysis.Ordinal.Veblen.VeblenCover
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
@@ -84,7 +86,7 @@ theorem le_onePlusNote_self (β : Gamma0Note) : β ≤ Gamma0Note.onePlusNote β
   rw [Gamma0Note.le_def, Gamma0Note.repr_onePlusNote]
   exact le_add_self
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### Transfinite induction along an initial segment -/

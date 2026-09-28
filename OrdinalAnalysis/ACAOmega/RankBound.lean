@@ -20,6 +20,8 @@
   together with `∀ σ ∈ Δ, rank (ev₂ σ) < ρ'` for a finite list `Δ`, with
   `ρ' := omegaAdd k` for `k` one more than the largest complexity on `Δ`.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.SecondCutEv
 import OrdinalAnalysis.Ordinal.NONoteSucc
 
@@ -27,9 +29,9 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 
 namespace OmegaDerivable₂

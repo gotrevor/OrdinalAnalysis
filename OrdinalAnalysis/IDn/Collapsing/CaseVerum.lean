@@ -13,6 +13,7 @@
 
   The statement is `Cases.lean`'s `collapse_case_verum`, verbatim.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Collapsing.Statement
 
 set_option autoImplicit false
@@ -23,7 +24,7 @@ namespace IDn
 
 namespace Collapsing
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ} {A : Fin n → Semisentence (LXIn n) 1}
 

@@ -35,6 +35,7 @@
     `numSubst_shift`, `numSubst_subst`, `numSubst_eq_self`, `freeVariables_numSubst`
     `tr`                                   `φ ↦ (embK φ)` under the assignment `f`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Evaluate
 
 set_option autoImplicit false
@@ -43,9 +44,9 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 /-! ### Reading `X` as empty -/
 
@@ -333,10 +334,10 @@ theorem numSubst_shift (f : ℕ → ℕ) (n : ℕ) (φ : Proposition LIinf) :
   simpa [← comp_app] using smul_ext' <| by ext x <;> simp [Rew.comp_app]
 
 theorem seqSubst_shifts (f : ℕ → ℕ) (n : ℕ) (Γ : Sequent LIinf) :
-    seqSubst (n :>ₙ f) Γ⁺ = seqSubst f Γ := by
+    seqSubst (n :>ₙ f) Γˡ⁺ = seqSubst f Γ := by
   induction Γ with
   | nil => rfl
-  | cons φ Γ ih => simp [seqSubst, Rewriting.shifts_cons, numSubst_shift] at ih ⊢; exact ih
+  | cons φ Γ ih => simp [seqSubst, Rewriting.lshifts_cons, numSubst_shift] at ih ⊢; exact ih
 
 /-- **The `exs` premise**: the witness becomes the closed term `numSubst f t`. -/
 theorem numSubst_subst (f : ℕ → ℕ) (t : SyntacticTerm LIinf) (φ : Semiproposition LIinf 1) :

@@ -48,22 +48,24 @@
   lost: it is recovered one `Provable`-level `spec₂` application away (at the
   arithmetical witness `#0 ∈& 0`), which is `Toolkit.lean`'s job, not this file's.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.Syntax
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 
 /-! ### The calculus -/
 
 /-- **Second-order one-sided LK with arithmetical comprehension.**
 
-Foundation's `LO.SecondOrder.Derivation`, verbatim, except that `exs₂` carries
+Foundation's `FFL.SecondOrder.Derivation`, verbatim, except that `exs₂` carries
 the hypothesis `Arith ψ`. -/
 inductive Derivation : SecondOrder.Sequent ℒₒᵣ → Type
   | identity {φ : Proposition ℒₒᵣ} : Derivation [φ, ∼φ]
@@ -93,19 +95,64 @@ namespace Derivation
 /-- Transport a derivation along an equality of sequents. -/
 def cast {Γ Δ : SecondOrder.Sequent ℒₒᵣ} (d : Derivation Γ) (h : Γ = Δ) : Derivation Δ := h ▸ d
 
+open Classical in
 /-- Every derivation of the restricted calculus is one of Foundation's full
-second-order LK; the restriction only removes rules. -/
-def toFull : {Γ : SecondOrder.Sequent ℒₒᵣ} → Derivation Γ → SecondOrder.Derivation Γ
-  | _, identity => .identity
-  | _, cut dp dn => .cut (toFull dp) (toFull dn)
-  | _, wk d h => .wk (toFull d) h
-  | _, verum => .verum
-  | _, and dp dq => .and (toFull dp) (toFull dq)
-  | _, or d => .or (toFull d)
-  | _, all₁ d => .all₁ (toFull d)
-  | _, exs₁ d => .exs₁ (toFull d)
-  | _, all₂ d => .all₂ (toFull d)
-  | _, exs₂ _ d => .exs₂ (toFull d)
+second-order LK; the restriction only removes rules.
+
+Upstream's sequents are multisets and its `cut` splits the context, so the
+translation transports each premise along the list-to-multiset coercion and
+contracts the duplicated context of a `cut` with `Structural.ofSubset`; a `wk`
+becomes the same `ofSubset`.  Nothing is assumed. -/
+theorem toFull : {Γ : SecondOrder.Sequent ℒₒᵣ} → Derivation Γ →
+    Nonempty (⊢ᴸᴷ² ((Γ : SecondOrder.Sequent ℒₒᵣ) : SecondOrder.LK.Sequent ℒₒᵣ))
+  | _, identity => ⟨.cast .identity (SecondOrder.Sequent.coe_pair _ _).symm⟩
+  | _, @cut φ Γ dp dn => by
+      refine ⟨?_⟩
+      have dp' : ⊢ᴸᴷ² (Γ : SecondOrder.LK.Sequent ℒₒᵣ) + ⦃φ⦄ :=
+        .cast (toFull dp).some (SecondOrder.Sequent.coe_cons φ Γ)
+      have dn' : ⊢ᴸᴷ² (Γ : SecondOrder.LK.Sequent ℒₒᵣ) + ⦃∼φ⦄ :=
+        .cast (toFull dn).some (SecondOrder.Sequent.coe_cons (∼φ) Γ)
+      exact Structural.ofSubset
+        ((Multiset.Traversal.ofList Γ).add (Multiset.Traversal.ofList Γ))
+        (Multiset.Traversal.ofList Γ) (dp'.cut dn') (by
+          intro ψ hψ; simpa using (by simpa using hψ : ψ ∈ Γ ∨ ψ ∈ Γ).elim id id)
+  | _, @wk Γ Δ d h =>
+      (toFull d).map fun d' =>
+        Structural.ofSubset (Multiset.Traversal.ofList Γ) (Multiset.Traversal.ofList Δ) d'
+          (Multiset.subset_iff.mpr fun ψ hψ => by simpa using h (by simpa using hψ))
+  | _, verum => ⟨.cast .verum (SecondOrder.Sequent.coe_singleton _).symm⟩
+  | _, @and φ ψ Γ dp dq => by
+      refine ⟨?_⟩
+      have dp' : ⊢ᴸᴷ² (Γ : SecondOrder.LK.Sequent ℒₒᵣ) + ⦃φ⦄ :=
+        .cast (toFull dp).some (SecondOrder.Sequent.coe_cons φ Γ)
+      have dq' : ⊢ᴸᴷ² (Γ : SecondOrder.LK.Sequent ℒₒᵣ) + ⦃ψ⦄ :=
+        .cast (toFull dq).some (SecondOrder.Sequent.coe_cons ψ Γ)
+      exact .cast (dp'.and dq') (SecondOrder.Sequent.coe_cons _ _).symm
+  | _, @or φ ψ Γ d =>
+      (toFull d).map fun d' =>
+        .cast (SecondOrder.LK.Derivation.or
+          (.cast d' (SecondOrder.Sequent.coe_cons₂ φ ψ Γ)))
+          (SecondOrder.Sequent.coe_cons _ _).symm
+  | _, @all₁ φ Γ d =>
+      (toFull d).map fun d' =>
+        .cast (SecondOrder.LK.Derivation.all₁
+          (.cast d' (by rw [SecondOrder.Sequent.coe_cons, SecondOrder.Sequent.coe_shift₀])))
+          (SecondOrder.Sequent.coe_cons _ _).symm
+  | _, @exs₁ φ t Γ d =>
+      (toFull d).map fun d' =>
+        .cast (SecondOrder.LK.Derivation.exs₁ (t := t)
+          (.cast d' (SecondOrder.Sequent.coe_cons _ Γ)))
+          (SecondOrder.Sequent.coe_cons _ _).symm
+  | _, @all₂ φ Γ d =>
+      (toFull d).map fun d' =>
+        .cast (SecondOrder.LK.Derivation.all₂
+          (.cast d' (by rw [SecondOrder.Sequent.coe_cons, SecondOrder.Sequent.coe_shift₁])))
+          (SecondOrder.Sequent.coe_cons _ _).symm
+  | _, @exs₂ φ ψ Γ _ d =>
+      (toFull d).map fun d' =>
+        .cast (SecondOrder.LK.Derivation.exs₂ (ψ := ψ)
+          (.cast d' (SecondOrder.Sequent.coe_cons _ Γ)))
+          (SecondOrder.Sequent.coe_cons _ _).symm
 
 end Derivation
 
@@ -300,9 +347,9 @@ set *and* number parameters, universally closed.**  Foundation's second-order
 syntax already carries both closure operators, and `allNums`/`allSets` are
 local names for them:
 
-* `LO.FirstOrder.allClosure` (`∀¹*`) iterates `∀¹`, closing every bound
+* `FFL.FirstOrder.allClosure` (`∀¹*`) iterates `∀¹`, closing every bound
   *number* slot;
-* `LO.SecondOrder.allClosure` (`∀²*`) iterates `∀²`, closing every bound *set*
+* `FFL.SecondOrder.allClosure` (`∀²*`) iterates `∀²`, closing every bound *set*
   slot.
 
 The de Bruijn convention throughout is Foundation's, forced by `Rew.q` /

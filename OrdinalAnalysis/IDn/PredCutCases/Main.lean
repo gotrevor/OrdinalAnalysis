@@ -1,3 +1,4 @@
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.PredCutCases.CaseLiteral
 import OrdinalAnalysis.IDn.PredCutCases.CaseVerum
 import OrdinalAnalysis.IDn.PredCutCases.CaseIdX
@@ -15,7 +16,7 @@ set_option autoImplicit false
 namespace OrdinalAnalysis
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 -- case_skeleton: generated header ends here
 
 theorem predCut_aux

@@ -32,18 +32,22 @@
   With `e := φ_2(0)` the ordering is `EpsilonSegmentOrder.epsilonOrder φ_2(0)`, the
   notations below `ε_{φ_2(0)} = φ_2(0)`, the ordering of the corresponding lower bound.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.OmegaJumpProg
 import OrdinalAnalysis.ACA.SegmentBridge
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 
@@ -712,7 +716,7 @@ end OrdinalAnalysis.ACA
 
 namespace OrdinalAnalysis.ACA.SegBridgeE
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen
 open OrdinalAnalysis.Gentzen.CodedVeblenJump
@@ -843,10 +847,10 @@ end OrdinalAnalysis.ACA.SegBridgeE
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat TIupto paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term)

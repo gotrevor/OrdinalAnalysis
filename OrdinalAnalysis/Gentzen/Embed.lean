@@ -34,6 +34,8 @@
   `NONote`.  Every ordinal step it takes — `lt_succ`, `lt_succ_of_le`,
   `le_nadd_left`, `le_nadd_right` — is a lemma of the class.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Proof.Bridge
 import OrdinalAnalysis.Gentzen.EvInst
 import OrdinalAnalysis.Gentzen.NumSubst
@@ -42,7 +44,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.Embed
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.NumSubst
 open OrdinalAnalysis.Gentzen.EvInst
@@ -52,22 +54,22 @@ variable {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]
 /-- **The replay.**  An LK derivation of `Γ` yields, for every assignment `f`,
 an ω-derivation of the evaluated `f`-instance of `Γ`, at the same rank and
 height. -/
-theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
+theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᶠ¹ Γ) (f : ℕ → ℕ),
     OmegaDerivable trueArithLits evInst (cutRank d) (ordN d : O) ((seqSubst f Γ).map ev)
-  | _, Derivation.identity rl v, f => by
+  | _, FinDerivation.identity rl v, f => by
       simp only [seqSubst_cons, seqSubst_nil, List.map_cons, List.map_nil,
         Semiformula.rew_rel, Semiformula.rew_nrel, ev_rel, ev_nrel]
       exact OmegaDerivable.identity _ _
-  | _, Derivation.verum, f => by
+  | _, FinDerivation.verum, f => by
       simpa using OmegaDerivable.verum
-  | _, Derivation.contraction d ss, f =>
+  | _, FinDerivation.contraction d ss, f =>
       OmegaDerivable.contraction (List.map_subset _ (seqSubst_subset ss)) (replay d f)
-  | _, Derivation.or d, f => by
+  | _, FinDerivation.or d, f => by
       have h := replay d f
       simp only [seqSubst_cons, List.map_cons] at h ⊢
       simp only [LogicalConnective.HomClass.map_or, ev_or]
       exact OmegaDerivable.or (OrdinalNotation.lt_succ _) (h.mono_rank (by simp [cutRank]))
-  | _, Derivation.and dp dq, f => by
+  | _, FinDerivation.and dp dq, f => by
       have hp := replay dp f
       have hq := replay dq f
       simp only [seqSubst_cons, List.map_cons] at hp hq ⊢
@@ -75,7 +77,7 @@ theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
       exact OmegaDerivable.and (OrdinalNotation.lt_succ_of_le (OrdinalNotation.le_nadd_left _ _))
         (OrdinalNotation.lt_succ_of_le (OrdinalNotation.le_nadd_right _ _))
         (hp.mono_rank (by simp [cutRank])) (hq.mono_rank (by simp [cutRank]))
-  | _, Derivation.cut dp dn, f => by
+  | _, FinDerivation.cut dp dn, f => by
       have hp := replay dp f
       have hn := replay dn f
       simp only [seqSubst_cons, List.map_cons] at hp hn
@@ -86,7 +88,7 @@ theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
         (hp.mono_rank (by simp [cutRank])) (hn.mono_rank (by simp [cutRank]))
       simp only [cutRank, Semiformula.complexity_rew, complexity_ev]
       omega
-  | _, Derivation.all d, f => by
+  | _, FinDerivation.all d, f => by
       simp only [seqSubst_cons, List.map_cons, numSubst_all, ev_all]
       refine OmegaDerivable.omegaRule (fun _ => (ordN d : O))
         (fun _ => OrdinalNotation.lt_succ _)
@@ -95,7 +97,7 @@ theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
       simp only [seqSubst_cons, List.map_cons, seqSubst_shifts, numSubst_free] at h
       rw [evInst_inst_ev]
       exact h.mono_rank (by simp [cutRank])
-  | _, Derivation.exs d, f => by
+  | _, FinDerivation.exs d, f => by
       rename_i φ t Γ
       have h := replay d f
       simp only [seqSubst_cons, List.map_cons, numSubst_subst] at h
@@ -106,7 +108,7 @@ theorem replay : ∀ {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
       exact h.mono_rank (by simp [cutRank])
 
 /-- **The replay of a closed sequent** is a derivation of its evaluation. -/
-theorem replay_closed {Γ : Sequent LX} (d : ⊢ᴸᴷ¹ Γ)
+theorem replay_closed {Γ : Sequent LX} (d : ⊢ᶠ¹ Γ)
     (hc : ∀ φ ∈ Γ, Semiformula.freeVariables φ = ∅) :
     OmegaDerivable trueArithLits evInst (cutRank d) (ordN d : O) (Γ.map ev) := by
   have h := replay (O := O) d (fun _ => 0)

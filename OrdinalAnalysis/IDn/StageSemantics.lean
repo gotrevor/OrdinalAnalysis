@@ -48,8 +48,11 @@
     `omega_zero_le`                                       `Ω₁ ⪯ Ω_{k+1}` for every level `k`
     `sound`                                                **the truth lemma**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Calculus
 import OrdinalAnalysis.IDn.Sound
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -59,7 +62,7 @@ namespace IDn
 
 namespace StageSem
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ}
 

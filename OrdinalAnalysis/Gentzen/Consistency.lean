@@ -8,13 +8,15 @@
   Gentzen 1943; it has been formalized before, in Coq and in Lean, and is
   recorded here only because it falls out.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.LowerBound
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {L : Language}
 
@@ -53,7 +55,8 @@ open OrdinalAnalysis.Gentzen.Embed OrdinalAnalysis.Gentzen.EvInst
 /-- **Consistency of `PA[X]`.** -/
 theorem paLX_consistent : paLX ⊬ (⊥ : Sentence LX) := by
   intro hprov
-  obtain ⟨Δ, hΔ, ⟨d⟩⟩ := Theory.Proof.provable_iff.mp hprov
+  obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp hprov
+  have d := FinDerivation.ofDerivation d₀ _ rfl
   have hclosed : ∀ φ ∈ (((⊥ : Sentence LX) : Proposition LX) :: ∼Sequent.embed Δ),
       Semiformula.freeVariables φ = ∅ := by
     intro φ hφ

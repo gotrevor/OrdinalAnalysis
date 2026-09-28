@@ -28,6 +28,7 @@
                         (the hypothesis `CollapseHyps.predCut` carries).
   * `noOmega_muBar`     `[Ω_s + 1, Ω_{s+1})` contains no `Ω_j`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Elimination
 import OrdinalAnalysis.IDn.Collapsing.Basic
 import OrdinalAnalysis.Ordinal.ThetaW.VeblenOrder2
@@ -163,7 +164,7 @@ end ThetaWNoteD
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ}
 

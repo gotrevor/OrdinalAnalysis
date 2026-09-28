@@ -29,6 +29,7 @@
 
       rank φ ≤ ω · lvlOf φ ⊕ complexity φ       (`rank_le_omegaMul_lvlOf_nadd`).
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Evaluate
 import OrdinalAnalysis.Ordinal.Veblen.RankSegments
 
@@ -38,7 +39,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 /-! ### `cut_axioms_of` -/
 

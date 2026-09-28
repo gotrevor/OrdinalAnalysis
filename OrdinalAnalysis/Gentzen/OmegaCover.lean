@@ -5,7 +5,10 @@
   bounded order induction on the common-prefix decomposition of Cantor normal
   forms; no external ordinal arithmetic is imported into the arithmetization.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.JumpArithmetic
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -13,7 +16,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.OmegaCover
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.CodedNotation
 open OrdinalAnalysis.Gentzen.JumpArithmetic

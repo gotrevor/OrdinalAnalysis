@@ -21,6 +21,8 @@
   notation below `ω` is reached from `0` by finitely many predecessor steps
   (`chain_of_lt_omegaN`), read off `ONote.repr_ofNat`.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.Reduction
 import OrdinalAnalysis.Ordinal.Veblen.Instance
 
@@ -28,10 +30,10 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 
 variable {L : FirstOrder.Language}
@@ -92,7 +94,7 @@ theorem chain_of_repr : ∀ (n : ℕ) (a : NONote), NONote.repr a = n → Chain 
       intro b hb
       show NONote.repr b ≤ NONote.repr (NONote.ofNat n)
       have hb' : NONote.repr b < NONote.repr a := hb
-      rw [h, Nat.cast_succ, Ordinal.add_one_eq_succ] at hb'
+      rw [h, Nat.cast_succ, ← Order.succ_eq_add_one] at hb'
       rw [hr]
       exact Order.lt_succ_iff.mp hb'
 

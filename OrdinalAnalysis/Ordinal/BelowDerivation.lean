@@ -23,6 +23,7 @@
   subtype `{o // o < ε}` and instance search then cannot find the
   `OrdinalNotation` instance, which is declared on the `def` `Below ε`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ordinal.Below
 import OrdinalAnalysis.Omega.Calculus
 
@@ -30,7 +31,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]
 

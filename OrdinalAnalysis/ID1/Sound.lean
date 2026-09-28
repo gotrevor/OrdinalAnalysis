@@ -48,6 +48,8 @@
 import OrdinalAnalysis.ID1.Theory
 import Mathlib.Order.FixedPoints
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option warn.classDefReducibility false
 
@@ -55,7 +57,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The standard structures -/
 

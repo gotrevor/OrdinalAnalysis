@@ -28,8 +28,11 @@
   at `a = 1` and is left as a follow-up (its proof needs a genuine trichotomy on `icmp₁ p a`,
   not just the fixed-point case).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalEpsMono
 import OrdinalAnalysis.Gentzen.VNoteBridge
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -37,7 +40,7 @@ set_option maxHeartbeats 2000000
 namespace OrdinalAnalysis.Gentzen.InternalVeblen
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -55,7 +58,7 @@ code of `1`) from the fixed base `1` to an arbitrary base `a`. -/
 noncomputable def vebFixIndic (a g : V) : V :=
   if g ≠ 0 ∧ vcCoeff g = 1 ∧ vcTail g = 0 ∧ icmp₁ a (vcFst g) = 0 then 1 else 0
 
-def _root_.LO.FirstOrder.Arithmetic.vebFixIndicDef : 𝚺₁.Semisentence 3 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.vebFixIndicDef : 𝚺₁.Semisentence 3 := .mkSigma
   “y a g. ∃ n, !vcCoeffDef n g ∧ ∃ t, !sndIdxDef t g ∧ ∃ f, !vcFstDef f g ∧
     ∃ c, !icmp₁Def c a f ∧
     ((g ≠ 0 ∧ n = 1 ∧ t = 0 ∧ c = 0 ∧ y = 1) ∨
@@ -63,7 +66,8 @@ def _root_.LO.FirstOrder.Arithmetic.vebFixIndicDef : 𝚺₁.Semisentence 3 := .
 
 instance vebFixIndic_defined :
     𝚺₁-Function₂ (vebFixIndic : V → V → V) via vebFixIndicDef := .mk fun v ↦ by
-  simp [vebFixIndicDef, vebFixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
+  simp only [vebFixIndicDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [vebFixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
     vcFst_defined.iff, icmp₁_defined.iff]
   by_cases h0 : v 2 = 0 <;> by_cases h1 : vcCoeff (v 2) = 1 <;>
     by_cases h2 : sndIdx (v 2) = 0 <;>
@@ -101,13 +105,14 @@ lemma vebFix_destruct {a g : V} (h : vebFixIndic a g = 1) :
 noncomputable def iveblen (a g : V) : V :=
   if vebFixIndic a g = 1 then g else vcVadd a g 1 0
 
-def _root_.LO.FirstOrder.Arithmetic.iveblenDef : 𝚺₁.Semisentence 3 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.iveblenDef : 𝚺₁.Semisentence 3 := .mkSigma
   “y a g. ∃ q, !vebFixIndicDef q a g ∧
     ((q = 1 ∧ y = g) ∨ (q ≠ 1 ∧ !vcVaddDef y a g 1 0))”
 
 instance iveblen_defined :
     𝚺₁-Function₂ (iveblen : V → V → V) via iveblenDef := .mk fun v ↦ by
-  simp [iveblenDef, iveblen, vebFixIndic_defined.iff, vcVadd_defined.iff]
+  simp only [iveblenDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iveblen, vebFixIndic_defined.iff, vcVadd_defined.iff]
   by_cases h : vebFixIndic (v 1) (v 2) = 1 <;> simp [h]
 
 instance iveblen_definable : 𝚺₁-Function₂ (iveblen : V → V → V) :=

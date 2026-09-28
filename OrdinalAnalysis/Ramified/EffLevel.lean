@@ -68,7 +68,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Replacing the atoms of one level -/
 

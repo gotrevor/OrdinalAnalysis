@@ -33,6 +33,8 @@
 -/
 import OrdinalAnalysis.Ramified.TowerR
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
@@ -40,7 +42,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen (LX paLX)
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.InternalEpsMonoCode (epsDef₁)

@@ -14,15 +14,18 @@
   * `idn_upper_bound_of_trans hT n hn : ∀ a ≺ c_n, IDn n (WForms orderFormulas n) ⊢ TI_a(≺, X)`;
   * `idlt_upper_bound_of_trans hT : ∀ a ≺ Ω₁, IDlt (WFormsOmega orderFormulas) ⊢ TI_a(≺, X)`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.Theorem
 import OrdinalAnalysis.IDn.Internal.Order
 import OrdinalAnalysis.ID1.Internal.JumpList
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.IDn.Internal
 open OrdinalAnalysis.ID1.Internal (bor band beq bor_eq_one band_eq_one beq_eq_one)
 
@@ -44,45 +47,47 @@ variable {V : Type} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 /-! ### Definability of the tables of `IDn/Internal/Order.lean` -/
 
 instance sumK_definable : 𝚺₁-Function₁ (sumK : V → V) := sumK_defined.to_definable
-instance sumK_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (sumK : V → V) :=
+instance sumK_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (sumK : V → V) :=
   sumK_definable.of_sigmaOne
 instance iltb_definable : 𝚺₁-Function₂ (iltb : V → V → V) := iltb_defined.to_definable
-instance iltb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iltb : V → V → V) :=
+instance iltb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iltb : V → V → V) :=
   iltb_definable.of_sigmaOne
 instance iall_definable : 𝚺₁-Function₃ (iall : V → V → V → V) := iall_defined.to_definable
-instance iall_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₃ (iall : V → V → V → V) :=
+instance iall_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₃ (iall : V → V → V → V) :=
   iall_definable.of_sigmaOne
 instance iex_definable : 𝚺₁-Function₃ (iex : V → V → V → V) := iex_defined.to_definable
-instance iex_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₃ (iex : V → V → V → V) :=
+instance iex_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₃ (iex : V → V → V → V) :=
   iex_definable.of_sigmaOne
 instance nfA_definable : 𝚺₁-Function₁ (nfA : V → V) := nfA_defined.to_definable
-instance nfA_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (nfA : V → V) :=
+instance nfA_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (nfA : V → V) :=
   nfA_definable.of_sigmaOne
 instance isNFb_definable : 𝚺₁-Function₁ (isNFb : V → V) := isNFb_defined.to_definable
-instance isNFb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (isNFb : V → V) :=
+instance isNFb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (isNFb : V → V) :=
   isNFb_definable.of_sigmaOne
 instance isDomb_definable : 𝚺₁-Function₁ (isDomb : V → V) := isDomb_defined.to_definable
-instance isDomb_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (isDomb : V → V) :=
+instance isDomb_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (isDomb : V → V) :=
   isDomb_definable.of_sigmaOne
 instance domOk_definable : 𝚺₁-Function₃ (domOk : V → V → V → V) := domOk_defined.to_definable
-instance domOk_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₃ (domOk : V → V → V → V) :=
+instance domOk_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₃ (domOk : V → V → V → V) :=
   domOk_definable.of_sigmaOne
-instance isNF_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (isNF : V → Prop) := by
+instance isNF_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (isNF : V → Prop) := by
   unfold isNF; definability
-instance isDom_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (isDom : V → Prop) := by
+instance isDom_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (isDom : V → Prop) := by
   unfold isDom; definability
 
 /-- A descending list (sum code) of normal domain codes. -/
 def IsSLW (s : V) : Prop := nfA s = 1 ∧ sumK s = 1 ∧ isDom s
 
-instance isSLW_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (IsSLW : V → Prop) := by
+instance isSLW_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (IsSLW : V → Prop) := by
   unfold IsSLW; definability
 
 theorem eval_iltDef (x y : V) : iltDef.val.Evalb ![x, y] ↔ iltb x y = 1 := by
-  simp [iltDef, iltb_defined.iff, eq_comm]
+  simp only [iltDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iltb_defined.iff, eq_comm]
 
 theorem eval_slWDef (s : V) : slWDef.val.Evalb ![s] ↔ IsSLW s := by
-  simp [slWDef, IsSLW, nfA_defined.iff, sumK_defined.iff, isDom, isDomb_defined.iff, eq_comm]
+  simp only [slWDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [IsSLW, nfA_defined.iff, sumK_defined.iff, isDom, isDomb_defined.iff, eq_comm]
 
 /-! ### The order clauses -/
 

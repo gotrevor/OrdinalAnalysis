@@ -165,7 +165,7 @@ namespace Ramified
 
 open OrdinalAnalysis.Gamma0Note (veblenNote epsilonNote VeblenBelow)
 open OrdinalAnalysis.Ramified.OmegaDerivableR (veblenIter veblenIter_lt_veblen)
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The semiformal bound at `ω^γ`, any `γ ≥ 1` -/
 

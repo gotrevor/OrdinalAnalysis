@@ -27,6 +27,7 @@
     `omegaMul_nadd`                       `ω · (α ⊕ β) = ω · α ⊕ ω · β`
     `induction_axiom`                     **every induction axiom**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.AxiomsLogic
 
 set_option autoImplicit false
@@ -54,10 +55,10 @@ end ThetaNote
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
-open LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.Arithmetic
 
 /-! ### Terms under the embedding -/
 

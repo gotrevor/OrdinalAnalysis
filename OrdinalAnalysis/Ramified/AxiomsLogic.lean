@@ -82,14 +82,16 @@
 import OrdinalAnalysis.Ramified.Evaluate
 import OrdinalAnalysis.Ramified.NumSubst
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
 
 /-- **A rewriting fixes a numeral, one level up.**  `numAtR_zero` identifies
 `num m` with `numAtR m` only at arity `0`; the ω-rule's substitutions and the

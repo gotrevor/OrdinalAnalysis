@@ -54,6 +54,8 @@
     `substX₂_ev₂_TI₂`, `substX₂_ev₂_TIupto₂`
     `OmegaDerivable₂.substX₂`              **the transformation of derivations**
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.EvProvider
 import OrdinalAnalysis.ACAOmega.LowerClass₂
 
@@ -61,10 +63,10 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 
 /-! ### Set-free formulas are fixed by every rewriting

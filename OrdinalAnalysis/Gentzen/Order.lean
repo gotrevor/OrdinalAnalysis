@@ -2,14 +2,17 @@
   Transitivity of the arithmetized notation order and downward closure of
   transfinite induction.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.CodedNotation
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.Order
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.CodedNotation
 

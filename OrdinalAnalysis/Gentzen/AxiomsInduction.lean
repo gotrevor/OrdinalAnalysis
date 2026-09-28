@@ -56,6 +56,7 @@
     `numSubst_succInd`           a numeral assignment passes through `succInd`
     `induction_axiom_derivable`  **Step 4** — every induction axiom of `PA[X]`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.EvInst
 import OrdinalAnalysis.Gentzen.NumSubst
 import OrdinalAnalysis.Omega.Identity
@@ -64,8 +65,8 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.AxiomsInduction
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
 open OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.OmegaTruth
 open OrdinalAnalysis.Gentzen.EvInst

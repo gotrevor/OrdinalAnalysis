@@ -20,6 +20,7 @@
   * its true numeral instances are provable in `PA⁻` (`guardAt_provable`), by
     `Σ₁`-completeness — this is what lets a particular code be used.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Ramified.Code
 import Foundation.FirstOrder.Arithmetic.HFS
 
@@ -29,7 +30,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-- **The guard**, with arguments `c p s m e k`:
 `c = ⟨m, s, e, p⟩ ∧ k + stage p < s`, where `stage p` is the first component of
@@ -46,7 +47,8 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 @[simp] theorem eval_guardDef (c p s m e k : V) : guardDef.val.Evalb ![c, p, s, m, e, k] ↔
     ∃ c₁, c = ⟪m, c₁⟫ ∧ ∃ c₂, c₁ = ⟪s, c₂⟫ ∧ c₂ = ⟪e, p⟫ ∧
       ∃ y z, p = ⟪y, z⟫ ∧ ∃ t w, z = ⟪t, w⟫ ∧ k + t < s := by
-  simp [guardDef, pair_defined.iff]
+  simp only [guardDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [pair_defined.iff]
 
 end Model
 

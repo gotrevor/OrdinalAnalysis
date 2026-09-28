@@ -20,8 +20,11 @@
   `I` (`WellOrdering.W_theta_tau`); `W` is downward closed, so every `x ≺ ⌜a⌝` is in `W`; and
   the induction scheme of `I` at the formula `X x` turns `Prog(≺, X)` into `W ⊆ X`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Bridge
 import OrdinalAnalysis.ID1.LowerBound
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -31,7 +34,7 @@ namespace InductiveDef
 
 namespace UpperBound
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.ID1.Internal
 open Lift (ArithStd precM Imem Xmem provable_of_models models_iSigma₁ ind_definable definable_xmem)
 open LowerBound (precLXI progX tiFieldSentence)

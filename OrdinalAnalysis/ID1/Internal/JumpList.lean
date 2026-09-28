@@ -19,13 +19,16 @@
   two comparisons used at the start of the tower of jumps: below `ω^β` (`iltb_single_cases`)
   and below `Ω + 1` (`iltb_omega_succ_cases`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.ArithLaws
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
@@ -33,7 +36,7 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 /-- `s ++ ⟨y⟩`: the list `s` with the exponent `y` appended at the end. -/
 noncomputable def isnoc (s y : V) : V := iapp s (tcCons y 0)
 
-instance isnoc_definable (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (isnoc : V → V → V) := by
+instance isnoc_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (isnoc : V → V → V) := by
   unfold isnoc; definability
 
 @[simp] lemma isnoc_zero (y : V) : isnoc 0 y = tcCons y 0 := by simp [isnoc]

@@ -14,13 +14,15 @@
   yields transfinite induction for the original predicate up to `omega ^ a`.
 -/
 import OrdinalAnalysis.Gentzen.Setup
-import Foundation.FirstOrder.Completeness
+import Foundation.FirstOrder.LK.Completeness
+
+open FFL.FirstOrder.Tarski
 
 namespace OrdinalAnalysis
 
 namespace Gentzen
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### Generic progressiveness -/
 

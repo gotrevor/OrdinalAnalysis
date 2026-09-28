@@ -14,11 +14,12 @@
   the map by one of the listed properties, and nothing about ordinals or ranks
   changes.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Omega.Calculus
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {L : Language}
 

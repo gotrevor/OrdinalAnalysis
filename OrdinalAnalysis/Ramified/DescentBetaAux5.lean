@@ -13,7 +13,10 @@
   (`accZeroD`, vacuously: nothing lies below `0`) and `Acc_μ(e) → Acc_μ(e ⊕ 1)`
   (`succD`: below `e ⊕ 1` lie `e` and what lies below `e`), both by `accIntro`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.DescentBetaAux4
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -21,7 +24,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.InternalVeblenCode (vebDef₁)
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)

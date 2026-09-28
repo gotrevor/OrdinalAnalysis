@@ -12,7 +12,10 @@
   `Ordinal.lt_epsilon_zero` says the tower is cofinal in `ε₀`.  Everything is generic in the
   induction formula `φ`, which is what the parametric lifting of the ACA bridge consumes.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.Epsilon1UpperBound
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -20,7 +23,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.VeblenEpsilon0UpperBound
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder

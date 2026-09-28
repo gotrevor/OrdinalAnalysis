@@ -74,6 +74,7 @@
   `Ordinal/` file about the rank notation, and it should be written there rather
   than here.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Reduction
 import OrdinalAnalysis.Ordinal.Veblen.VeblenStructureInstance
 
@@ -83,7 +84,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 namespace OmegaDerivableR
 

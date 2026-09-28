@@ -21,7 +21,10 @@
   `ρ`, then `C` is derivable in the context `Γ`, `n` inferences higher.  The
   conclusion `C` itself is never cut, so its rank is unrestricted.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.DescentBetaAux1
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -29,7 +32,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-- `Γ` is derivable in `RA_∞` with the junk literals, at cut rank `ρ`, below the
 height `H`. -/

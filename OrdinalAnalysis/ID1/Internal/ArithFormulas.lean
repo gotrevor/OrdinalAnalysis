@@ -13,6 +13,7 @@
   The ordinal sum and `ω^·` are also transported into the language `LX` (`addCodeTheta`,
   `omegaPowCodeTheta`), as the order is in `Standard`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.ArithBridge
 import OrdinalAnalysis.ID1.Internal.Standard
 
@@ -20,7 +21,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedNotation (liftCode)
 open OrdinalAnalysis.ThetaTerm
@@ -61,28 +62,36 @@ section Model
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_thAddDef (z x y : V) : thAddDef.val.Evalb ![z, x, y] ↔ z = iadd x y := by
-  simp [thAddDef, iadd_defined.iff]
+  simp only [thAddDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iadd_defined.iff]
 
 @[simp] theorem eval_thNaddDef (z x y : V) :
     thNaddDef.val.Evalb ![z, x, y] ↔ z = inadd x y := by
-  simp [thNaddDef, inadd_defined.iff]
+  simp only [thNaddDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [inadd_defined.iff]
 
 @[simp] theorem eval_thOmegaPowDef (z x : V) :
     thOmegaPowDef.val.Evalb ![z, x] ↔ z = iomegaPow x := by
-  simp [thOmegaPowDef, iomegaPow_defined.iff]
+  simp only [thOmegaPowDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iomegaPow_defined.iff]
 
 @[simp] theorem eval_thOmegaMulDef (z x : V) :
     thOmegaMulDef.val.Evalb ![z, x] ↔ z = iomegaMul x := by
-  simp [thOmegaMulDef, iomegaMul_defined.iff]
+  simp only [thOmegaMulDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iomegaMul_defined.iff]
 
 @[simp] theorem eval_thNumDef (z n : V) : thNumDef.val.Evalb ![z, n] ↔ z = inum n := by
-  simp [thNumDef, inum_defined.iff]
+  simp only [thNumDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [inum_defined.iff]
 
 @[simp] theorem eval_thSuccDef (z x : V) : thSuccDef.val.Evalb ![z, x] ↔ z = isucc x := by
-  simp [thSuccDef, isucc_defined.iff]
+  simp only [thSuccDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isucc_defined.iff]
 
 @[simp] theorem eval_thOneDef (z : V) : thOneDef.val.Evalb ![z] ↔ z = ione := by
-  simp [thOneDef, ioneDef, ione, tcCons_defined.iff]
+  simp only [thOneDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp only [ioneDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ione, tcCons_defined.iff]
 
 /-! ### Evaluation at standard codes -/
 

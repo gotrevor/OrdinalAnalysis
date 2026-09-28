@@ -1,3 +1,6 @@
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.CompatArith
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Basic
 import OrdinalAnalysis.Ordinal.NaturalSum
 import OrdinalAnalysis.Ordinal.NaturalSumMono

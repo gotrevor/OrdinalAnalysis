@@ -68,6 +68,7 @@
     ∀-inversion, to feed a family of numeral instances at a common height into
     a further application of the ω-rule.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.LowerBound
 import OrdinalAnalysis.Ramified.Reduction
 
@@ -77,7 +78,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 namespace OmegaDerivableR
 

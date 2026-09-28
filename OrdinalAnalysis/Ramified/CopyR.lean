@@ -40,6 +40,8 @@
 -/
 import OrdinalAnalysis.Ramified.UpperBound
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
@@ -47,7 +49,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.InternalVNoteJump (safeIadd₁Def)
 open OrdinalAnalysis.Gentzen.VeblenSuccStep (baseDef₁)

@@ -17,6 +17,8 @@
 -/
 import OrdinalAnalysis.ACA.TowerInduction
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option maxHeartbeats 1000000
 
@@ -24,7 +26,7 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA.SegBridge
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen
 open OrdinalAnalysis.Gentzen.CodedVeblenJump
@@ -163,10 +165,10 @@ end OrdinalAnalysis.ACA.SegBridge
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat TIupto paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.ACA.TowerSyntax (emb_univCl_of_closed)

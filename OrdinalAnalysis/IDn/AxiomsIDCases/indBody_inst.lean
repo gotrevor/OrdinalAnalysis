@@ -1,3 +1,4 @@
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.AxiomsIDCases.Defs
 import OrdinalAnalysis.IDn.AxiomsIDCases.params_plugI
 import OrdinalAnalysis.IDn.AxiomsIDCases.plugI_subst_numI
@@ -20,11 +21,11 @@ variable {n : ℕ} (k : Fin n)
 namespace IDn
 
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
 
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 
 /-! ### Proposition 6.4, the axiom -/

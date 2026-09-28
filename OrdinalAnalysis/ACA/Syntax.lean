@@ -26,8 +26,8 @@
 
   Everything is stated for an arbitrary language `L`; only `TISO` fixes `ℒₒᵣ`.
 -/
-import Foundation.SecondOrder.Derivation
-import Foundation.SecondOrder.Semantics
+import Foundation.SecondOrder.LK.Basic
+import Foundation.SecondOrder.Tarski.Basic
 import OrdinalAnalysis.Proof.Bridge
 import OrdinalAnalysis.Ordinal.OmegaPow
 import OrdinalAnalysis.Gentzen.CodedNotation
@@ -36,10 +36,10 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 
 /-! ### `ω`, as a notation
 

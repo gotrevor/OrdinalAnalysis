@@ -40,13 +40,16 @@
     leveled slots `posAll i a c2`/`posEx i c1 b` from the plain slot at `⟪posP c1, posP c2⟫` (with
     `c1 = tcTheta i a`, `c2 = tcTheta i b`), second/first coordinate unchanged respectively.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.Internal.Codes
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.ThetaWTerm
 open OrdinalAnalysis.ID1.Internal (bor band beq borDef bandDef beqDef bor_defined band_defined
   beq_defined bor_eq_one band_eq_one beq_eq_one covVal covVal_unfold covVal_zero covVal_succ
@@ -69,10 +72,12 @@ def posPDef : 𝚺₁.Semisentence 2 := .mkSigma “y c. !pairDef y 0 c”
 def posLDef : 𝚺₁.Semisentence 3 := .mkSigma “y i c. ∃ q, !pairDef q i c ∧ !pairDef y 1 q”
 
 instance posP_defined : 𝚺₁-Function₁ (posP : V → V) via posPDef := .mk fun v ↦ by
-  simp [posPDef, posP, pair_defined.iff]
+  simp only [posPDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [posP, pair_defined.iff]
 
 instance posL_defined : 𝚺₁-Function₂ (posL : V → V → V) via posLDef := .mk fun v ↦ by
-  simp [posLDef, posL, pair_defined.iff]
+  simp only [posLDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [posL, pair_defined.iff]
 
 @[simp] lemma pi1_posP (c : V) : π₁ (posP c) = 0 := by simp [posP]
 
@@ -147,13 +152,16 @@ def rdExDef : 𝚺₁.Semisentence 5 := .mkSigma
   “r s k x y. ∃ px, !posPDef px x ∧ ∃ py, !posLDef py k y ∧ ∃ p, !pairDef p px py ∧ !znthDef r s p”
 
 instance rdLt_defined : 𝚺₁-Function₃ (rdLt : V → V → V → V) via rdLtDef := .mk fun v ↦ by
-  simp [rdLtDef, rdLt, posP_defined.iff, pair_defined.iff, znth_defined.iff]
+  simp only [rdLtDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdLt, posP_defined.iff, pair_defined.iff, znth_defined.iff]
 
 instance rdAll_defined : 𝚺₁-Function₄ (rdAll : V → V → V → V → V) via rdAllDef := .mk fun v ↦ by
-  simp [rdAllDef, rdAll, posL_defined.iff, posP_defined.iff, pair_defined.iff, znth_defined.iff]
+  simp only [rdAllDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdAll, posL_defined.iff, posP_defined.iff, pair_defined.iff, znth_defined.iff]
 
 instance rdEx_defined : 𝚺₁-Function₄ (rdEx : V → V → V → V → V) via rdExDef := .mk fun v ↦ by
-  simp [rdExDef, rdEx, posP_defined.iff, posL_defined.iff, pair_defined.iff, znth_defined.iff]
+  simp only [rdExDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdEx, posP_defined.iff, posL_defined.iff, pair_defined.iff, znth_defined.iff]
 
 /-- The level of a principal code (`Omega` or `theta`). -/
 noncomputable def princLev (c : V) : V := if kind c = 1 then tcOmegaLev c else tcLev c
@@ -188,14 +196,17 @@ def ltPCDef : 𝚺₁.Semisentence 4 := .mkSigma
     !borDef y r e”
 
 instance ltCC_defined : 𝚺₁-Function₃ (ltCC : V → V → V → V) via ltCCDef := .mk fun v ↦ by
-  simp [ltCCDef, ltCC, tcHd_defined.iff, tcTl_defined.iff, rdLt_defined.iff,
+  simp only [ltCCDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltCC, tcHd_defined.iff, tcTl_defined.iff, rdLt_defined.iff,
     beq_defined.iff, band_defined.iff, bor_defined.iff]
 
 instance ltCP_defined : 𝚺₁-Function₃ (ltCP : V → V → V → V) via ltCPDef := .mk fun v ↦ by
-  simp [ltCPDef, ltCP, tcHd_defined.iff, rdLt_defined.iff]
+  simp only [ltCPDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltCP, tcHd_defined.iff, rdLt_defined.iff]
 
 instance ltPC_defined : 𝚺₁-Function₃ (ltPC : V → V → V → V) via ltPCDef := .mk fun v ↦ by
-  simp [ltPCDef, ltPC, tcHd_defined.iff, rdLt_defined.iff, beq_defined.iff, bor_defined.iff]
+  simp only [ltPCDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltPC, tcHd_defined.iff, rdLt_defined.iff, beq_defined.iff, bor_defined.iff]
 
 /-- The `lt` flag between two principal codes (`kind ∈ {1,2}`): position first, the ϑ_i-ϑ_i
 clause when both are `theta`-codes at the same level. -/
@@ -265,7 +276,8 @@ def ltStepDef : 𝚺₁.Semisentence 4 := .mkSigma
     ∨ (k1 ≠ 0 ∧ k1 ≠ 3 ∧ k2 ≠ 0 ∧ k2 ≠ 3 ∧ !ltPPDef y c1 c2 s) )”
 
 instance ltStep_defined : 𝚺₁-Function₃ (ltStep : V → V → V → V) via ltStepDef := .mk fun v ↦ by
-  simp [ltStepDef, ltStep, kind_defined.iff, ltCC_defined.iff, ltCP_defined.iff,
+  simp only [ltStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ltStep, kind_defined.iff, ltCC_defined.iff, ltCP_defined.iff,
     ltPC_defined.iff, ltPP_defined.iff]
   rcases kind_cases (v 1) with h1 | h1 | h1 | h1 | h1 <;>
     rcases kind_cases (v 2) with h2 | h2 | h2 | h2 | h2 <;> simp [h1, h2]
@@ -421,13 +433,16 @@ def iexDef : 𝚺₁.Semisentence 4 := .mkSigma
     !cmpValDef y p”
 
 instance iltb_defined : 𝚺₁-Function₂ (iltb : V → V → V) via iltbDef := .mk fun v ↦ by
-  simp [iltbDef, iltb, posP_defined.iff, pair_defined.iff, cmpVal_defined.iff]
+  simp only [iltbDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iltb, posP_defined.iff, pair_defined.iff, cmpVal_defined.iff]
 
 instance iall_defined : 𝚺₁-Function₃ (iall : V → V → V → V) via iallDef := .mk fun v ↦ by
-  simp [iallDef, iall, posL_defined.iff, posP_defined.iff, pair_defined.iff, cmpVal_defined.iff]
+  simp only [iallDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iall, posL_defined.iff, posP_defined.iff, pair_defined.iff, cmpVal_defined.iff]
 
 instance iex_defined : 𝚺₁-Function₃ (iex : V → V → V → V) via iexDef := .mk fun v ↦ by
-  simp [iexDef, iex, posP_defined.iff, posL_defined.iff, pair_defined.iff, cmpVal_defined.iff]
+  simp only [iexDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iex, posP_defined.iff, posL_defined.iff, pair_defined.iff, cmpVal_defined.iff]
 
 /-! ### The recursion law of the comparison table -/
 
@@ -782,7 +797,8 @@ def sokDef : 𝚺₁.Semisentence 2 := .mkSigma
       ((k ≠ 3 ∨ t ≠ 0 ∨ (kh ≠ 1 ∧ kh ≠ 2)) ∧ y = 1))”
 
 instance sok_defined : 𝚺₁-Function₁ (sok : V → V) via sokDef := .mk fun v ↦ by
-  simp [sokDef, sok, kind_defined.iff, tcTl_defined.iff, tcHd_defined.iff]
+  simp only [sokDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [sok, kind_defined.iff, tcTl_defined.iff, tcHd_defined.iff]
   by_cases h : kind (v 1) = 3 ∧ tcTl (v 1) = 0 ∧ (kind (tcHd (v 1)) = 1 ∨ kind (tcHd (v 1)) = 2)
   · obtain ⟨h1, h2, h3⟩ := h
     rcases h3 with h3 | h3 <;> simp [h1, h2, h3]
@@ -804,7 +820,8 @@ def descOkDef : 𝚺₁.Semisentence 2 := .mkSigma
     ∃ h2, !tcHdDef h2 t ∧ ∃ r, !iltbDef r h2 h ∧ ∃ e, !beqDef e h2 h ∧ !borDef y r e))”
 
 instance descOk_defined : 𝚺₁-Function₁ (descOk : V → V) via descOkDef := .mk fun v ↦ by
-  simp [descOkDef, descOk, tcTl_defined.iff, tcHd_defined.iff, iltb_defined.iff,
+  simp only [descOkDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [descOk, tcTl_defined.iff, tcHd_defined.iff, iltb_defined.iff,
     beq_defined.iff, bor_defined.iff]
   by_cases h : tcTl (v 1) = 0 <;> simp [h]
 
@@ -830,7 +847,8 @@ def nfStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 0 ∧ k ≠ 1 ∧ k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance nfStep_defined : 𝚺₁-Function₂ (nfStep : V → V → V) via nfStepDef := .mk fun v ↦ by
-  simp [nfStepDef, nfStep, kind_defined.iff, tcThetaArg_defined.iff, znth_defined.iff,
+  simp only [nfStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [nfStep, kind_defined.iff, tcThetaArg_defined.iff, znth_defined.iff,
     sok_defined.iff, band_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
     sumK_defined.iff, descOk_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
@@ -852,7 +870,8 @@ def isNFbDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ a, !nfADef a c ∧ ∃ o, !sokDef o c ∧ !bandDef y a o”
 
 instance isNFb_defined : 𝚺₁-Function₁ (isNFb : V → V) via isNFbDef := .mk fun v ↦ by
-  simp [isNFbDef, isNFb, nfA_defined.iff, sok_defined.iff, band_defined.iff]
+  simp only [isNFbDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNFb, nfA_defined.iff, sok_defined.iff, band_defined.iff]
 
 lemma nfA_unfold (c : V) : ∃ S : V, nfA c = nfStep c S ∧ ∀ k < c, znth S k = nfA k :=
   covVal_unfold nfStep nfStepDef c
@@ -1009,7 +1028,8 @@ def domOkDef : 𝚺₁.Semisentence 4 := .mkSigma
   “y bound k c. ∃ kc, !pairDef kc k c ∧ ∃ i, !pairDef i bound kc ∧ !domOkValDef y i”
 
 instance domOk_defined : 𝚺₁-Function₃ (domOk : V → V → V → V) via domOkDef := .mk fun v ↦ by
-  simp [domOkDef, domOk, pair_defined.iff, (covVal_defined domOkStep domOkStepDef).iff,
+  simp only [domOkDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [domOk, pair_defined.iff, (covVal_defined domOkStep domOkStepDef).iff,
     domOkValDef]
 
 lemma domOk_unfold (bound k c : V) :
@@ -1104,7 +1124,8 @@ def domStepDef : 𝚺₁.Semisentence 3 := .mkSigma
     ∨ (k ≠ 0 ∧ k ≠ 1 ∧ k ≠ 2 ∧ k ≠ 3 ∧ y = 0) )”
 
 instance domStep_defined : 𝚺₁-Function₂ (domStep : V → V → V) via domStepDef := .mk fun v ↦ by
-  simp [domStepDef, domStep, kind_defined.iff, tcThetaArg_defined.iff, znth_defined.iff,
+  simp only [domStepDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [domStep, kind_defined.iff, tcThetaArg_defined.iff, znth_defined.iff,
     tcLev_defined.iff, domOk_defined.iff, band_defined.iff, tcHd_defined.iff, tcTl_defined.iff]
   rcases kind_cases (v 1) with h | h | h | h | h <;> simp [h]
 
@@ -1178,14 +1199,17 @@ section Model
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_thNFDef (x : V) : thNFDef.val.Evalb ![x] ↔ isNF x := by
-  simp [thNFDef, isNF, isNFb_defined.iff, eq_comm]
+  simp only [thNFDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thPrecDef (y x : V) :
     thPrecDef.val.Evalb ![y, x] ↔ isNF y ∧ isNF x ∧ iltb y x = 1 := by
-  simp [thPrecDef, isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
+  simp only [thPrecDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, iltb_defined.iff, eq_comm]
 
 @[simp] theorem eval_thDomDef (x : V) : thDomDef.val.Evalb ![x] ↔ isDom x := by
-  simp [thDomDef, isDom, isDomb_defined.iff, eq_comm]
+  simp only [thDomDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isDom, isDomb_defined.iff, eq_comm]
 
 theorem eval_thNFDef_mc (t : ThetaWTerm) : thNFDef.val.Evalb ![mc (V := V) t] ↔ NF t := by
   simpa using isNF_mc (V := V) t

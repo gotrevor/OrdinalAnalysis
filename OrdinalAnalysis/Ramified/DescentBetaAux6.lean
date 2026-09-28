@@ -22,7 +22,10 @@
     `φ_a(γ)`, and `Acc_L(u)` is introduced by `accIntro`, whose premises are the
     instances.  Then Step 2 (`step2`) and `Veb(φ_a(c), a, c)`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.DescentBetaAux5
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -30,7 +33,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.InternalVeblenCode (vebDef₁)
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)

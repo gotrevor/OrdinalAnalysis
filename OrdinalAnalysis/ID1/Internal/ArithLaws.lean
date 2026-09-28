@@ -11,13 +11,16 @@
     from below, and `ω^P = P` (`iomegaPow_of_prin`);
   * normal forms are preserved by `ω^·`; `0` is neutral for both sums.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.Arith
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
@@ -27,7 +30,7 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 /-- `c` has the shape of `Ω` or of a `ϑ`-term. -/
 abbrev IsPrinC (c : V) : Prop := kind c = 1 ∨ kind c = 2
 
-instance IsPrinC_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (IsPrinC : V → Prop) := by
+instance IsPrinC_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (IsPrinC : V → Prop) := by
   unfold IsPrinC; definability
 
 lemma IsPrinC.kind_ne_zero {p : V} (hp : IsPrinC p) : kind p ≠ 0 := by
@@ -73,10 +76,11 @@ noncomputable def ilead (c : V) : V := tcHd (itoL c)
 def ileadDef : 𝚺₁.Semisentence 2 := .mkSigma “y c. ∃ s, !itoLDef s c ∧ !tcHdDef y s”
 
 instance ilead_defined : 𝚺₁-Function₁ (ilead : V → V) via ileadDef := .mk fun v ↦ by
-  simp [ileadDef, ilead, itoL_defined.iff, tcHd_defined.iff]
+  simp only [ileadDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ilead, itoL_defined.iff, tcHd_defined.iff]
 
 instance ilead_definable : 𝚺₁-Function₁ (ilead : V → V) := ilead_defined.to_definable
-instance ilead_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (ilead : V → V) :=
+instance ilead_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (ilead : V → V) :=
   ilead_definable.of_sigmaOne
 
 lemma itoL_of_prinC {p : V} (hp : IsPrinC p) : itoL p = tcCons p 0 := if_pos hp

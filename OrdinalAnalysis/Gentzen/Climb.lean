@@ -22,6 +22,7 @@
   Without the last a number that is "internally normal" but codes nothing
   would have predecessors the climb cannot reach.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.Boundedness
 import OrdinalAnalysis.Omega.Identity
 
@@ -29,7 +30,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.Climb
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.StandardLX (trueArithLits)
 open OrdinalAnalysis.Gentzen.LowerSyntax OrdinalAnalysis.Gentzen.LowerClass

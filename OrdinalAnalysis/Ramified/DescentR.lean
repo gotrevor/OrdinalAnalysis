@@ -22,13 +22,15 @@
 -/
 import OrdinalAnalysis.Ramified.EpsProgR
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-- The matrix of the descent: `TI_μ(b) → ψ_κ(b)`, with `b` the bound
 variable. -/

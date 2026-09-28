@@ -37,9 +37,12 @@
     `allClosure_derivable`                             the universal closure, by the ω-rule
     `IFreeL`, `paMinus_axiom`, `eq_axiom`, `relExtI_derivable`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Evaluate
 import OrdinalAnalysis.IDn.NumSubst
 import OrdinalAnalysis.IDn.Sound
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -118,7 +121,7 @@ end ThetaWNoteD
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Structural helpers -/
 
@@ -785,8 +788,8 @@ end Semantics
 
 section Closure
 
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 variable {A : Fin n → Semisentence (LXIn n) 1} {ρ : ThetaWNoteD} {H : Set ThetaWNoteD → Set ThetaWNoteD}
 

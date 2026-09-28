@@ -53,6 +53,7 @@
 
   No `sorry`, no new axiom, no `native_decide`, no `partial def`; `autoImplicit false`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.AxiomsLogic
 
 set_option autoImplicit false
@@ -61,7 +62,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ}
 

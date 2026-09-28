@@ -40,7 +40,10 @@
   have coefficient `1`.  The code-shape form `veb_surj'` needs no such hypothesis — at `a = 0`
   it says every *additively principal* normal code is an ω-power, which is true.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVeblen
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -48,7 +51,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalVeblenSurj
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -88,7 +91,7 @@ and normal `e`, see `vebBaseIndic_iff_forall`) a common fixed point of every `φ
 noncomputable def vebBaseIndic (a e : V) : V :=
   if e ≠ 0 ∧ vcCoeff e = 1 ∧ vcTail e = 0 ∧ icmp₁ (vcFst e) a ≠ 0 then 1 else 0
 
-def _root_.LO.FirstOrder.Arithmetic.vebBaseIndicDef : 𝚺₁.Semisentence 3 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.vebBaseIndicDef : 𝚺₁.Semisentence 3 := .mkSigma
   “y a e. ∃ n, !vcCoeffDef n e ∧ ∃ t, !sndIdxDef t e ∧ ∃ f, !vcFstDef f e ∧
     ∃ c, !icmp₁Def c f a ∧
     ((e ≠ 0 ∧ n = 1 ∧ t = 0 ∧ c ≠ 0 ∧ y = 1) ∨
@@ -96,7 +99,8 @@ def _root_.LO.FirstOrder.Arithmetic.vebBaseIndicDef : 𝚺₁.Semisentence 3 := 
 
 instance vebBaseIndic_defined :
     𝚺₁-Function₂ (vebBaseIndic : V → V → V) via vebBaseIndicDef := .mk fun v ↦ by
-  simp [vebBaseIndicDef, vebBaseIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
+  simp only [vebBaseIndicDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [vebBaseIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
     vcFst_defined.iff, icmp₁_defined.iff]
   by_cases h0 : v 2 = 0 <;> by_cases h1 : vcCoeff (v 2) = 1 <;>
     by_cases h2 : sndIdx (v 2) = 0 <;>

@@ -33,6 +33,8 @@
   `toSOAtB_tiUptoAt`/`toSOAtB_liftCode`/`toSOAtB_Xat_bvar`, so no `Empty`-version
   of the jump formula is ever needed (`specSO` could not take one).
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.Lifted
 import OrdinalAnalysis.ACA.Congruence
 
@@ -43,7 +45,7 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA.TowerSyntax
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 
 /-- A rewriting passes through a substitution instance of a **closed** formula:
@@ -404,10 +406,10 @@ end OrdinalAnalysis.ACA.TowerSyntax
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 open OrdinalAnalysis.Gentzen.CodedVeblenJump (addCode₁ omegaPowCode₁)

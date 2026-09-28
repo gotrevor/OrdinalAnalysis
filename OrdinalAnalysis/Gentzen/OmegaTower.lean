@@ -6,7 +6,10 @@
   The final theorem specializes the generic predicate to the fresh predicate
   `X`, yielding the concrete `TIupto` sentence used by the upper bound.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.OmegaCover
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -14,7 +17,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.OmegaTower
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.CodedNotation
 open OrdinalAnalysis.Gentzen.JumpArithmetic

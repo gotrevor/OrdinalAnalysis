@@ -35,15 +35,17 @@
 
   Everything else is the first-order proof, line for line.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.LowerClass₂
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 
 variable {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O] {C : CodedOrder₂ O}

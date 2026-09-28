@@ -36,13 +36,14 @@
   At the end `γ := 0` and the reading of `TI(≺)` is "every notation is below
   `ω^α`", refuted by `ω^α` itself.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.LowerClassEv
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.Boundedness
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.LowerSyntax OrdinalAnalysis.Gentzen.LowerClass
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.EvInst

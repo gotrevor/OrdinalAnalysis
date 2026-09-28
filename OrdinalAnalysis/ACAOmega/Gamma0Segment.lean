@@ -50,9 +50,9 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 open OrdinalAnalysis.ACAOmega.NumSubst₂
 open OrdinalAnalysis.Gamma0Note (veblenNote VeblenBelow)

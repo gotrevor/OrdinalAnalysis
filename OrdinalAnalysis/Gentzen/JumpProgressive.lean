@@ -18,11 +18,13 @@
 -/
 import OrdinalAnalysis.Gentzen.Jump
 
+open FFL.FirstOrder.Tarski
+
 namespace OrdinalAnalysis
 
 namespace Gentzen
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### Finite iteration and its arithmetic laws -/
 

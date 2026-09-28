@@ -24,8 +24,11 @@
   * induction along the numbers for every such predicate (`succ_induction_definable`,
     `order_induction_definable`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.Theory
-import Foundation.FirstOrder.Completeness
+import Foundation.FirstOrder.LK.Completeness
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -35,7 +38,7 @@ namespace IDn
 
 namespace Lift
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 variable {ι : Type}
 

@@ -56,6 +56,7 @@
     `inst_substX`                    the ω-rule's instances commute too
     `OmegaDerivable.substX`          **the transformation of derivations**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.EvInst
 import OrdinalAnalysis.Gentzen.Jump
 import OrdinalAnalysis.Gentzen.CodedOrder
@@ -65,7 +66,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.SubstX
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.Evaluate
 open OrdinalAnalysis.Gentzen.StandardLX (trueArithLits numLX IsArithLit)
@@ -325,7 +326,7 @@ end OrdinalAnalysis.Gentzen.SubstX
 
 namespace OrdinalAnalysis.OmegaDerivable
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.Evaluate
 open OrdinalAnalysis.Gentzen.StandardLX (trueArithLits numLX)

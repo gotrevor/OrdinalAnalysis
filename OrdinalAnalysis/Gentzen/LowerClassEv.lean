@@ -41,6 +41,7 @@
     *selectively*: a wholesale `open` would make the bare name `numLX`
     ambiguous.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.LowerClass
 import OrdinalAnalysis.Gentzen.EvInst
 import OrdinalAnalysis.Gentzen.PrecStandard
@@ -49,7 +50,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.LowerClassEv
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 -- `Gentzen.belowAt` (Jump.lean) is a *different* formula of the same name, and it
 -- is visible here through the enclosing namespace, which no `open … hiding` can
 -- suppress.  So `belowAt` is written `LowerClass.belowAt` throughout.

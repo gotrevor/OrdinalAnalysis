@@ -22,6 +22,7 @@
   `φ_ν`; see the boundedness and upper-bound files for the ordinals of the
   theories.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.PredicativeCutGeneral
 
 set_option autoImplicit false
@@ -30,7 +31,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 namespace OmegaDerivableR
 

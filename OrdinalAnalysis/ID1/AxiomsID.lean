@@ -47,6 +47,7 @@
     `closure_derivable`, `closure_axiom`            **Proposition 6.2**
     `indAx_claim`, `indAx_derivable`, `indAx_axiom` **Proposition 6.4**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.AxiomsPA
 
 set_option autoImplicit false
@@ -55,9 +56,9 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 /-! ### Predicates plugged into an operator form -/
 

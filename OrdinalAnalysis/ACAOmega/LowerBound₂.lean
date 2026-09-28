@@ -52,6 +52,8 @@
     `unTerm (numeral k) = numeral k` (`Gentzen.lMap_toLX_numeral`).  So both
     halves of `|ACA| = ε_{ε₀}` speak about one sentence.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.SchemeAxioms₂
 import OrdinalAnalysis.ACAOmega.RankBound
 import OrdinalAnalysis.ACAOmega.Embed₂
@@ -64,9 +66,9 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 open OrdinalAnalysis.ACAOmega.NumSubst₂
 open OrdinalAnalysis.Gentzen (LX Xat)

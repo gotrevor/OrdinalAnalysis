@@ -26,8 +26,11 @@
   `CodedNotation.paLX_of_peano_semantic`, or a semantic consequence of
   already-transported `paLX`-theorems.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalEpsMonoCode
 import OrdinalAnalysis.Gentzen.InternalVeblen
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -35,7 +38,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.ProgStep
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder

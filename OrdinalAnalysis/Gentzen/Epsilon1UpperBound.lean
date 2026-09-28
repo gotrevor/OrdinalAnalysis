@@ -18,10 +18,13 @@
   tower (`Ordinal.lt_nfp_iff` at `ε₁ = nfp (ω ^ ·) (ε₀ + 1)`).  Downward closure of
   transfinite induction along a transitive ordering finishes.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.CodedVeblenJump
 import OrdinalAnalysis.Gentzen.OmegaTower
 import OrdinalAnalysis.Gentzen.Order
 import OrdinalAnalysis.Ordinal.Veblen.Epsilon
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -29,7 +32,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.Epsilon1UpperBound
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder

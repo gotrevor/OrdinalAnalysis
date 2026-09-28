@@ -46,8 +46,8 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open scoped FFL.FirstOrder
 
 /-! ### Picking the notation: `ε_{ε₀}` is the sup of `ε_c` over notations `c < ε₀`
 

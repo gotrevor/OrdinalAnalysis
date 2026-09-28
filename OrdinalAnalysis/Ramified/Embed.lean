@@ -21,7 +21,7 @@
   * **There is no (Pr) case.**  Foundation's `LK` has eight rules and none of
     them is a predicator rule, so the replay never fires `pr`/`npr`.  That is not
     an omission: in D2 the naming axioms are an *external schema* (see
-    `Ramified/Theory.lean`), so a proof in `RA Λ` arrives as `⊢ᴸᴷ¹ σ :: ∼axioms`
+    `Ramified/Theory.lean`), so a proof in `RA Λ` arrives as `⊢ᶠ¹ σ :: ∼axioms`
     and the naming axioms enter as ordinary formulas of the sequent, to be cut
     away later against (Pr)-derivations of themselves.  The (Pr) rules exist for
     that cut, not for the replay.
@@ -50,6 +50,8 @@
   application of `φ_1` (`Ramified/BlockCut.lean`).  `exists_blkTop_bound` is the
   list form, the analogue of `RankBound.exists_omegaAdd_bound`.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Proof.Bridge
 import OrdinalAnalysis.Ramified.Evaluate
 import OrdinalAnalysis.Ramified.NumSubst
@@ -60,7 +62,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation
 
 /-! ### The ordinal cut rank of an `LK` derivation -/
 
@@ -72,49 +74,49 @@ of the two premises.
 `Proof/CutRank.cutRank` with `φ.complexity + 1` replaced by `succ (rank φ)`,
 which is `ACAOmega/CutRank₂.lean`'s `cutRank₂` transported to the first-order
 `Derivation`. -/
-def cutRankR : {Δ : Sequent LRA} → ⊢ᴸᴷ¹ Δ → Gamma0Note
-  | _, Derivation.identity _ _ => 0
-  | _, Derivation.verum => 0
-  | _, @Derivation.cut _ φ _ _ dp dn =>
+def cutRankR : {Δ : Sequent LRA} → ⊢ᶠ¹ Δ → Gamma0Note
+  | _, FinDerivation.identity _ _ => 0
+  | _, FinDerivation.verum => 0
+  | _, @FinDerivation.cut _ φ _ _ dp dn =>
       max (OrdinalNotation.succ (rank φ)) (max (cutRankR dp) (cutRankR dn))
-  | _, Derivation.contraction d _ => cutRankR d
-  | _, Derivation.or d => cutRankR d
-  | _, Derivation.and dp dq => max (cutRankR dp) (cutRankR dq)
-  | _, Derivation.all d => cutRankR d
-  | _, Derivation.exs d => cutRankR d
+  | _, FinDerivation.contraction d _ => cutRankR d
+  | _, FinDerivation.or d => cutRankR d
+  | _, FinDerivation.and dp dq => max (cutRankR dp) (cutRankR dq)
+  | _, FinDerivation.all d => cutRankR d
+  | _, FinDerivation.exs d => cutRankR d
 
 @[simp] theorem cutRankR_identity {k : ℕ} (r : LRA.Rel k) (v) :
-    cutRankR (Derivation.identity r v) = 0 := rfl
+    cutRankR (FinDerivation.identity r v) = 0 := rfl
 
 @[simp] theorem cutRankR_verum :
-    cutRankR (Derivation.verum : ⊢ᴸᴷ¹ ([⊤] : Sequent LRA)) = 0 := rfl
+    cutRankR (FinDerivation.verum : ⊢ᶠ¹ ([⊤] : Sequent LRA)) = 0 := rfl
 
 @[simp] theorem cutRankR_cut {φ : Proposition LRA} {Γ Δ : Sequent LRA}
-    (dp : ⊢ᴸᴷ¹ φ :: Γ) (dn : ⊢ᴸᴷ¹ ∼φ :: Δ) :
+    (dp : ⊢ᶠ¹ φ :: Γ) (dn : ⊢ᶠ¹ ∼φ :: Δ) :
     cutRankR (dp.cut dn)
       = max (OrdinalNotation.succ (rank φ)) (max (cutRankR dp) (cutRankR dn)) := rfl
 
-@[simp] theorem cutRankR_contraction {Δ Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ) (ss : Δ ⊆ Γ) :
+@[simp] theorem cutRankR_contraction {Δ Γ : Sequent LRA} (d : ⊢ᶠ¹ Δ) (ss : Δ ⊆ Γ) :
     cutRankR (d.contraction ss) = cutRankR d := rfl
 
 @[simp] theorem cutRankR_or {φ ψ : Proposition LRA} {Γ : Sequent LRA}
-    (d : ⊢ᴸᴷ¹ φ :: ψ :: Γ) : cutRankR d.or = cutRankR d := rfl
+    (d : ⊢ᶠ¹ φ :: ψ :: Γ) : cutRankR d.or = cutRankR d := rfl
 
 @[simp] theorem cutRankR_and {φ ψ : Proposition LRA} {Γ : Sequent LRA}
-    (dp : ⊢ᴸᴷ¹ φ :: Γ) (dq : ⊢ᴸᴷ¹ ψ :: Γ) :
+    (dp : ⊢ᶠ¹ φ :: Γ) (dq : ⊢ᶠ¹ ψ :: Γ) :
     cutRankR (dp.and dq) = max (cutRankR dp) (cutRankR dq) := rfl
 
 @[simp] theorem cutRankR_all {φ : Semiproposition LRA 1} {Γ : Sequent LRA}
-    (d : ⊢ᴸᴷ¹ Rewriting.free φ :: Γ⁺) : cutRankR d.all = cutRankR d := rfl
+    (d : ⊢ᶠ¹ Rewriting.free φ :: Γˡ⁺) : cutRankR d.all = cutRankR d := rfl
 
 @[simp] theorem cutRankR_exs {φ : Semiproposition LRA 1} {t : SyntacticTerm LRA}
-    {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ φ/[t] :: Γ) : cutRankR d.exs = cutRankR d := rfl
+    {Γ : Sequent LRA} (d : ⊢ᶠ¹ φ/[t] :: Γ) : cutRankR d.exs = cutRankR d := rfl
 
 /-- **Every cut formula's rank is strictly below the cut rank** — the side
 condition `OmegaDerivableR.cut` demands, discharged once here instead of at every
 replayed cut. -/
 theorem rank_lt_cutRankR_cut {φ : Proposition LRA} {Γ Δ : Sequent LRA}
-    (dp : ⊢ᴸᴷ¹ φ :: Γ) (dn : ⊢ᴸᴷ¹ ∼φ :: Δ) : rank φ < cutRankR (dp.cut dn) := by
+    (dp : ⊢ᶠ¹ φ :: Γ) (dn : ⊢ᶠ¹ ∼φ :: Δ) : rank φ < cutRankR (dp.cut dn) := by
   rw [cutRankR_cut]
   exact lt_of_lt_of_le (OrdinalNotation.lt_succ _) (le_max_left _ _)
 
@@ -124,41 +126,41 @@ The cut rank is an ordinal and we must place it inside an `ω`-power block.  The
 measure that does it is the largest *level* of a cut formula. -/
 
 /-- **The largest level of a cut formula of `d`**, `0` if `d` is cut free. -/
-def cutLvl : {Δ : Sequent LRA} → ⊢ᴸᴷ¹ Δ → Lv
-  | _, Derivation.identity _ _ => 0
-  | _, Derivation.verum => 0
-  | _, @Derivation.cut _ φ _ _ dp dn => max (lvlOf φ) (max (cutLvl dp) (cutLvl dn))
-  | _, Derivation.contraction d _ => cutLvl d
-  | _, Derivation.or d => cutLvl d
-  | _, Derivation.and dp dq => max (cutLvl dp) (cutLvl dq)
-  | _, Derivation.all d => cutLvl d
-  | _, Derivation.exs d => cutLvl d
+def cutLvl : {Δ : Sequent LRA} → ⊢ᶠ¹ Δ → Lv
+  | _, FinDerivation.identity _ _ => 0
+  | _, FinDerivation.verum => 0
+  | _, @FinDerivation.cut _ φ _ _ dp dn => max (lvlOf φ) (max (cutLvl dp) (cutLvl dn))
+  | _, FinDerivation.contraction d _ => cutLvl d
+  | _, FinDerivation.or d => cutLvl d
+  | _, FinDerivation.and dp dq => max (cutLvl dp) (cutLvl dq)
+  | _, FinDerivation.all d => cutLvl d
+  | _, FinDerivation.exs d => cutLvl d
 
 @[simp] theorem cutLvl_identity {k : ℕ} (r : LRA.Rel k) (v) :
-    cutLvl (Derivation.identity r v) = 0 := rfl
+    cutLvl (FinDerivation.identity r v) = 0 := rfl
 
 @[simp] theorem cutLvl_verum :
-    cutLvl (Derivation.verum : ⊢ᴸᴷ¹ ([⊤] : Sequent LRA)) = 0 := rfl
+    cutLvl (FinDerivation.verum : ⊢ᶠ¹ ([⊤] : Sequent LRA)) = 0 := rfl
 
 @[simp] theorem cutLvl_cut {φ : Proposition LRA} {Γ Δ : Sequent LRA}
-    (dp : ⊢ᴸᴷ¹ φ :: Γ) (dn : ⊢ᴸᴷ¹ ∼φ :: Δ) :
+    (dp : ⊢ᶠ¹ φ :: Γ) (dn : ⊢ᶠ¹ ∼φ :: Δ) :
     cutLvl (dp.cut dn) = max (lvlOf φ) (max (cutLvl dp) (cutLvl dn)) := rfl
 
-@[simp] theorem cutLvl_contraction {Δ Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ) (ss : Δ ⊆ Γ) :
+@[simp] theorem cutLvl_contraction {Δ Γ : Sequent LRA} (d : ⊢ᶠ¹ Δ) (ss : Δ ⊆ Γ) :
     cutLvl (d.contraction ss) = cutLvl d := rfl
 
 @[simp] theorem cutLvl_or {φ ψ : Proposition LRA} {Γ : Sequent LRA}
-    (d : ⊢ᴸᴷ¹ φ :: ψ :: Γ) : cutLvl d.or = cutLvl d := rfl
+    (d : ⊢ᶠ¹ φ :: ψ :: Γ) : cutLvl d.or = cutLvl d := rfl
 
 @[simp] theorem cutLvl_and {φ ψ : Proposition LRA} {Γ : Sequent LRA}
-    (dp : ⊢ᴸᴷ¹ φ :: Γ) (dq : ⊢ᴸᴷ¹ ψ :: Γ) :
+    (dp : ⊢ᶠ¹ φ :: Γ) (dq : ⊢ᶠ¹ ψ :: Γ) :
     cutLvl (dp.and dq) = max (cutLvl dp) (cutLvl dq) := rfl
 
 @[simp] theorem cutLvl_all {φ : Semiproposition LRA 1} {Γ : Sequent LRA}
-    (d : ⊢ᴸᴷ¹ Rewriting.free φ :: Γ⁺) : cutLvl d.all = cutLvl d := rfl
+    (d : ⊢ᶠ¹ Rewriting.free φ :: Γˡ⁺) : cutLvl d.all = cutLvl d := rfl
 
 @[simp] theorem cutLvl_exs {φ : Semiproposition LRA 1} {t : SyntacticTerm LRA}
-    {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ φ/[t] :: Γ) : cutLvl d.exs = cutLvl d := rfl
+    {Γ : Sequent LRA} (d : ⊢ᶠ¹ φ/[t] :: Γ) : cutLvl d.exs = cutLvl d := rfl
 
 /-! ### Raising the level of a block -/
 
@@ -179,7 +181,7 @@ theorem blkTop_succ_pos (m : Lv) : (0 : Gamma0Note) < Gamma0Note.blkTop (Gamma0N
 at a `cut` node the cut formula's rank is below `blkTop (lvlOf φ ⊕ 1)` and a
 successor stays inside the block because the top of a block is a limit, and
 everything else is the induction hypothesis lifted along `blkTop` monotone. -/
-theorem cutRankR_lt_blkTop_succ : ∀ {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ),
+theorem cutRankR_lt_blkTop_succ : ∀ {Δ : Sequent LRA} (d : ⊢ᶠ¹ Δ),
     cutRankR d < Gamma0Note.blkTop (Gamma0Note.nadd (cutLvl d) 1) := by
   intro Δ d
   induction d with
@@ -202,19 +204,19 @@ theorem cutRankR_lt_blkTop_succ : ∀ {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ),
 
 /-- **The form predicative cut elimination consumes.**  If every cut of `d` is on
 a formula of level `< ν`, the whole derivation's cut rank is below `blkTop ν`. -/
-theorem cutRankR_lt_blkTop {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ) {ν : Lv}
+theorem cutRankR_lt_blkTop {Δ : Sequent LRA} (d : ⊢ᶠ¹ Δ) {ν : Lv}
     (h : cutLvl d < ν) : cutRankR d < Gamma0Note.blkTop ν :=
   lt_of_lt_of_le (cutRankR_lt_blkTop_succ d)
     (Gamma0Note.blkTop_mono (Gamma0Note.nadd_one_le_of_lt h))
 
 /-- **The finite form**: every cut of `d` below the finite level `ν` ⇒ cut rank
 below `ω · ν`. -/
-theorem cutRankR_lt_omegaMul {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ) {ν : ℕ}
+theorem cutRankR_lt_omegaMul {Δ : Sequent LRA} (d : ⊢ᶠ¹ Δ) {ν : ℕ}
     (h : cutLvl d < Gamma0Note.ofNat ν) : cutRankR d < omegaMul ν := by
   rw [← blkTop_ofNat]; exact cutRankR_lt_blkTop d h
 
 /-- The coarser `ω`-power form of `cutRankR_lt_omegaMul`. -/
-theorem cutRankR_lt_omegaPowLv {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ) {ν : ℕ}
+theorem cutRankR_lt_omegaPowLv {Δ : Sequent LRA} (d : ⊢ᶠ¹ Δ) {ν : ℕ}
     (h : cutLvl d < Gamma0Note.ofNat ν) : cutRankR d < omegaPowLv ν :=
   lt_of_lt_of_le (cutRankR_lt_omegaMul d h) (omegaMul_le_omegaPowLv ν)
 
@@ -248,24 +250,24 @@ does not have, so "closed" is not an invariant of the derivation but
 in `Gentzen/Embed.lean` — `all` becomes the ω-rule via `numSubstR_free` and
 `seqSubstR_shifts`, and `exs`'s arbitrary witness becomes a numeral via
 `evR_subst_ground`. -/
-theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
+theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᶠ¹ Γ) (f : ℕ → ℕ),
     OmegaDerivableR trueArithLitsR evInstR (cutRankR d) (ordN d : O)
       ((seqSubstR f Γ).map evR)
-  | _, Derivation.identity rl v, f => by
+  | _, FinDerivation.identity rl v, f => by
       simp only [seqSubstR_cons, seqSubstR_nil, List.map_cons, List.map_nil,
         Semiformula.rew_rel, Semiformula.rew_nrel, evR_rel, evR_nrel]
       exact OmegaDerivableR.identity _ _
-  | _, Derivation.verum, f => by
+  | _, FinDerivation.verum, f => by
       simpa using OmegaDerivableR.verum
-  | _, Derivation.contraction d ss, f =>
+  | _, FinDerivation.contraction d ss, f =>
       OmegaDerivableR.contraction (List.map_subset _ (seqSubstR_subset ss)) (replayR d f)
-  | _, Derivation.or d, f => by
+  | _, FinDerivation.or d, f => by
       have h := replayR d f
       simp only [seqSubstR_cons, List.map_cons] at h ⊢
       simp only [LogicalConnective.HomClass.map_or, evR_or]
       exact OmegaDerivableR.or (OrdinalNotation.lt_succ _)
         (h.mono_rank (le_of_eq (cutRankR_or d).symm))
-  | _, Derivation.and dp dq, f => by
+  | _, FinDerivation.and dp dq, f => by
       have hp := replayR dp f
       have hq := replayR dq f
       simp only [seqSubstR_cons, List.map_cons] at hp hq ⊢
@@ -275,7 +277,7 @@ theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
         (OrdinalNotation.lt_succ_of_le (OrdinalNotation.le_nadd_right _ _))
         (hp.mono_rank (by rw [cutRankR_and]; exact le_max_left _ _))
         (hq.mono_rank (by rw [cutRankR_and]; exact le_max_right _ _))
-  | _, Derivation.cut dp dn, f => by
+  | _, FinDerivation.cut dp dn, f => by
       have hp := replayR dp f
       have hn := replayR dn f
       simp only [seqSubstR_cons, List.map_cons] at hp hn
@@ -289,7 +291,7 @@ theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
       rw [cutRankR_cut, rank_evR]
       exact lt_of_le_of_lt (rank_numSubstR_le f _)
         (lt_of_lt_of_le (OrdinalNotation.lt_succ _) (le_max_left _ _))
-  | _, Derivation.all d, f => by
+  | _, FinDerivation.all d, f => by
       simp only [seqSubstR_cons, List.map_cons, numSubstR_all, evR_all]
       refine OmegaDerivableR.omegaRule (fun _ => (ordN d : O))
         (fun _ => OrdinalNotation.lt_succ _)
@@ -298,7 +300,7 @@ theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
       simp only [seqSubstR_cons, List.map_cons, seqSubstR_shifts, numSubstR_free] at h
       rw [evInstR_inst_ev]
       exact h.mono_rank (le_of_eq (cutRankR_all d).symm)
-  | _, Derivation.exs d, f => by
+  | _, FinDerivation.exs d, f => by
       rename_i φ t Γ
       have h := replayR d f
       simp only [seqSubstR_cons, List.map_cons, numSubstR_subst] at h
@@ -310,7 +312,7 @@ theorem replayR : ∀ {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
 
 /-- **The replay of a closed sequent** is a derivation of its evaluation, with no
 `seqSubstR` wrapper. -/
-theorem replayR_closed {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ)
+theorem replayR_closed {Γ : Sequent LRA} (d : ⊢ᶠ¹ Γ)
     (hc : ∀ φ ∈ Γ, Semiformula.freeVariables φ = ∅) :
     OmegaDerivableR trueArithLitsR evInstR (cutRankR d) (ordN d : O) (Γ.map evR) := by
   have h := replayR (O := O) d (fun _ => 0)
@@ -319,7 +321,7 @@ theorem replayR_closed {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ)
 /-- **The replay, with the cut rank placed inside a block.**  The form
 predicative cut elimination consumes: if every cut of `d` is on a formula of
 level `< ν`, the replayed derivation has cut rank below `blkTop ν`. -/
-theorem replayR_closed_of_level {Γ : Sequent LRA} (d : ⊢ᴸᴷ¹ Γ) {ν : Lv} (hν : cutLvl d < ν)
+theorem replayR_closed_of_level {Γ : Sequent LRA} (d : ⊢ᶠ¹ Γ) {ν : Lv} (hν : cutLvl d < ν)
     (hc : ∀ φ ∈ Γ, Semiformula.freeVariables φ = ∅) :
     OmegaDerivableR trueArithLitsR evInstR (Gamma0Note.blkTop ν) (ordN d : O) (Γ.map evR) :=
   (replayR_closed (O := O) d hc).mono_rank

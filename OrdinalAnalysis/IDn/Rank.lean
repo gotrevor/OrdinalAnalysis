@@ -199,7 +199,7 @@ end ThetaWNoteD
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### The rank -/
 

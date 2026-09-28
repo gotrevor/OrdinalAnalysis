@@ -80,6 +80,7 @@
   `rank_evR_emb_lt_of_mem_RAlt`.  `RAlt ν` is a strict subset of
   `RA {μ | μ < ν}` (`RAlt_subset_RA`).
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Guard
 
 set_option autoImplicit false
@@ -88,7 +89,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The per-code naming formulas
 
@@ -407,13 +408,13 @@ negations of finitely many axioms.  `Ramified/Embed.lean`'s `replayR` takes that
 derivation into `RA_∞`. -/
 theorem RA_provable_iff {Λ : Set Lv} {σ : Sentence LRA} :
     RA Λ ⊢ σ ↔ ∃ Γ : List (Sentence LRA), (∀ ψ ∈ Γ, ψ ∈ RA Λ) ∧
-      Nonempty (⊢ᴸᴷ¹ (σ : Proposition LRA) :: ∼Sequent.embed Γ) :=
-  Theory.Proof.provable_iff
+      Nonempty (⊢ᴸᴷˡ ((σ : Proposition LRA) :: ∼Sequent.embed Γ : Sequent LRA)) :=
+  Theory.Proof.provable_iff_list
 
 theorem RAlt_provable_iff {ν : Lv} {σ : Sentence LRA} :
     RAlt ν ⊢ σ ↔ ∃ Γ : List (Sentence LRA), (∀ ψ ∈ Γ, ψ ∈ RAlt ν) ∧
-      Nonempty (⊢ᴸᴷ¹ (σ : Proposition LRA) :: ∼Sequent.embed Γ) :=
-  Theory.Proof.provable_iff
+      Nonempty (⊢ᴸᴷˡ ((σ : Proposition LRA) :: ∼Sequent.embed Γ : Sequent LRA)) :=
+  Theory.Proof.provable_iff_list
 
 end Ramified
 

@@ -52,12 +52,13 @@
     larger notation systems; taking `O := NONote` gives back exactly what was
     here before, which is what the `Gentzen/` files still do.
 -/
-import Foundation.FirstOrder.Basic.CutFree
+import OrdinalAnalysis.Compat
+import Foundation.FirstOrder.LK.CutFree
 import OrdinalAnalysis.Ordinal.Notation
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 open ONote
 
 variable {L : Language}

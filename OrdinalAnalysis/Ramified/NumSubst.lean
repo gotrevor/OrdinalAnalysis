@@ -31,6 +31,7 @@
   the numerals are closed terms, which `free`, `shift` and `bShift` all leave
   alone.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Rank
 
 set_option autoImplicit false
@@ -39,9 +40,9 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 /-- `k̄` is a closed term. -/
 @[simp] theorem freeVariables_num (k : ℕ) : (num k).freeVariables = ∅ := by
@@ -145,10 +146,10 @@ theorem numSubstR_shift (f : ℕ → ℕ) (n : ℕ) (φ : Proposition LRA) :
   simpa [← comp_app] using smul_ext' <| by ext x <;> simp [Rew.comp_app]
 
 theorem seqSubstR_shifts (f : ℕ → ℕ) (n : ℕ) (Γ : Sequent LRA) :
-    seqSubstR (n :>ₙ f) Γ⁺ = seqSubstR f Γ := by
+    seqSubstR (n :>ₙ f) Γˡ⁺ = seqSubstR f Γ := by
   induction Γ with
   | nil => rfl
-  | cons φ Γ ih => simp [Rewriting.shifts_cons, numSubstR_shift, ih]
+  | cons φ Γ ih => simp [Rewriting.lshifts_cons, numSubstR_shift, ih]
 
 /-- **The `exs` premise.**  The witness becomes the closed term `numSubstR f t`. -/
 theorem numSubstR_subst (f : ℕ → ℕ) (t : SyntacticTerm LRA) (φ : Semiproposition LRA 1) :

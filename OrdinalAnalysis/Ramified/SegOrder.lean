@@ -23,9 +23,12 @@
   below `ε` is, verbatim, a derivation in `Below ε` — the two new (Pr)/(Pr⁻)
   cases are handled the same way every other unary rule is.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.CodedOrderR
 import OrdinalAnalysis.Ordinal.Veblen.VeblenBelow
 import OrdinalAnalysis.Ordinal.BelowDerivation
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -33,7 +36,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precN₁ precN₁_code_iff)

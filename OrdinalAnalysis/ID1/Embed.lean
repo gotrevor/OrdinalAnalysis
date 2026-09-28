@@ -6,7 +6,7 @@
   obtain `H ⊢^{Ω·2+n}_{Ω+m} ψ⁺` for any nice operator `H` and some `m, n ∈ ℕ`.
 
   **The proof, as in the source.**  A proof of `σ` from finitely many axioms `θ_i` of `ID₁`
-  is a finitary derivation of `σ, ¬θ_0, …, ¬θ_{k−1}` (Foundation's `⊢ᴸᴷ¹`, with cuts).  By
+  is a finitary derivation of `σ, ¬θ_0, …, ¬θ_{k−1}` (Foundation's `⊢ᴸᴷˡ`, with cuts).  By
   induction over it (`replay`) the calculus derives every numeral instance of the embedded
   sequent at height `Ω + h` and cut rank `Ω + m`: the identity axioms by Lemma 6.1 (the
   atoms have rank at most `Ω`), the propositional rules by clauses (V) and (W), `∀` by the
@@ -53,6 +53,8 @@
     `embedding_theorem`                **Theorem 6.5**
     `embedding_theorem_xfree`          the form `H ⊢^{Ω·2+n}_{Ω+m} σ⁺` for `X`-free `σ`
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.AxiomsID
 
 set_option autoImplicit false
@@ -61,34 +63,34 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
-open LO.FirstOrder.LawfulSyntacticRewriting
-open LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.Arithmetic
 
 /-! ### Height and cut complexity of a finitary derivation -/
 
 /-- The height of the replay of an `LK` derivation, above `Ω`. -/
-def hgt : {Γ : Sequent LXI} → ⊢ᴸᴷ¹ Γ → ℕ
-  | _, Derivation.identity _ _ => 0
-  | _, Derivation.verum => 0
-  | _, Derivation.cut dp dn => max (hgt dp) (hgt dn) + 1
-  | _, Derivation.contraction d _ => hgt d
-  | _, Derivation.or d => hgt d + 2
-  | _, Derivation.and dp dq => max (hgt dp) (hgt dq) + 1
-  | _, Derivation.all d => hgt d + 1
-  | _, Derivation.exs d => hgt d + 1
+def hgt : {Γ : Sequent LXI} → ⊢ᶠ¹ Γ → ℕ
+  | _, FinDerivation.identity _ _ => 0
+  | _, FinDerivation.verum => 0
+  | _, FinDerivation.cut dp dn => max (hgt dp) (hgt dn) + 1
+  | _, FinDerivation.contraction d _ => hgt d
+  | _, FinDerivation.or d => hgt d + 2
+  | _, FinDerivation.and dp dq => max (hgt dp) (hgt dq) + 1
+  | _, FinDerivation.all d => hgt d + 1
+  | _, FinDerivation.exs d => hgt d + 1
 
 /-- One more than the largest complexity of an embedded cut formula. -/
-def cutCx : {Γ : Sequent LXI} → ⊢ᴸᴷ¹ Γ → ℕ
-  | _, Derivation.identity _ _ => 0
-  | _, Derivation.verum => 0
-  | _, @Derivation.cut _ φ _ _ dp dn => max ((embK φ).complexity + 1) (max (cutCx dp) (cutCx dn))
-  | _, Derivation.contraction d _ => cutCx d
-  | _, Derivation.or d => cutCx d
-  | _, Derivation.and dp dq => max (cutCx dp) (cutCx dq)
-  | _, Derivation.all d => cutCx d
-  | _, Derivation.exs d => cutCx d
+def cutCx : {Γ : Sequent LXI} → ⊢ᶠ¹ Γ → ℕ
+  | _, FinDerivation.identity _ _ => 0
+  | _, FinDerivation.verum => 0
+  | _, @FinDerivation.cut _ φ _ _ dp dn => max ((embK φ).complexity + 1) (max (cutCx dp) (cutCx dn))
+  | _, FinDerivation.contraction d _ => cutCx d
+  | _, FinDerivation.or d => cutCx d
+  | _, FinDerivation.and dp dq => max (cutCx dp) (cutCx dq)
+  | _, FinDerivation.all d => cutCx d
+  | _, FinDerivation.exs d => cutCx d
 
 /-! ### The translation under an assignment -/
 
@@ -115,11 +117,11 @@ theorem tr_free (f : ℕ → ℕ) (n : ℕ) (φ : Semiproposition LXI 1) :
   rw [tr, embK_free, numSubst_free]
 
 theorem tr_shifts (f : ℕ → ℕ) (n : ℕ) (Γ : Sequent LXI) :
-    (Γ⁺).map (tr (n :>ₙ f)) = Γ.map (tr f) := by
+    (Γˡ⁺).map (tr (n :>ₙ f)) = Γ.map (tr f) := by
   induction Γ with
   | nil => rfl
   | cons φ Γ ih =>
-    rw [Rewriting.shifts_cons, List.map_cons, List.map_cons, ih, tr, tr, embK_shift,
+    rw [Rewriting.lshifts_cons, List.map_cons, List.map_cons, ih, tr, tr, embK_shift,
       numSubst_shift]
 
 theorem tr_subst (f : ℕ → ℕ) (φ : Semiproposition LXI 1) (t : SyntacticTerm LXI) :
@@ -194,9 +196,9 @@ theorem subset_cons_cons {α : Type*} {a : α} {Γ Δ : List α} (h : Γ ⊆ Δ)
 assignment `f` of numerals to the free variables, a derivation of the embedded sequent at
 height `Ω + h` and cut rank `Ω + m`, with `h`, `m` read off the derivation. -/
 theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
-    ∀ {Γ : Sequent LXI} (d : ⊢ᴸᴷ¹ Γ) (f : ℕ → ℕ),
+    ∀ {Γ : Sequent LXI} (d : ⊢ᶠ¹ Γ) (f : ℕ → ℕ),
       IDerivable A (OmegaPlus (cutCx d)) H (OmegaPlus (hgt d)) (Γ.map (tr f))
-  | _, Derivation.identity r v, f => by
+  | _, FinDerivation.identity r v, f => by
     have hc : (tr f (Semiformula.rel r v)).freeVariables = ∅ := freeVariables_tr f _
     have d := taut (A := A) hH (tr f (Semiformula.rel r v)) hc
     rw [ThetaNote.adjoin_eq_self hH.isOperator (params_tr_sub hH f _)] at d
@@ -208,14 +210,14 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
     show _ ≤ ThetaNote.nadd ThetaNote.Omega (ThetaNote.ofNat 0)
     rw [ThetaNote.ofNat_zero, ThetaNote.nadd_zero]
     exact omegaMul_rk_tr_atom_le f r v
-  | _, Derivation.verum, f => by
+  | _, FinDerivation.verum, f => by
     rw [List.map_cons, List.map_nil, tr_verum]
     exact .verum (OmegaPlus_mem hH _) (paramsList_cons_sub (by simp) (by simp))
       List.mem_cons_self
-  | _, Derivation.contraction d ss, f =>
+  | _, FinDerivation.contraction d ss, f =>
     (replay hX hH d f).weaken_seq hH.isOperator (List.map_subset _ ss)
       (paramsList_map_tr hH f _)
-  | _, @Derivation.or _ φ ψ Γ d, f => by
+  | _, @FinDerivation.or _ φ ψ Γ d, f => by
     have ih := replay hX hH d f
     rw [List.map_cons, List.map_cons] at ih
     have pD : params (tr f φ ⋎ tr f ψ) ⊆ H ∅ := by rw [← tr_or]; exact params_tr_sub hH f _
@@ -233,7 +235,7 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
             (params_tr_sub hH f φ) (paramsList_cons_sub pD pR))))
     exact .orL (OmegaPlus_mem hH _) (paramsList_cons_sub pD pR) List.mem_cons_self
       (OmegaPlus_lt (show hgt d + 1 < hgt d + 2 by omega)) e1
-  | _, @Derivation.and _ φ Γ ψ dp dq, f => by
+  | _, @FinDerivation.and _ φ Γ ψ dp dq, f => by
     have ihp := replay hX hH dp f
     have ihq := replay hX hH dq f
     rw [List.map_cons] at ihp ihq
@@ -250,7 +252,7 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
     · refine (ihq.mono_rank (OmegaPlus_le (le_max_right _ _))).weaken_seq hH.isOperator
         (subset_cons_cons (List.subset_cons_self _ _)) ?_
       exact paramsList_cons_sub (params_tr_sub hH f ψ) (paramsList_cons_sub pD pR)
-  | _, @Derivation.all _ Γ φ d, f => by
+  | _, @FinDerivation.all _ Γ φ d, f => by
     have pD : params (∀¹ (numSubst₁ f ▹ embK φ)) ⊆ H ∅ := by
       rw [← tr_all]; exact params_tr_sub hH f _
     rw [List.map_cons, tr_all]
@@ -264,7 +266,7 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
     refine paramsList_cons_sub ?_ (paramsList_cons_sub pD pR)
     rw [params_subst, params_rew]; exact (params_embK φ).trans
       (Set.singleton_subset_iff.mpr hH.Omega_mem)
-  | _, @Derivation.exs _ φ t Γ d, f => by
+  | _, @FinDerivation.exs _ φ t Γ d, f => by
     have ih := replay hX hH d f
     rw [List.map_cons, tr_subst] at ih
     have pD : params (∃¹ (numSubst₁ f ▹ embK φ)) ⊆ H ∅ := by
@@ -285,7 +287,7 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
     refine paramsList_cons_sub ?_ (paramsList_cons_sub pD pR)
     rw [params_subst, hφ', params_rew]
     exact (params_embK φ).trans (Set.singleton_subset_iff.mpr hH.Omega_mem)
-  | _, @Derivation.cut _ φ Γ Δ dp dn, f => by
+  | _, @FinDerivation.cut _ φ Γ Δ dp dn, f => by
     have ihp := replay hX hH dp f
     have ihn := replay hX hH dn f
     rw [List.map_cons] at ihp ihn
@@ -295,7 +297,7 @@ theorem replay (hX : XFreeL A) (hH : ThetaNote.Nice H) :
       rw [paramsList_append]
       exact Set.union_subset (paramsList_map_tr hH f Γ) (paramsList_map_tr hH f Δ)
     have hρ : ∀ {j : ℕ}, j ≤ cutCx dp ∨ j ≤ cutCx dn →
-        OmegaPlus j ≤ OmegaPlus (cutCx (Derivation.cut dp dn)) := by
+        OmegaPlus j ≤ OmegaPlus (cutCx (FinDerivation.cut dp dn)) := by
       intro j hj
       refine OmegaPlus_le ?_
       show j ≤ max ((embK φ).complexity + 1) (max (cutCx dp) (cutCx dn))
@@ -420,7 +422,8 @@ theorem embedding_theorem (hA : Positive A) (hX : XFreeL A) {σ : Sentence LXI}
       IDerivable A (ThetaNote.nadd ThetaNote.Omega (ThetaNote.ofNat m)) H
         (ThetaNote.nadd (ThetaNote.nadd ThetaNote.Omega ThetaNote.Omega) (ThetaNote.ofNat n))
         [(Rewriting.emb (embK σ) : Proposition LIinf)] := by
-  obtain ⟨Δ, hΔ, ⟨d⟩⟩ := Theory.Proof.provable_iff.mp h
+  obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp h
+  have d := FinDerivation.ofDerivation d₀ _ rfl
   have hax : ∀ θ ∈ Δ, AxDerivable A θ := fun θ hθ => ax_derivable_of_mem hA hX (hΔ θ hθ)
   obtain ⟨N, hN⟩ := axDerivable_list Δ hax
   obtain ⟨m0, hm0⟩ := cx_list Δ

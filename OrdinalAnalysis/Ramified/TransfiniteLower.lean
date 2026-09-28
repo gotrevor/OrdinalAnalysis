@@ -23,6 +23,7 @@
   `ω^{n+1}` and a height below `ε₀`, and the semiformal bound applies.  This bound
   is sound but, for the finitary theory, not claimed to be attained.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.LowerBound
 
 set_option autoImplicit false
@@ -69,7 +70,7 @@ theorem ofNat_lt_omegaPow_ofNat {n : ℕ} (hn : 1 ≤ n) (k : ℕ) :
   exact (Ordinal.natCast_lt_omega0 k).trans_le
     (Ordinal.left_le_opow _ (by exact_mod_cast (show 0 < n by omega)))
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### Cut elimination below `ω^{e+1}` -/
 

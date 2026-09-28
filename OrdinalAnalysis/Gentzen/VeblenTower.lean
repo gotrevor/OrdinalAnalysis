@@ -15,7 +15,12 @@
   that induction consumes: a zero-step tower is its base, and a successor-step tower factors
   through an ω-power edge, which is what `CodedVeblenJump.jumpB₁` climbs.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.VeblenEpsilon0UpperBound
+
+open scoped FFL.FirstOrder.Bounding
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -23,7 +28,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.VeblenTower
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -44,9 +49,12 @@ noncomputable def towerConstruction {V : Type*} [ORingStructure V]
     [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁] : PR.Construction V towerBlueprint where
   zero := fun v ↦ v 0
   succ := fun _ _ ih ↦ iomegaPow ih
-  zero_defined := .mk fun v ↦ by simp [towerBlueprint]
+  zero_defined := .mk fun v ↦ by
+    simp only [towerBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp
   succ_defined := .mk fun v ↦ by
-    simp [towerBlueprint, iomegaPow_defined.iff]
+    simp only [towerBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp [iomegaPow_defined.iff]
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
@@ -61,7 +69,7 @@ noncomputable def itower (c n : V) : V := towerConstruction.result ![c] n
   simp [itower, towerConstruction]
 
 /-- Result-first graph of the internal tower, argument order `(y, c, n)`. -/
-def _root_.LO.FirstOrder.Arithmetic.itowerDef : 𝚺₁.Semisentence 3 :=
+def _root_.FFL.FirstOrder.Arithmetic.itowerDef : 𝚺₁.Semisentence 3 :=
   towerBlueprint.resultDef.rew (Rew.subst ![#0, #2, #1])
 
 instance itower_defined : 𝚺₁-Function₂ (itower : V → V → V) via itowerDef := .mk
@@ -71,7 +79,7 @@ instance itower_definable : 𝚺₁-Function₂ (itower : V → V → V) :=
   itower_defined.to_definable
 
 instance itower_definable' (Γ) (m : ℕ) :
-    Γ-[m + 1]-Function₂ (itower : V → V → V) :=
+    Γᴬ-[m + 1]-Function₂ (itower : V → V → V) :=
   itower_definable.of_sigmaOne
 
 /-- The tower stays inside the normal forms. -/
@@ -92,7 +100,8 @@ def towerDef₁ : 𝚺₁.Semisentence 3 := .mkSigma
 
 @[simp] theorem eval_towerDef₁ (u k c : V) :
     towerDef₁.val.Evalb ![u, k, c] ↔ isNF₁ c ∧ u = itower c k := by
-  simp [towerDef₁, isNF₁, isNFb₁_defined.iff, itower_defined.iff, eq_comm]
+  simp only [towerDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, itower_defined.iff, eq_comm]
 
 /-- The tower graph in `LX`. -/
 def towerCode₁ : Semiformula LX ℕ 3 := liftCode towerDef₁

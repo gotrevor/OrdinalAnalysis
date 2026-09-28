@@ -13,7 +13,7 @@
 
   **The route.** A derivation `IDseq (WFormsOmega F) m ⊢ σ` maps, along `retr m hm`, to a
   derivation `Theory.lMap (retr m hm) (IDseq (WFormsOmega F) m) ⊢ Semiformula.lMap (retr m hm) σ`
-  (`theory_proof_lMap`, built from `Derivation.lMap` and `Theory.Proof.provable_iff` — the
+  (`theory_proof_lMap`, built from `LK.Derivation.lMap` and `Theory.Proof.provable_iff` — the
   translation-of-derivations lemma `Union.lean`'s docstring says is not built). Since
   `tiUptoSentence` never mentions any `I_j` (only `X` and arithmetic), it is fixed by *any*
   `mapHom` (`lMap_tiUptoSentence`). And every axiom of `IDseq (WFormsOmega F) m` translates,
@@ -46,6 +46,7 @@
     `idseq_lMap_subset`, `retraction_step`              the retraction, assembled
     `idseq_to_idn`                                      **`IDseqToIDn orderFormulas (Omega 0)`**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Theorem2
 import OrdinalAnalysis.IDn.UpperFormsFacts
 
@@ -55,7 +56,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Upper
 
 /-! ### The retraction `LXIω →ᵥ LXIn m` -/
@@ -534,22 +535,11 @@ theorem theory_proof_lMap {L₁ L₂ : Language} (Φ : L₁ →ᵥ L₂) {T : Th
   rw [Theory.Proof.provable_iff]
   refine ⟨Γ.map (Semiformula.lMap Φ), ?_, ⟨?_⟩⟩
   · rintro ψ hψ
-    obtain ⟨ψ', hψ', rfl⟩ := List.mem_map.mp hψ
+    obtain ⟨ψ', hψ', rfl⟩ := Multiset.mem_map.mp hψ
     exact ⟨ψ', hΓ ψ' hψ', rfl⟩
-  · have d' := Derivation.lMap Φ d
-    simp only [List.map_cons] at d'
-    have hemb : ∀ Γ' : List (Sentence L₁),
-        (Sequent.embed Γ').map (Semiformula.lMap Φ) = Sequent.embed (Γ'.map (Semiformula.lMap Φ)) := by
-      intro Γ'
-      simp only [Sequent.embed, List.map_map]
-      congr 1
-      funext ψ
-      exact Semiformula.lMap_emb ψ
-    have hneg : ((∼Sequent.embed Γ : Sequent L₁)).map (Semiformula.lMap Φ) =
-        (∼Sequent.embed (Γ.map (Semiformula.lMap Φ)) : Sequent L₂) := by
-      rw [List.map_tilde, hemb]
-    rw [Semiformula.lMap_emb, hneg] at d'
-    exact d'
+  · refine LK.Derivation.cast (LK.Derivation.lMap Φ d) ?_
+    simp [LK.Sequent.embed, Multiset.tilde_def, Multiset.map_map, Function.comp_def,
+      Semiformula.lMap_emb]
 
 /-! ### The retraction, assembled -/
 

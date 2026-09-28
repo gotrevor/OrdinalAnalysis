@@ -46,6 +46,7 @@
   `rw`/`simp`, so every such fact is proved by a `congrArg`/`show` argument
   instead.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.CodedOrderR
 
 set_option autoImplicit false
@@ -54,7 +55,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /- `numAtR` is a plain `def` (not an `abbrev`), and `numAtR_zero` — the fact
 that it agrees with `num` at level `0` — is a `simp` lemma pointed the wrong

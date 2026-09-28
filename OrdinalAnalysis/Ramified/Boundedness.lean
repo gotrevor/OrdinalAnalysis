@@ -40,6 +40,7 @@
     instance in scope, so `rank φ < (0 : Gamma0Note)` is refuted directly
     from `Gamma0Note.repr` landing in `Ordinal`, where `0` already is `⊥`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.LowerClass
 import OrdinalAnalysis.Gentzen.Boundedness
 
@@ -49,7 +50,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /- See `Ramified/LowerClass.lean`: `numAtR` is a plain `def`, and
 `numAtR_zero` is a `simp` lemma that fights every other fact about `numAtR`

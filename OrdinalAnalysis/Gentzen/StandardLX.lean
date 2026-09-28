@@ -50,6 +50,8 @@ import OrdinalAnalysis.Omega.Calculus
 import OrdinalAnalysis.Gentzen.Idiom
 import OrdinalAnalysis.Gentzen.Code
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option warn.classDefReducibility false
 
@@ -59,7 +61,7 @@ namespace Gentzen
 
 namespace StandardLX
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The standard model of `LX`
 

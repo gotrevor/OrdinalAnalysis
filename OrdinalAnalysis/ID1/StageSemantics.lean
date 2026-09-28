@@ -47,9 +47,12 @@
     `codeNote_mem_stageSet_acc`, `mem_stageSet_acc_of_fieldN`,
     `mem_stageSet_acc_of_not_code`                the stages of the accessible part
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Calculus
 import OrdinalAnalysis.ID1.Sound
 import OrdinalAnalysis.ID1.Internal.Standard
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -59,7 +62,7 @@ namespace InductiveDef
 
 namespace StageSem
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Structures reading the stages by given sets -/
 

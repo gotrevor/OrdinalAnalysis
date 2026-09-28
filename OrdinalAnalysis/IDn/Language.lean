@@ -60,7 +60,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Stages -/
 

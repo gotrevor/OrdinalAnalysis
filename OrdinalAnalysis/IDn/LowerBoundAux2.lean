@@ -25,7 +25,9 @@ import OrdinalAnalysis.IDn.LowerBoundAux
 import OrdinalAnalysis.IDn.StageSemantics
 import OrdinalAnalysis.IDn.UpperBound
 import OrdinalAnalysis.IDn.Internal.OrderBridge
-import Foundation.FirstOrder.Completeness
+import Foundation.FirstOrder.LK.Completeness
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -33,7 +35,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Upper
 open OrdinalAnalysis.IDn.Internal (code)
 

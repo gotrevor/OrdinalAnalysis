@@ -24,7 +24,10 @@
     Step 2 applied to `ψ_L(g) :≡ ∀u (Eps(u, g) → Acc_L(u))`, whose progressiveness
     is the finitary (EP_L), `epsProg_provable`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.DescentBetaAux3
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -32,7 +35,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)
 open OrdinalAnalysis.Gentzen.InternalEpsMonoCode (epsDef₁)
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)

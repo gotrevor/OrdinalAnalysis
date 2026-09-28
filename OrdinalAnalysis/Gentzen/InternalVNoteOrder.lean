@@ -21,6 +21,7 @@
   Everything is proved semantically in an arbitrary model of `IΣ₁`, by `𝚺₁`-order
   induction; nothing about ordinals is used.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVNote
 
 set_option autoImplicit false
@@ -29,7 +30,7 @@ set_option maxHeartbeats 2000000
 namespace OrdinalAnalysis.Gentzen.InternalVNoteOrder
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 

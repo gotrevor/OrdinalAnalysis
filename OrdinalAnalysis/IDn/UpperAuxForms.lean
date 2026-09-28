@@ -20,14 +20,17 @@
   `eval_DF`, `eval_wForm_zero`, `eval_wForm_succ`: the forms in any `LXIN ι`-structure whose
   arithmetic reduct is standard, with the predicates `I_j` read as that structure reads them.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.UpperAux
 import OrdinalAnalysis.IDn.Lift
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.IDn.Internal
 
 namespace OrderFormulas
@@ -49,11 +52,13 @@ section Eval
 variable {V : Type} [ORingStructure V]
 
 @[simp] theorem eval_fldWDef (x : V) : F.fldWDef.val.Evalb ![x] ↔ F.fld x := by
-  simp [fldWDef, fld]
+  simp only [fldWDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [fld]
 
 @[simp] theorem eval_precWDef (y x : V) :
     F.precWDef.val.Evalb ![y, x] ↔ F.fld y ∧ F.fld x ∧ F.lt y x := by
-  simp [precWDef, fld]
+  simp only [precWDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [fld]
   tauto
 
 end Eval

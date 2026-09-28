@@ -33,25 +33,29 @@
   of `exs₂` is therefore *not* used here — it earns its keep in the ordinal
   analysis, not in the semantics.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.LK
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 
 /-! ### The missing substitution lemmas -/
 
 section Substitution
 
-variable {L : FirstOrder.Language} {Ξ ξ : Type*} {M : Type*} [s : FirstOrder.Structure L M]
+variable {L : FirstOrder.Language} {Ξ ξ : Type*} {M : Type*} [s : FirstOrder.Tarski.Structure L M]
 
 /-- **First-order rewriting under the second-order `Eval`.**  Mirrors
-`LO.FirstOrder.Semiformula.eval_rew`; the two set-atom cases are new. -/
+`FFL.FirstOrder.Semiformula.eval_rew`; the two set-atom cases are new. -/
 theorem eval_rew {N : ℕ} {ξ₁ ξ₂ : Type*} {n₁ n₂ : ℕ} {𝕊 : Set (Set M)} {F : Ξ → Set M}
     {E : Fin N → Set M} {e₂ : Fin n₂ → M} {f₂ : ξ₂ → M}
     (ω : FirstOrder.Rew L ξ₁ n₁ ξ₂ n₂) (φ : Semiformula L Ξ ξ₁ N n₁) :
@@ -357,7 +361,7 @@ that; and it uses it in the cheapest possible way, since the witness
 
 namespace Derivation
 
-variable {M : Type*} [FirstOrder.Structure ℒₒᵣ M]
+variable {M : Type*} [FirstOrder.Tarski.Structure ℒₒᵣ M]
 
 set_option maxHeartbeats 1000000 in
 /-- **Soundness of the calculus in a full model**, for every assignment of the
@@ -458,7 +462,7 @@ end Derivation
 
 /-- **The full second-order model of arithmetic**: the standard model of `ℒₒᵣ`
 on `ℕ`, with *every* set of naturals a value of the set quantifiers. -/
-def stdSO : Struc₂ ℒₒᵣ := Struc₂.of (Set.univ : Set (Set ℕ)) ℒₒᵣ
+def stdSO : SecondOrder.Tarski.Struc ℒₒᵣ := SecondOrder.Tarski.Struc.of (Set.univ : Set (Set ℕ)) ℒₒᵣ
 
 @[simp] theorem stdSO_sets : stdSO.sets = (Set.univ : Set (Set ℕ)) := rfl
 
@@ -565,12 +569,12 @@ theorem eval_liftSentence {σ : FirstOrder.Sentence ℒₒᵣ}
 /-- The lifted equality axioms are true. -/
 theorem eval_eqAxioms {χ : Proposition ℒₒᵣ} (h : χ ∈ eqAxioms) : SOTrue χ := by
   obtain ⟨σ, hσ, rfl⟩ := h
-  exact eval_liftSentence (LO.FirstOrder.models_iff.mp (LO.FirstOrder.models_of_mem hσ))
+  exact eval_liftSentence (FFL.FirstOrder.models_iff.mp (FFL.FirstOrder.models_of_mem hσ))
 
 /-- The lifted `PA⁻` axioms are true. -/
 theorem eval_paMinus {χ : Proposition ℒₒᵣ} (h : χ ∈ paMinus) : SOTrue χ := by
   obtain ⟨σ, hσ, rfl⟩ := h
-  exact eval_liftSentence (LO.FirstOrder.models_iff.mp (LO.FirstOrder.models_of_mem hσ))
+  exact eval_liftSentence (FFL.FirstOrder.models_iff.mp (FFL.FirstOrder.models_of_mem hσ))
 
 /-- **Every axiom of `ACA₀` is true in the full ω-model.** -/
 theorem eval_ACA₀ {χ : Proposition ℒₒᵣ} (h : χ ∈ ACA₀) : SOTrue χ := by

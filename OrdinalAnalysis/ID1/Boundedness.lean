@@ -28,6 +28,7 @@
   Both results need of the operator only that it is an operator (monotone), for the
   premises of (V) at `¬I^{≺γ}`, which carry the operator `H[{γ}]`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Calculus
 
 set_option autoImplicit false
@@ -36,7 +37,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Bounding of stage atoms -/
 

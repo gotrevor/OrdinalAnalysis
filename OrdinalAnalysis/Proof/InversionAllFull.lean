@@ -1,9 +1,10 @@
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Proof.Substitution
 import OrdinalAnalysis.Proof.Inversion
 import OrdinalAnalysis.Proof.InversionAll
 
 namespace OrdinalAnalysis
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 variable {L : Language}
 
@@ -64,9 +65,9 @@ theorem inv_all {r : ℕ} :
           rcases hmem with h | h
           · exact absurd h hcase
           · exact h
-        have hshift : (∀¹ (Rewriting.shift ψ)) ∈ Γ'⁺ := by
-          have h0 : Rewriting.shift (∀¹ ψ) ∈ Γ'⁺ :=
-            LawfulSyntacticRewriting.mem_shifts_iff.mpr hmemΓ
+        have hshift : (∀¹ (Rewriting.shift ψ)) ∈ Γ'ˡ⁺ := by
+          have h0 : Rewriting.shift (∀¹ ψ) ∈ Γ'ˡ⁺ :=
+            LawfulSyntacticRewriting.mem_lshifts_iff.mpr hmemΓ
           simpa using h0
         have key := ih (ψ := Rewriting.shift ψ)
           (by simp only [List.mem_cons]; exact Or.inr hshift) (Rew.shift t)
@@ -77,10 +78,10 @@ theorem inv_all {r : ℕ} :
           rw [← TransitiveRewriting.comp_app, ← TransitiveRewriting.comp_app,
             Rew.shift_comp_subst1]
         rw [← hinst] at key
-        have step : BoundedDerivable r β (χ.free :: (ψ/[t] :: Γ')⁺) := by
+        have step : BoundedDerivable r β (χ.free :: (ψ/[t] :: Γ')ˡ⁺) := by
           refine .contraction ?_ key
           intro x hx
-          simp only [Rewriting.shifts_cons, List.mem_cons] at hx ⊢
+          simp only [Rewriting.lshifts_cons, List.mem_cons] at hx ⊢
           tauto
         refine .contraction ?_ (BoundedDerivable.all hlt step)
         intro x hx; simp only [List.mem_cons] at hx ⊢; tauto

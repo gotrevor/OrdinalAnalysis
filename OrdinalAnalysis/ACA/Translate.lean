@@ -24,16 +24,19 @@
   `Toolkit.lean`'s `specSets` — which is exactly `subst₁_toSOAtB` below.
   `toSOAt := toSOAtB (N := 0)` keeps every earlier use unchanged.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.Toolkit
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX XRel Xat toLX paLX)
 
 /-! ### Erasing the fresh predicate from a term
@@ -551,7 +554,7 @@ parameter `ψ`.  Every rule maps to its namesake; only `cut` (Foundation
 concatenates the two contexts, ours shares them) and `identity` (Foundation's
 is atomic, ours is general) need anything beyond the commutation lemmas. -/
 def translate (ψ : Semiformula ℒₒᵣ ℕ Empty 0 1) :
-    {Γ : FirstOrder.Sequent LX} → FirstOrder.Derivation Γ → Derivation (Γ.map (toSOAt ψ))
+    {Γ : FirstOrder.Sequent LX} → OrdinalAnalysis.FinDerivation Γ → Derivation (Γ.map (toSOAt ψ))
   | _, .identity r v =>
       Derivation.cast
         (Derivation.identity (φ := toSOAt ψ (FirstOrder.Semiformula.rel r v))) (by simp)
@@ -568,7 +571,7 @@ def translate (ψ : Semiformula ℒₒᵣ ℕ Empty 0 1) :
   | _, .and dp dq => Derivation.and (translate ψ dp) (translate ψ dq)
   | _, .all (φ := φ) (Γ := Γ) d =>
       Derivation.all₁ (Derivation.cast (translate ψ d) (by
-        simp [FirstOrder.Rewriting.shifts, SecondOrder.Sequent.shift₀, List.map_map,
+        simp [FirstOrder.Rewriting.lshifts, SecondOrder.Sequent.shift₀, List.map_map,
           Function.comp_def]))
   | _, .exs (φ := φ) (t := t) (Γ := Γ) d =>
       Derivation.exs₁ (t := unTerm t) (Derivation.cast (translate ψ d) (by simp))

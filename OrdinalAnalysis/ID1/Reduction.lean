@@ -38,6 +38,7 @@
     `IDerivable.reduction`                       Exercise 7.1 (b)
     `IDerivable.reduction_cut`                   a cut of rank `ρ ≠ Ω` at the height `α + α`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.ReductionAux
 
 set_option autoImplicit false
@@ -46,7 +47,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### The shapes of the cut formula -/
 

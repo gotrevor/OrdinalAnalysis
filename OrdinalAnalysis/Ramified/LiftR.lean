@@ -37,13 +37,15 @@
 import OrdinalAnalysis.Ramified.Comprehension
 import OrdinalAnalysis.Ramified.AxiomsLogic
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The levels of the equality axioms -/
 

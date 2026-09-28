@@ -23,7 +23,10 @@
   instance of (T'') by its own course-of-values induction, with no normal-form hypothesis on
   the right-hand term, which breaks the circle.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalEpsCover
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -31,7 +34,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalEpsMono
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -50,7 +53,7 @@ noncomputable def epsFixIndic (g : V) : V :=
   if g ≠ 0 ∧ vcCoeff g = 1 ∧ vcTail g = 0 ∧
       icmp₁ (vcVadd 0 0 1 0) (vcFst g) = 0 then 1 else 0
 
-def _root_.LO.FirstOrder.Arithmetic.epsFixIndicDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.epsFixIndicDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y g. ∃ n, !vcCoeffDef n g ∧ ∃ t, !sndIdxDef t g ∧ ∃ a, !vcFstDef a g ∧
     ∃ o, !vcVaddDef o 0 0 1 0 ∧ ∃ c, !icmp₁Def c o a ∧
     ((g ≠ 0 ∧ n = 1 ∧ t = 0 ∧ c = 0 ∧ y = 1) ∨
@@ -58,7 +61,8 @@ def _root_.LO.FirstOrder.Arithmetic.epsFixIndicDef : 𝚺₁.Semisentence 2 := .
 
 instance epsFixIndic_defined :
     𝚺₁-Function₁ (epsFixIndic : V → V) via epsFixIndicDef := .mk fun v ↦ by
-  simp [epsFixIndicDef, epsFixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
+  simp only [epsFixIndicDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [epsFixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff,
     vcFst_defined.iff, vcVadd_defined.iff, icmp₁_defined.iff]
   by_cases h0 : v 1 = 0 <;> by_cases h1 : vcCoeff (v 1) = 1 <;>
     by_cases h2 : sndIdx (v 1) = 0 <;>
@@ -88,14 +92,15 @@ lemma epsFix_destruct {g : V} (h : epsFixIndic g = 1) :
 noncomputable def iepsilon (g : V) : V :=
   if epsFixIndic g = 1 then g else vcVadd (vcVadd 0 0 1 0) g 1 0
 
-def _root_.LO.FirstOrder.Arithmetic.iepsilonDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.iepsilonDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y g. ∃ q, !epsFixIndicDef q g ∧
     ((q = 1 ∧ y = g) ∨
       (q ≠ 1 ∧ ∃ o, !vcVaddDef o 0 0 1 0 ∧ !vcVaddDef y o g 1 0))”
 
 instance iepsilon_defined :
     𝚺₁-Function₁ (iepsilon : V → V) via iepsilonDef := .mk fun v ↦ by
-  simp [iepsilonDef, iepsilon, epsFixIndic_defined.iff, vcVadd_defined.iff]
+  simp only [iepsilonDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iepsilon, epsFixIndic_defined.iff, vcVadd_defined.iff]
   by_cases h : epsFixIndic (v 1) = 1 <;> simp [h]
 
 instance iepsilon_definable : 𝚺₁-Function₁ (iepsilon : V → V) :=

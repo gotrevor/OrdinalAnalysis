@@ -21,7 +21,10 @@
   * the totalised addition `safeIadd₁` and the unguarded finite iteration `safeIter₁`
     of `JumpArithmetic`, one notation system up.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVNoteOrder
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 set_option maxHeartbeats 2000000
@@ -29,7 +32,7 @@ set_option maxHeartbeats 2000000
 namespace OrdinalAnalysis.Gentzen.InternalVNoteJump
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -43,12 +46,13 @@ fixed point of `ω ^ ·`. -/
 noncomputable def fixIndic (c : V) : V :=
   if c ≠ 0 ∧ vcCoeff c = 1 ∧ vcTail c = 0 ∧ vcFst c ≠ 0 then 1 else 0
 
-def _root_.LO.FirstOrder.Arithmetic.fixIndicDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.fixIndicDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ n, !vcCoeffDef n c ∧ ∃ t, !sndIdxDef t c ∧ ∃ a, !vcFstDef a c ∧
     ((c ≠ 0 ∧ n = 1 ∧ t = 0 ∧ a ≠ 0 ∧ y = 1) ∨ ((c = 0 ∨ n ≠ 1 ∨ t ≠ 0 ∨ a = 0) ∧ y = 0))”
 
 instance fixIndic_defined : 𝚺₁-Function₁ (fixIndic : V → V) via fixIndicDef := .mk fun v ↦ by
-  simp [fixIndicDef, fixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff, vcFst_defined.iff]
+  simp only [fixIndicDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [fixIndic, vcCoeff_defined.iff, vcTail, sndIdx_defined.iff, vcFst_defined.iff]
   by_cases h0 : v 1 = 0 <;> by_cases h1 : vcCoeff (v 1) = 1 <;>
     by_cases h2 : sndIdx (v 1) = 0 <;> by_cases h3 : vcFst (v 1) = 0 <;> simp [h0, h1, h2, h3]
 
@@ -87,29 +91,32 @@ noncomputable def iomegaPow (c : V) : V := vcVadd (ipowFst c) (ipowSnd c) 1 0
 /-- **The code of `ω ^ c · k`.** -/
 noncomputable def omegaBlock (c k : V) : V := vcVadd (ipowFst c) (ipowSnd c) k 0
 
-def _root_.LO.FirstOrder.Arithmetic.ipowFstDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.ipowFstDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ f, !fixIndicDef f c ∧ ((f = 1 ∧ !vcFstDef y c) ∨ (f ≠ 1 ∧ y = 0))”
 
 instance ipowFst_defined : 𝚺₁-Function₁ (ipowFst : V → V) via ipowFstDef := .mk fun v ↦ by
-  simp [ipowFstDef, ipowFst, fixIndic_defined.iff, vcFst_defined.iff]
+  simp only [ipowFstDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ipowFst, fixIndic_defined.iff, vcFst_defined.iff]
   by_cases h : fixIndic (v 1) = 1 <;> simp [h]
 
 instance ipowFst_definable : 𝚺₁-Function₁ (ipowFst : V → V) := ipowFst_defined.to_definable
 
-def _root_.LO.FirstOrder.Arithmetic.ipowSndDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.ipowSndDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ f, !fixIndicDef f c ∧ ((f = 1 ∧ !vcSndDef y c) ∨ (f ≠ 1 ∧ y = c))”
 
 instance ipowSnd_defined : 𝚺₁-Function₁ (ipowSnd : V → V) via ipowSndDef := .mk fun v ↦ by
-  simp [ipowSndDef, ipowSnd, fixIndic_defined.iff, vcSnd_defined.iff]
+  simp only [ipowSndDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [ipowSnd, fixIndic_defined.iff, vcSnd_defined.iff]
   by_cases h : fixIndic (v 1) = 1 <;> simp [h]
 
 instance ipowSnd_definable : 𝚺₁-Function₁ (ipowSnd : V → V) := ipowSnd_defined.to_definable
 
-def _root_.LO.FirstOrder.Arithmetic.iomegaPowDef : 𝚺₁.Semisentence 2 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.iomegaPowDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ p, !ipowFstDef p c ∧ ∃ q, !ipowSndDef q c ∧ !vcVaddDef y p q 1 0”
 
 instance iomegaPow_defined : 𝚺₁-Function₁ (iomegaPow : V → V) via iomegaPowDef := .mk fun v ↦ by
-  simp [iomegaPowDef, iomegaPow, ipowFst_defined.iff, ipowSnd_defined.iff, vcVadd_defined.iff]
+  simp only [iomegaPowDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iomegaPow, ipowFst_defined.iff, ipowSnd_defined.iff, vcVadd_defined.iff]
 
 instance iomegaPow_definable : 𝚺₁-Function₁ (iomegaPow : V → V) := iomegaPow_defined.to_definable
 
@@ -245,7 +252,7 @@ noncomputable def iadd₁Next (b c s : V) : V :=
     vcVadd (vcFst c) (vcSnd c) (vcCoeff c + vcCoeff b) (vcTail b)
   else vcVadd (vcFst c) (vcSnd c) (vcCoeff c) (znth s (vcTail c))
 
-def _root_.LO.FirstOrder.Arithmetic.iadd₁NextDef : 𝚺₁.Semisentence 4 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.iadd₁NextDef : 𝚺₁.Semisentence 4 := .mkSigma
   “y b c s.
     (c = 0 ∧ y = b)
   ∨ (c ≠ 0 ∧ b = 0 ∧ y = c)
@@ -259,7 +266,8 @@ def _root_.LO.FirstOrder.Arithmetic.iadd₁NextDef : 𝚺₁.Semisentence 4 := .
 
 instance iadd₁Next_defined : 𝚺₁-Function₃ (iadd₁Next : V → V → V → V) via iadd₁NextDef := .mk
   fun v ↦ by
-  simp [iadd₁NextDef, iadd₁Next, vcLead_defined.iff, vcFst_defined.iff, vcSnd_defined.iff,
+  simp only [iadd₁NextDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iadd₁Next, vcLead_defined.iff, vcFst_defined.iff, vcSnd_defined.iff,
     vcCoeff_defined.iff, vcTail, sndIdx_defined.iff, icmp₁_defined.iff, znth_defined.iff,
     vcVadd_defined.iff]
   by_cases hc : v 2 = 0
@@ -301,7 +309,7 @@ noncomputable def iadd₁Table (b n : V) : V := iadd₁Table.construction.result
 /-- **Internal Veblen-normal-form ordinal addition** `a + b` inside `V`. -/
 noncomputable def iadd₁ (a b : V) : V := znth (iadd₁Table b a) a
 
-def _root_.LO.FirstOrder.Arithmetic.iadd₁TableDef : 𝚺₁.Semisentence 3 :=
+def _root_.FFL.FirstOrder.Arithmetic.iadd₁TableDef : 𝚺₁.Semisentence 3 :=
   iadd₁Table.blueprint.resultDef.rew (Rew.subst ![#0, #2, #1])
 
 instance iadd₁Table_defined : 𝚺₁-Function₂ (iadd₁Table : V → V → V) via iadd₁TableDef := .mk
@@ -310,28 +318,29 @@ instance iadd₁Table_defined : 𝚺₁-Function₂ (iadd₁Table : V → V → 
 instance iadd₁Table_definable : 𝚺₁-Function₂ (iadd₁Table : V → V → V) :=
   iadd₁Table_defined.to_definable
 instance iadd₁Table_definable' (Γ) (m : ℕ) :
-    Γ-[m + 1]-Function₂ (iadd₁Table : V → V → V) :=
+    Γᴬ-[m + 1]-Function₂ (iadd₁Table : V → V → V) :=
   iadd₁Table_definable.of_sigmaOne
 
-def _root_.LO.FirstOrder.Arithmetic.iadd₁Def : 𝚺₁.Semisentence 3 := .mkSigma
+def _root_.FFL.FirstOrder.Arithmetic.iadd₁Def : 𝚺₁.Semisentence 3 := .mkSigma
   “y a b. ∃ t, !iadd₁TableDef t b a ∧ !znthDef y t a”
 
 instance iadd₁_defined : 𝚺₁-Function₂ (iadd₁ : V → V → V) via iadd₁Def := .mk fun v ↦ by
-  simp [iadd₁Def, iadd₁, iadd₁Table_defined.iff, znth_defined.iff]
+  simp only [iadd₁Def, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iadd₁, iadd₁Table_defined.iff, znth_defined.iff]
 
 instance iadd₁_definable : 𝚺₁-Function₂ (iadd₁ : V → V → V) := iadd₁_defined.to_definable
 instance iadd₁_definable' (Γ) (m : ℕ) :
-    Γ-[m + 1]-Function₂ (iadd₁ : V → V → V) :=
+    Γᴬ-[m + 1]-Function₂ (iadd₁ : V → V → V) :=
   iadd₁_definable.of_sigmaOne
 
 /-! ### Structural correctness of `iadd₁` -/
 
 private lemma def_iadd₁Table {k} (b : V) (i : Fin k) :
-    𝚺-[1].DefinableFunction (fun v : Fin k → V ↦ iadd₁Table b (v i)) :=
+    𝚺ᴬ-[1].DefinableFunction (fun v : Fin k → V ↦ iadd₁Table b (v i)) :=
   DefinableFunction₂.comp (F := iadd₁Table) (DefinableFunction.const b) (DefinableFunction.var i)
 
 private lemma def_iadd₁ {k} (b : V) (i : Fin k) :
-    𝚺-[1].DefinableFunction (fun v : Fin k → V ↦ iadd₁ (v i) b) :=
+    𝚺ᴬ-[1].DefinableFunction (fun v : Fin k → V ↦ iadd₁ (v i) b) :=
   DefinableFunction₂.comp (F := iadd₁) (DefinableFunction.var i) (DefinableFunction.const b)
 
 @[simp] lemma iadd₁Table_seq (b n : V) : Seq (iadd₁Table b n) := by
@@ -355,7 +364,7 @@ lemma znth_iadd₁Table_succ {b n k : V} (hk : k < n + 1) :
 lemma znth_iadd₁Table_eq_iadd₁ (b : V) : ∀ N : V, ∀ k ≤ N, znth (iadd₁Table b N) k = iadd₁ k b := by
   intro N
   induction N using ISigma1.sigma1_succ_induction
-  · refine Definable.ball_le (by definability) ?_
+  · refine Definable.arithmetic_ball_le (by definability) ?_
     exact Definable.comp₂
       (DefinableFunction₂.comp (F := znth) (def_iadd₁Table b 1) (DefinableFunction.var 0))
       (def_iadd₁ b 0)
@@ -794,7 +803,8 @@ def safeIadd₁Def : 𝚺₁.Semisentence 3 := .mkSigma
 
 instance safeIadd₁_defined : 𝚺₁-Function₂ (safeIadd₁ : V → V → V) via safeIadd₁Def :=
   .mk fun v ↦ by
-  simp [safeIadd₁Def, safeIadd₁, isNF₁, isNFb₁_defined.iff, iadd₁_defined.iff]
+  simp only [safeIadd₁Def, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [safeIadd₁, isNF₁, isNFb₁_defined.iff, iadd₁_defined.iff]
   by_cases h : isNFb₁ (v 1) = 1 <;> simp [h]
 
 instance safeIadd₁_definable : 𝚺₁-Function₂ (safeIadd₁ : V → V → V) :=
@@ -817,9 +827,12 @@ noncomputable def safeIter₁Construction {V : Type*} [ORingStructure V]
     [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁] : PR.Construction V safeIter₁Blueprint where
   zero := fun v ↦ v 0
   succ := fun v _ ih ↦ safeIadd₁ ih (v 1)
-  zero_defined := .mk fun v ↦ by simp [safeIter₁Blueprint]
+  zero_defined := .mk fun v ↦ by
+    simp only [safeIter₁Blueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp
   succ_defined := .mk fun v ↦ by
-    simp [safeIter₁Blueprint, safeIadd₁_defined.iff]
+    simp only [safeIter₁Blueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp [safeIadd₁_defined.iff]
 
 /-- Result-first graph of `k` successive safe additions of `w` to `b`. -/
 def safeIter₁Def : 𝚺₁.Semisentence 4 :=

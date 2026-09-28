@@ -17,6 +17,7 @@
   is a normal form — which is exactly what the syntactic fixed-point test of
   `VNote.repr_lt_veblen_of_test` / `VNote.veblen_repr_eq_of_test` is for.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalVNote
 import OrdinalAnalysis.Gentzen.NotationBridge
 import OrdinalAnalysis.Ordinal.Veblen.Gamma0Note
@@ -27,7 +28,7 @@ set_option maxHeartbeats 2000000
 namespace OrdinalAnalysis.Gentzen.VNoteBridge
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.NotationBridge (orderingCode thenV_orderingCode cmpV_natCast)

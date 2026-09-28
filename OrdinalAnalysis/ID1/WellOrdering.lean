@@ -37,9 +37,12 @@
     `ξ ∈ M` with `ξ ≺ α`, then `ϑα ∈ W` (`W_theta`), by induction on the codes below `ϑα`.
   * Hence `ϑ(τ_n) ∈ W` for every standard `n` (`W_theta_tau`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Lift
 import OrdinalAnalysis.ID1.Internal.JumpList
 import OrdinalAnalysis.ID1.Internal.ArithE
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -49,7 +52,7 @@ namespace InductiveDef
 
 namespace WellOrdering
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.ID1.Internal OrdinalAnalysis.InductiveDef.Lift
 
 /-! ### Definability in `LXI` -/

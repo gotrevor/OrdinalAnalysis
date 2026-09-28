@@ -6,11 +6,12 @@
   single rule does the work of weakening, contraction and exchange at once, and
   it does not raise the ordinal index.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Proof.Bounded
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 open ONote
 
 variable {L : Language}

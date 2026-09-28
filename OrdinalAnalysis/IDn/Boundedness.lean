@@ -37,6 +37,7 @@
 
   Both results need of the operator only that it is an operator (monotone).
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Calculus
 
 set_option autoImplicit false
@@ -45,7 +46,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {n : ℕ}
 

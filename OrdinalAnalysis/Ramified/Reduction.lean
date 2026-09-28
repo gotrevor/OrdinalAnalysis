@@ -43,6 +43,7 @@
   `PredBound`, `Chain` and `cutElimination_chain` are restated over `Gamma0Note`
   rather than `NONote`; nothing about them changes.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Literals
 import OrdinalAnalysis.Ramified.ReductionProbe
 
@@ -52,7 +53,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 /-! ### Head mismatch
 

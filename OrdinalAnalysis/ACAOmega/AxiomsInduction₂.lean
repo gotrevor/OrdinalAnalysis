@@ -65,6 +65,8 @@
     `succInd₂`, `succInd₂_derivable` **the induction axiom**, height `ω ⊕ 2`
     `setInduction_derivable`         **`setInduction`**, height `ω ⊕ 3`
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACAOmega.AxiomsLogic₂
 import OrdinalAnalysis.Ordinal.Veblen.Instance
 
@@ -72,9 +74,9 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA
 open OrdinalAnalysis.ACAOmega.OmegaTruth₂
 

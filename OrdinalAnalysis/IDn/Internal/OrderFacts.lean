@@ -9,6 +9,7 @@
   `IDn/Internal/{Order,OrderT,OrderE,JumpList}.lean`, in every model of `IΣ₁`
   (`orderAxioms_coded`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.Internal.JumpList
 import OrdinalAnalysis.IDn.UpperAux
 
@@ -16,7 +17,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.ID1.Internal (bor band beq bor_eq_one band_eq_one beq_eq_one)
 
 /-- `x ≺ y` on codes. -/
@@ -27,10 +28,12 @@ section Model
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_thLtDef (x y : V) : thLtDef.val.Evalb ![x, y] ↔ iltb x y = 1 := by
-  simp [thLtDef, iltb_defined.iff, eq_comm]
+  simp only [thLtDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iltb_defined.iff, eq_comm]
 
 @[simp] theorem eval_isSLDef (s : V) : isSLDef.val.Evalb ![s] ↔ isSL s := by
-  simp [isSLDef, isSL, isDom, sumK_defined.iff, nfA_defined.iff, isDomb_defined.iff, eq_comm]
+  simp only [isSLDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isSL, isDom, sumK_defined.iff, nfA_defined.iff, isDomb_defined.iff, eq_comm]
 
 /-- U2's exponent list `Upper.itoL` is `expList`. -/
 theorem itoL_eq_expList (c : V) : Upper.itoL c = expList c := rfl

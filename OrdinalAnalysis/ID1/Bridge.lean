@@ -9,6 +9,7 @@
   (ii')) this gives, for a standard notation `a ≺ Ω`, a standard `n` with `⌜a⌝ ≺ ϑ(τ_n)`
   inside `V` (`exists_lt_theta_tau`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.WellOrdering
 import OrdinalAnalysis.Ordinal.Theta.HullCofinal
 
@@ -20,7 +21,7 @@ namespace InductiveDef
 
 namespace WellOrdering
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.ID1.Internal
 open ThetaNote (omegaTower)
 

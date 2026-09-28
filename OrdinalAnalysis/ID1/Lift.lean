@@ -26,9 +26,12 @@
   `N` itself (Foundation's `Language.Definable`); such a formula becomes an instance of the
   axiom schemes by numbering its finitely many free variables (`exists_nat_formula`).
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Theory
 import OrdinalAnalysis.ID1.Internal.Codes
-import Foundation.FirstOrder.Completeness
+import Foundation.FirstOrder.LK.Completeness
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -38,7 +41,7 @@ namespace InductiveDef
 
 namespace Lift
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### Arithmetically standard structures -/
 

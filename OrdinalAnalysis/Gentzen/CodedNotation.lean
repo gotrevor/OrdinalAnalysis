@@ -4,15 +4,18 @@
   language and only then transported to LX, so the fresh predicate cannot
   occur in the notation layer.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalONote
 import OrdinalAnalysis.Gentzen.JumpProgressive
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.CodedNotation
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 
 def nfDef : 𝚺₁.Semisentence 1 := .mkSigma
@@ -35,9 +38,12 @@ noncomputable def iterConstruction {V : Type*} [ORingStructure V]
     [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁] : PR.Construction V iterBlueprint where
   zero := fun v ↦ v 0
   succ := fun v _ ih ↦ iadd ih (v 1)
-  zero_defined := .mk fun v ↦ by simp [iterBlueprint]
+  zero_defined := .mk fun v ↦ by
+    simp only [iterBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp
   succ_defined := .mk fun v ↦ by
-    simp [iterBlueprint, iadd_defined.iff]
+    simp only [iterBlueprint, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+    simp [iadd_defined.iff]
 
 def rawIterDef : 𝚺₁.Semisentence 4 :=
   iterBlueprint.resultDef.rew (Rew.subst ![#0, #3, #1, #2])
@@ -61,19 +67,23 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
 
 @[simp] theorem eval_nfDef (x : V) :
     nfDef.val.Evalb ![x] ↔ isNF x := by
-  simp [nfDef, isNF, isNFb_defined.iff, eq_comm]
+  simp only [nfDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, eq_comm]
 
 @[simp] theorem eval_precDef (x y : V) :
     precDef.val.Evalb ![x, y] ↔ isNF x ∧ isNF y ∧ icmp x y = 0 := by
-  simp [precDef, isNF, isNFb_defined.iff, icmp_defined.iff, eq_comm]
+  simp only [precDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, icmp_defined.iff, eq_comm]
 
 @[simp] theorem eval_addDef (z x y : V) :
     addDef.val.Evalb ![z, x, y] ↔ isNF x ∧ z = iadd x y := by
-  simp [addDef, isNF, isNFb_defined.iff, iadd_defined.iff, eq_comm]
+  simp only [addDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, iadd_defined.iff, eq_comm]
 
 @[simp] theorem eval_omegaPowDef (z a : V) :
     omegaPowDef.val.Evalb ![z, a] ↔ isNF a ∧ z = ocOadd a 1 0 := by
-  simp [omegaPowDef, isNF, isNFb_defined.iff, ocOadd_defined.iff, eq_comm]
+  simp only [omegaPowDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, ocOadd_defined.iff, eq_comm]
 
 @[simp] theorem eval_rawIterDef (z b w k : V) :
     rawIterDef.val.Evalb ![z, b, w, k] ↔
@@ -84,7 +94,8 @@ variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
     iterDef.val.Evalb ![z, b, w, k] ↔
       isNF b ∧ isNF w ∧
         z = (iterConstruction (V := V)).result ![b, w] k := by
-  simp [iterDef, isNF, isNFb_defined.iff, eq_comm]
+  simp only [iterDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF, isNFb_defined.iff, eq_comm]
 
 /-! ### Transport from arithmetic PA to PA[X] -/
 

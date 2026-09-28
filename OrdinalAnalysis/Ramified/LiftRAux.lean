@@ -30,6 +30,8 @@ import OrdinalAnalysis.Ramified.LiftR
 import OrdinalAnalysis.Gentzen.ProgStep
 import OrdinalAnalysis.Gentzen.VeblenEpsilon0UpperBound
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 set_option linter.unusedSimpArgs false
 
@@ -37,7 +39,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen (LX paLX)
 open OrdinalAnalysis.Gentzen.CodedNotation (liftCode)
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)

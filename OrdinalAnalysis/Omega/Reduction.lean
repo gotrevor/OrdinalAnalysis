@@ -23,11 +23,12 @@
   `contraction` cannot, because it leaves the ordinal unchanged, so it is the
   one case that uses the structural hypothesis.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Omega.Calculus
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 variable {L : Language}
 variable {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]

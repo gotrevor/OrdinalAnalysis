@@ -20,13 +20,14 @@
   raising the bound — and branching rules take the natural sum rather than the
   maximum, which is what the reduction lemma consumes.
 -/
+import OrdinalAnalysis.FinLK
 import OrdinalAnalysis.Proof.CutElimination
 import OrdinalAnalysis.Proof.CutRank
 import OrdinalAnalysis.Ordinal.Notation
 
 namespace OrdinalAnalysis
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder OrdinalAnalysis.FinDerivation
 
 variable {L : Language}
 
@@ -44,40 +45,40 @@ what `BoundedDerivable` below forces, its index still being `NONote` — gives
 back exactly the old function, `OrdinalNotation.ofNat 0` being `(0 : NONote)`
 and `OrdinalNotation.succ`/`nadd` the `NONote` ones by definition. -/
 def ordN {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]
-    {Δ : Sequent L} : ⊢ᴸᴷ¹ Δ → O
-  | Derivation.identity _ _ => OrdinalNotation.ofNat 0
-  | Derivation.verum => OrdinalNotation.ofNat 0
-  | Derivation.contraction d _ => ordN d
-  | Derivation.or d => OrdinalNotation.succ (ordN d)
-  | Derivation.and dp dq => OrdinalNotation.succ (OrdinalNotation.nadd (ordN dp) (ordN dq))
-  | Derivation.all d => OrdinalNotation.succ (ordN d)
-  | Derivation.exs d => OrdinalNotation.succ (ordN d)
-  | Derivation.cut dp dn => OrdinalNotation.succ (OrdinalNotation.nadd (ordN dp) (ordN dn))
+    {Δ : Sequent L} : ⊢ᶠ¹ Δ → O
+  | FinDerivation.identity _ _ => OrdinalNotation.ofNat 0
+  | FinDerivation.verum => OrdinalNotation.ofNat 0
+  | FinDerivation.contraction d _ => ordN d
+  | FinDerivation.or d => OrdinalNotation.succ (ordN d)
+  | FinDerivation.and dp dq => OrdinalNotation.succ (OrdinalNotation.nadd (ordN dp) (ordN dq))
+  | FinDerivation.all d => OrdinalNotation.succ (ordN d)
+  | FinDerivation.exs d => OrdinalNotation.succ (ordN d)
+  | FinDerivation.cut dp dn => OrdinalNotation.succ (OrdinalNotation.nadd (ordN dp) (ordN dn))
 
 namespace BoundedDerivable
 
 /-- **Forwards.**  Every concrete derivation is an indexed one, at its own
 height and its own cut rank. -/
 theorem ofDerivation {Δ : Sequent L} :
-    ∀ d : ⊢ᴸᴷ¹ Δ, BoundedDerivable (cutRank d) (ordN d) Δ
-  | Derivation.identity rl v => .identity rl v
-  | Derivation.verum => .verum
-  | Derivation.contraction d ss => by
+    ∀ d : ⊢ᶠ¹ Δ, BoundedDerivable (cutRank d) (ordN d) Δ
+  | FinDerivation.identity rl v => .identity rl v
+  | FinDerivation.verum => .verum
+  | FinDerivation.contraction d ss => by
       exact .contraction ss (ofDerivation d)
-  | Derivation.or d => by
+  | FinDerivation.or d => by
       refine .or (NONote.lt_succ _) ?_
       simpa [cutRank] using ofDerivation d
-  | Derivation.and dp dq => by
+  | FinDerivation.and dp dq => by
       refine .and (NONote.lt_succ_of_le (NONote.le_nadd_left _ _))
         (NONote.lt_succ_of_le (NONote.le_nadd_right _ _)) ?_ ?_
       · exact (ofDerivation dp).mono_rank (by simp [cutRank])
       · exact (ofDerivation dq).mono_rank (by simp [cutRank])
-  | Derivation.all d => by
+  | FinDerivation.all d => by
       refine .all (NONote.lt_succ _) ?_
       simpa [cutRank] using ofDerivation d
-  | Derivation.exs d => by
+  | FinDerivation.exs d => by
       exact .exs _ (NONote.lt_succ _) (by simpa [cutRank] using ofDerivation d)
-  | Derivation.cut dp dn => by
+  | FinDerivation.cut dp dn => by
       refine .cut ?_ (NONote.lt_succ_of_le (NONote.le_nadd_left _ _))
         (NONote.lt_succ_of_le (NONote.le_nadd_right _ _))
         ((ofDerivation dp).mono_rank (by simp [cutRank]))
@@ -90,25 +91,49 @@ theorem ofDerivation {Δ : Sequent L} :
 This is what makes Foundation's semantics available: soundness, the standard
 model, and everything built on `Derivation` transfers without redevelopment. -/
 theorem toDerivation {r : ℕ} :
-    ∀ {α : NONote} {Γ : Sequent L}, BoundedDerivable r α Γ → Nonempty (⊢ᴸᴷ¹ Γ) := by
+    ∀ {α : NONote} {Γ : Sequent L}, BoundedDerivable r α Γ → Nonempty (⊢ᶠ¹ Γ) := by
   intro α Γ h
   induction h with
-  | identity rl v => exact ⟨Derivation.identity rl v⟩
-  | verum => exact ⟨Derivation.verum⟩
-  | or _ _ ih => exact ih.map Derivation.or
-  | and _ _ _ _ ihp ihq => exact ⟨Derivation.and ihp.some ihq.some⟩
-  | all _ _ ih => exact ih.map Derivation.all
-  | exs t _ _ ih => exact ih.map Derivation.exs
-  | contraction ss _ ih => exact ih.map (fun d => Derivation.contraction d ss)
-  | cut _ _ _ _ _ ihp ihn => exact ⟨Derivation.cut ihp.some ihn.some⟩
+  | identity rl v => exact ⟨FinDerivation.identity rl v⟩
+  | verum => exact ⟨FinDerivation.verum⟩
+  | or _ _ ih => exact ih.map FinDerivation.or
+  | and _ _ _ _ ihp ihq => exact ⟨FinDerivation.and ihp.some ihq.some⟩
+  | all _ _ ih => exact ih.map FinDerivation.all
+  | exs t _ _ ih => exact ih.map FinDerivation.exs
+  | contraction ss _ ih => exact ih.map (fun d => FinDerivation.contraction d ss)
+  | cut _ _ _ _ _ ihp ihn => exact ⟨FinDerivation.cut ihp.some ihn.some⟩
 
 /-- The headline corollary: every concrete derivation has a cut-free indexed
 counterpart, at a height bounded by an explicit tower of `ω`-powers over its
 own height — and that bound is below `ε₀`, because `NONote` is the type of
 notations below `ε₀`. -/
-theorem cutFree_of_derivation {Δ : Sequent L} (d : ⊢ᴸᴷ¹ Δ) :
+theorem cutFree_of_derivation {Δ : Sequent L} (d : ⊢ᶠ¹ Δ) :
     BoundedDerivable 0 (NONote.omegaTower (cutRank d) (ordN d)) Δ :=
   cutElimination _ (ofDerivation d)
+
+/-! ### The same two directions, against upstream's calculus
+
+`FinDerivation` is the list-sequent calculus of `FinLK.lean`; upstream's
+`⊢ᴸᴷ¹` has multiset sequents.  `FinDerivation.ofDerivation` and
+`FinDerivation.toUpstream` translate, so these two wrappers are the statements
+above phrased directly for upstream's derivations. -/
+
+/-- **Forwards, from upstream.**  Every derivation of `Foundation`'s own `⊢ᴸᴷ¹`
+has a cut-free indexed counterpart below `ε₀`, on any list representing its end
+sequent. -/
+theorem cutFree_of_upstreamDerivation {Δ : FFL.FirstOrder.LK.Sequent L}
+    (d : ⊢ᴸᴷ¹ Δ) (Γ : Sequent L) (hΓ : (Γ : FFL.FirstOrder.LK.Sequent L) = Δ) :
+    BoundedDerivable 0
+      (NONote.omegaTower (cutRank (FinDerivation.ofDerivation d Γ hΓ))
+        (ordN (FinDerivation.ofDerivation d Γ hΓ))) Γ :=
+  cutFree_of_derivation _
+
+/-- **Backwards, into upstream.**  An indexed derivation yields a derivation of
+`Foundation`'s own `⊢ᴸᴷ¹`, which is what makes upstream's semantics apply. -/
+theorem toUpstreamDerivation {r : ℕ} {α : NONote} {Γ : Sequent L}
+    (h : BoundedDerivable r α Γ) :
+    Nonempty (⊢ᴸᴷ¹ ((Γ : Sequent L) : FFL.FirstOrder.LK.Sequent L)) :=
+  (toDerivation h).elim fun d => FinDerivation.toUpstream d
 
 end BoundedDerivable
 

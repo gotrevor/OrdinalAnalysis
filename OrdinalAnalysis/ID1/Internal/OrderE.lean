@@ -14,13 +14,16 @@
     `δ ∈ E(β)`;
   * `iinE_finite`: `E(c)` is a finite set of the model, bounded by `c`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.Order
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
@@ -243,7 +246,7 @@ lemma exists_iinE_le_of_le {a b g : V} (ha : isNF a) (hab : iltb a b = 1 ∨ a =
 /-- **`E(c)` is finite**: it is (the extension of) a unique finite set of the model; its
 elements are bounded by `c`. -/
 lemma iinE_finite (c : V) : ∃! s : V, ∀ g, g ∈ s ↔ iinE g c = 1 := by
-  have hP : 𝚺-[1]-Predicate (fun g : V => iinE g c = 1) := by definability
+  have hP : 𝚺ᴬ-[1]-Predicate (fun g : V => iinE g c = 1) := by definability
   exact finite_comprehension₁! hP ⟨c + 1, fun g hg => lt_succ_iff_le.mpr (le_of_iinE hg)⟩
 
 end OrdinalAnalysis.ID1.Internal

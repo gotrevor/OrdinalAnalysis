@@ -52,7 +52,10 @@
     `sim_subst_closed`, `sim_subst_numI`     `ψ(s) ~ ψ(t)` for closed `s`, `t` of equal value
     `IDnDerivable.replace`, `replace_head`   **term replacement**
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Calculus
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 
@@ -64,7 +67,7 @@ variable {n : ℕ}
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 section Numeral
 
@@ -297,7 +300,7 @@ end ThetaWNoteD
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### The replacement relation -/
 

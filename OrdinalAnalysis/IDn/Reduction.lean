@@ -1,5 +1,6 @@
 /- Source: OrdinalAnalysis\ID1\Reduction.lean (one-level `Omega`/`Stage` generalised to level `k : Fin n`). -/
 
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.IDn.Calculus
 import OrdinalAnalysis.IDn.ReductionAux
 import OrdinalAnalysis.Ordinal.ThetaW.HullCofinal
@@ -51,7 +52,7 @@ variable {n : ℕ}
 
 namespace IDn
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### The shapes of the cut formula -/
 

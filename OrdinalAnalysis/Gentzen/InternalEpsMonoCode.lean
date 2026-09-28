@@ -15,7 +15,10 @@
   while `0` is not — `epsFixIndic_eq_one_iff` requires `g ≠ 0`).  So the guard here, `fixDef₁`,
   drops the `e = 0` disjunct and states `Fix(e) :≡ NF(e) ∧ fixIndic(e) = 1` outright.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalEpsMono
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -23,7 +26,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalEpsMonoCode
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -42,7 +45,8 @@ def epsDef₁ : 𝚺₁.Semisentence 2 := .mkSigma
 
 @[simp] theorem eval_epsDef₁ (y g : V) :
     epsDef₁.val.Evalb ![y, g] ↔ isNF₁ g ∧ y = iepsilon g := by
-  simp [epsDef₁, isNF₁, isNFb₁_defined.iff, iepsilon_defined.iff, eq_comm]
+  simp only [epsDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, iepsilon_defined.iff, eq_comm]
 
 /-- The ε-graph, in `LX`. -/
 def epsCode₁ : Semiformula LX ℕ 2 := liftCode epsDef₁
@@ -67,7 +71,8 @@ def fixDef₁ : 𝚺₁.Semisentence 1 := .mkSigma
 
 @[simp] theorem eval_fixDef₁ (e : V) :
     fixDef₁.val.Evalb ![e] ↔ isNF₁ e ∧ fixIndic e = 1 := by
-  simp [fixDef₁, isNF₁, isNFb₁_defined.iff, fixIndic_defined.iff, eq_comm]
+  simp only [fixDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, fixIndic_defined.iff, eq_comm]
 
 /-- The guard, in `LX`. -/
 def fixCode₁ : Semiformula LX ℕ 1 := liftCode fixDef₁

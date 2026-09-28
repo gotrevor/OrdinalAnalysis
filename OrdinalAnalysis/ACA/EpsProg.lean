@@ -29,6 +29,8 @@
     (Prog) itself, whose second-order moves are one `gen₂`, one `exs₂` and a
     handful of `all₁`/`exs₁`/`cut`.
 -/
+import OrdinalAnalysis.CompatSO
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ACA.TowerInduction
 import OrdinalAnalysis.Gentzen.ProgStep
 
@@ -37,10 +39,10 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 open OrdinalAnalysis.Gentzen.CodedVeblenJump (addCode₁)

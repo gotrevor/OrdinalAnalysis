@@ -43,6 +43,7 @@
     `theta_omegaTower_lt`           the bound `ϑη ≺ ϑ(ω_k(Ω + 1))`
     `corollary_7_2`                 Corollary 7.2, from cut rank `Ω + m`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.ID1.Reduction
 
 set_option autoImplicit false
@@ -51,7 +52,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-! ### Exercise 7.1 (c) -/
 

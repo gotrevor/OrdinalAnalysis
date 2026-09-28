@@ -8,13 +8,14 @@
   below `ε₀` in `NONote` becomes a derivation in the Veblen notations, where
   the heights above `ε₀` live.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Omega.Calculus
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.OmegaDerivable
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 variable {L : Language}
 variable {O O' : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]

@@ -20,6 +20,8 @@
   the coding: `ε₀` enters only through the fact that every height produced is
   a normal-form notation, and those are exactly the ordinals below `ε₀`.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Gentzen.Embed
 import OrdinalAnalysis.Gentzen.AxiomsLogic
 import OrdinalAnalysis.Gentzen.AxiomsInduction
@@ -30,7 +32,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.LowerBound
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.LowerSyntax OrdinalAnalysis.Gentzen.Evaluate
 open OrdinalAnalysis.Gentzen.EvInst OrdinalAnalysis.Gentzen.Embed
@@ -87,7 +89,8 @@ theorem closed_neg_embed (Δ : List (Sentence LX)) :
 /-- **The lower bound.**  `PA[X]` does not prove `TI(≺)`. -/
 theorem gentzen_lower_bound : paLX ⊬ (TI precCode).univCl := by
   intro hprov
-  obtain ⟨Δ, hΔ, ⟨d⟩⟩ := Theory.Proof.provable_iff.mp hprov
+  obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp hprov
+  have d := FinDerivation.ofDerivation d₀ _ rfl
   have hclosed : ∀ φ ∈ (((TI precCode).univCl : Proposition LX) :: ∼Sequent.embed Δ),
       Semiformula.freeVariables φ = ∅ := by
     intro φ hφ

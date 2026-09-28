@@ -11,6 +11,7 @@
     `isucc_mc`: the ordinal sum, the natural sum, `ω^·`, `ω · ·`, the numerals, `1` and the
     successor of `ThetaNote`.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.Arith
 import OrdinalAnalysis.Ordinal.Theta.Arith
 
@@ -18,7 +19,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.ThetaTerm
 

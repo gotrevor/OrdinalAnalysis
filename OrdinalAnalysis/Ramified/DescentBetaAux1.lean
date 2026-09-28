@@ -9,6 +9,7 @@
     already the inverted sequent; every other rule is rebuilt around the
     inverted premises.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.InfTools
 
 set_option autoImplicit false
@@ -17,7 +18,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder
+open FFL FFL.FirstOrder
 
 /-- Close a goal `l₁ ⊆ l₂` between explicit lists. -/
 macro "subset_tac" : tactic =>

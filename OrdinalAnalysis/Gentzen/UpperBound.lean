@@ -6,10 +6,13 @@
   standard code.  The quantification over notations is deliberately in Lean's
   metalanguage: there is no single PA proof asserting all of these instances.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.OmegaTower
 import OrdinalAnalysis.Gentzen.NotationBridge
 import OrdinalAnalysis.Gentzen.Order
 import OrdinalAnalysis.Gentzen.Cofinality
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 800000
@@ -17,7 +20,7 @@ set_option maxHeartbeats 800000
 namespace OrdinalAnalysis.Gentzen.UpperBound
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.CodedNotation
 open OrdinalAnalysis.Gentzen.OmegaTower

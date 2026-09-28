@@ -26,7 +26,10 @@
   which no ε-number is), giving the promised base-`0` form: **every normal code below `ε₀` is
   below some `ω_n(1)`**.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.VeblenSuccStep
+
+open FFL.FirstOrder.Tarski
 
 set_option autoImplicit false
 set_option maxHeartbeats 1600000
@@ -34,7 +37,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalEpsCover
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder
@@ -217,7 +220,8 @@ def leqDef₁ : 𝚺₁.Semisentence 2 := .mkSigma
 @[simp] theorem eval_leqDef₁ (x y : V) :
     leqDef₁.val.Evalb ![x, y] ↔
       isNF₁ x ∧ isNF₁ y ∧ (icmp₁ x y = 0 ∨ x = y) := by
-  simp [leqDef₁, isNF₁, isNFb₁_defined.iff, icmp₁_defined.iff, eq_comm]
+  simp only [leqDef₁, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isNF₁, isNFb₁_defined.iff, icmp₁_defined.iff, eq_comm]
 
 /-- `≼₁`, in `LX`. -/
 def leqCode₁ : Semiformula LX ℕ 2 := liftCode leqDef₁

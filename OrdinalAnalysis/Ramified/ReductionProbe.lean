@@ -42,6 +42,7 @@
   give this for free — a set atom *is* a literal — and it is the exact analogue
   of `StandardLX.lean`'s `trueArithLits_xfree`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Calculus
 
 set_option autoImplicit false
@@ -50,7 +51,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 namespace OmegaDerivableR
 

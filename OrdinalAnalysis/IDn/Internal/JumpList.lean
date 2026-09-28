@@ -19,13 +19,16 @@
   * `isNF_isDom_tcCons_iff`: a sum code is a normal domain code iff it is a descending list and
     not a one-entry list with a principal entry.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.IDn.Internal.OrderE
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.ID1.Internal (bor band beq bor_eq_one band_eq_one beq_eq_one covVal
   covVal_unfold covValDef covVal_defined)
 
@@ -42,7 +45,8 @@ def rdPairDef : 𝚺₁.Semisentence 4 := .mkSigma
   “r S x y. ∃ i, !pairDef i x y ∧ !znthDef r S i”
 
 instance rdPair_defined : 𝚺₁-Function₃ (rdPair : V → V → V → V) via rdPairDef := .mk fun v ↦ by
-  simp [rdPairDef, rdPair, pair_defined.iff, znth_defined.iff]
+  simp only [rdPairDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [rdPair, pair_defined.iff, znth_defined.iff]
 
 /-- The concatenation of two lists, one step. -/
 noncomputable def appF (s t S : V) : V :=
@@ -55,7 +59,8 @@ def appFDef : 𝚺₁.Semisentence 4 := .mkSigma
         !tcConsDef r x w))”
 
 instance appF_defined : 𝚺₁-Function₃ (appF : V → V → V → V) via appFDef := .mk fun v ↦ by
-  simp [appFDef, appF, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
+  simp only [appFDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [appF, kind_defined.iff, tcHd_defined.iff, tcTl_defined.iff,
     rdPair_defined.iff, tcCons_defined.iff]
   by_cases h1 : kind (v 1) = 3 <;> simp [h1]
 
@@ -77,10 +82,11 @@ def iappDef : 𝚺₁.Semisentence 3 := .mkSigma
   “r s t. ∃ i, !pairDef i s t ∧ !(covValDef appStepDef) r i”
 
 instance iapp_defined : 𝚺₁-Function₂ (iapp : V → V → V) via iappDef := .mk fun v ↦ by
-  simp [iappDef, iapp, pair_defined.iff, (covVal_defined appStep appStepDef).iff]
+  simp only [iappDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [iapp, pair_defined.iff, (covVal_defined appStep appStepDef).iff]
 
 instance iapp_definable : 𝚺₁-Function₂ (iapp : V → V → V) := iapp_defined.to_definable
-instance iapp_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (iapp : V → V → V) :=
+instance iapp_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (iapp : V → V → V) :=
   iapp_definable.of_sigmaOne
 
 lemma iapp_unfold (s t : V) :
@@ -109,7 +115,7 @@ lemma iapp_ne_zero {t : V} (s : V) (ht : t ≠ 0) : iapp s t ≠ 0 := by
 /-- `s ++ ⟨y⟩`: the list `s` with the exponent `y` appended at the end. -/
 noncomputable def isnocL (s y : V) : V := iapp s (tcCons y 0)
 
-instance isnocL_definable (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (isnocL : V → V → V) := by
+instance isnocL_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (isnocL : V → V → V) := by
   unfold isnocL; definability
 
 @[simp] lemma isnocL_zero (y : V) : isnocL 0 y = tcCons y 0 := by simp [isnocL]
@@ -169,9 +175,10 @@ def isSLDef : 𝚺₁.Semisentence 1 := .mkSigma
   “s. !sumKDef 1 s ∧ !nfADef 1 s ∧ !isDombDef 1 s”
 
 instance isSL_defined : 𝚺₁-Predicate (isSL : V → Prop) via isSLDef := .mk fun v ↦ by
-  simp [isSLDef, isSL, isDom, sumK_defined.iff, nfA_defined.iff, isDomb_defined.iff, eq_comm]
+  simp only [isSLDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [isSL, isDom, sumK_defined.iff, nfA_defined.iff, isDomb_defined.iff, eq_comm]
 
-instance isSL_definable (Γ) (m : ℕ) : Γ-[m + 1]-Predicate (isSL : V → Prop) := by
+instance isSL_definable (Γ) (m : ℕ) : Γᴬ-[m + 1]-Predicate (isSL : V → Prop) := by
   unfold isSL; definability
 
 lemma isSL_zero : isSL (0 : V) := ⟨sumK_zero, nfA_zero, isDom_at_zero⟩
@@ -325,13 +332,14 @@ def expListDef : 𝚺₁.Semisentence 2 := .mkSigma
   “y c. ∃ k, !kindDef k c ∧ (((k = 1 ∨ k = 2) ∧ !tcConsDef y c 0) ∨ (k ≠ 1 ∧ k ≠ 2 ∧ y = c))”
 
 instance expList_defined : 𝚺₁-Function₁ (expList : V → V) via expListDef := .mk fun v ↦ by
-  simp [expListDef, expList, kind_defined.iff, tcCons_defined.iff]
+  simp only [expListDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [expList, kind_defined.iff, tcCons_defined.iff]
   by_cases h : kind (v 1) = 1 ∨ kind (v 1) = 2
   · rw [if_pos h]; tauto
   · rw [if_neg h]; rw [not_or] at h; tauto
 
 instance expList_definable : 𝚺₁-Function₁ (expList : V → V) := expList_defined.to_definable
-instance expList_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₁ (expList : V → V) :=
+instance expList_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₁ (expList : V → V) :=
   expList_definable.of_sigmaOne
 
 lemma expList_of_prin {c : V} (h : kind c = 1 ∨ kind c = 2) : expList c = tcCons c 0 := by

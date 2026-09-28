@@ -42,12 +42,14 @@
     language; `LRA = ℒₒᵣ + RALang` is a sum of two languages that already have
     it, so the instance is assembled, not proved.
   * **`cutRankR_eq_zero_of_isCutFree`.**  `cutRankR` only ever produces something
-    other than `0` at a `cut` node, and `Derivation.IsCutFree` rules those out.
+    other than `0` at a `cut` node, and `FinDerivation.IsCutFree` rules those out.
   * **`ordN_lt_epsilonNote`.**  `Proof/Bridge.lean`'s `ordN` produces, for a
     *finite* `LK`-derivation, a value built from finitely many
     `ofNat`/`succ`/`nadd` operations — so, read in `Gamma0Note`, it always sits
     below `ε₀`, `ε₀` being closed under exactly those three operations.
 -/
+import OrdinalAnalysis.FinLK
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.SegOrder
 import OrdinalAnalysis.Ramified.Embed
 import OrdinalAnalysis.Ramified.Axioms
@@ -55,7 +57,7 @@ import OrdinalAnalysis.Ramified.NamingAxioms
 import OrdinalAnalysis.Ramified.CutAxioms
 import OrdinalAnalysis.Ramified.BlockCut
 import OrdinalAnalysis.Ramified.Boundedness
-import Foundation.FirstOrder.Hauptsatz
+import Foundation.FirstOrder.LK.Hauptsatz
 
 set_option autoImplicit false
 
@@ -63,8 +65,8 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Derivation
-open LO.FirstOrder.Derivation.Canonical (hauptsatz)
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation
+open FFL.FirstOrder.LK.Derivation.Canonical (hauptsatz)
 open OrdinalAnalysis.Gamma0Note (veblenNote epsilonNote VeblenBelow)
 open OrdinalAnalysis.Ramified.OmegaDerivableR (Chain chain_nadd_ofNat veblenIter veblenIter_succ
   veblenIter_zero)
@@ -88,11 +90,11 @@ instance instDecidableEqLRA : Language.DecidableEq LRA :=
 /-! ### A cut-free derivation has cut rank `0`
 
 `cutRankR` only ever produces something other than `0` at a `cut` node
-(`cutRankR_cut`); `Derivation.IsCutFree` rules that node out entirely, so the
+(`cutRankR_cut`); `FinDerivation.IsCutFree` rules that node out entirely, so the
 induction is immediate at every other case. -/
 
 theorem cutRankR_eq_zero_of_isCutFree :
-    ∀ {Δ : Sequent LRA} {d : ⊢ᴸᴷ¹ Δ}, Derivation.IsCutFree d → cutRankR d = 0
+    ∀ {Δ : Sequent LRA} {d : ⊢ᶠ¹ Δ}, FinDerivation.IsCutFree d → cutRankR d = 0
   | _, _, .identity _ _ => rfl
   | _, _, .verum => rfl
   | _, _, .or h => by rw [cutRankR_or]; exact cutRankR_eq_zero_of_isCutFree h
@@ -115,7 +117,7 @@ private theorem succ_lt_epsilonNote_zero {x : Gamma0Note} (hx : x < epsilonNote 
   rw [OrdinalNotation.Gamma0Note_succ]
   exact Gamma0Note.nadd_lt_epsilon hx (Gamma0Note.one_lt_epsilon 0)
 
-theorem ordN_lt_epsilonNote : ∀ {Δ : Sequent LRA} (d : ⊢ᴸᴷ¹ Δ),
+theorem ordN_lt_epsilonNote : ∀ {Δ : Sequent LRA} (d : ⊢ᶠ¹ Δ),
     (ordN d : Gamma0Note) < epsilonNote 0 := by
   intro Δ d
   induction d with
@@ -349,8 +351,11 @@ private theorem replay_of_provable {T : Theory LRA} {σ : Sentence LRA} (h : T �
     ∃ (Δ : List (Sentence LRA)) (α : Gamma0Note), (∀ τ ∈ Δ, τ ∈ T) ∧ α < epsilonNote 0 ∧
       OmegaDerivableR trueArithLitsR evInstR 0 α
         (((σ : Proposition LRA) :: ∼Sequent.embed Δ).map evR) := by
-  obtain ⟨Δ, hΔ, ⟨d⟩⟩ := Theory.Proof.provable_iff.mp ⟨h⟩
-  obtain ⟨d', hcf⟩ := hauptsatz d
+  obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp ⟨h⟩
+  obtain ⟨d₁, hcf₁⟩ := hauptsatz d₀
+  -- upstream's cut-free derivation, translated into the list calculus
+  have d' := FinDerivation.ofDerivation d₁ _ rfl
+  have hcf : FinDerivation.IsCutFree d' := FinDerivation.isCutFree_ofDerivation hcf₁ _ rfl
   have hcr0 : cutRankR d' = 0 := cutRankR_eq_zero_of_isCutFree hcf
   have hclosed : ∀ φ ∈ ((σ : Proposition LRA) :: ∼Sequent.embed Δ), φ.freeVariables = ∅ := by
     intro φ hφ

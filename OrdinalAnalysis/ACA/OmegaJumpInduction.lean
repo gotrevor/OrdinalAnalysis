@@ -36,11 +36,13 @@
 -/
 import OrdinalAnalysis.ACA.OmegaJumpDepth
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA.ColumnTower
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 open OrdinalAnalysis.Gentzen.CodedVeblenJump (addCode₁ omegaPowCode₁)
@@ -429,10 +431,10 @@ end OrdinalAnalysis.ACA.ColumnTower
 
 namespace OrdinalAnalysis.ACA
 
-open LO LO.SecondOrder
-open LO.SecondOrder.Semiformula
-open LO.SecondOrder.Semiproposition
-open scoped LO.FirstOrder
+open FFL FFL.SecondOrder
+open FFL.SecondOrder.Semiformula
+open FFL.SecondOrder.Semiproposition
+open scoped FFL.FirstOrder
 open OrdinalAnalysis.Gentzen (LX XRel Xat toLX paLX)
 
 /-! ### The omega-jump axiom has no free variables

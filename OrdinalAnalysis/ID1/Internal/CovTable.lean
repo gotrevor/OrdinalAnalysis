@@ -16,14 +16,17 @@
 
   The second part provides `0/1`-valued boolean connectives with `Σ₀` graphs.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.Gentzen.InternalONote
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.ID1.Internal
 
 open Classical
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.Gentzen.InternalONote
 
 variable {V : Type*} [ORingStructure V] [V↓[ℒₒᵣ] ⊧* 𝗜𝚺₁]
@@ -78,17 +81,18 @@ def covValDef : 𝚺₁.Semisentence 2 := .mkSigma
 
 instance covVal_defined :
     𝚺₁-Function₁ (covVal step stepDef : V → V) via covValDef stepDef := .mk fun v ↦ by
-  simp [covValDef, covVal, (covTable_defined step stepDef).iff, znth_defined.iff]
+  simp only [covValDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [covVal, (covTable_defined step stepDef).iff, znth_defined.iff]
 
 instance covVal_definable : 𝚺₁-Function₁ (covVal step stepDef : V → V) :=
   (covVal_defined step stepDef).to_definable
 
 private lemma def_covTable {k} (i : Fin k) :
-    𝚺-[1].DefinableFunction (fun v : Fin k → V ↦ covTable step stepDef (v i)) :=
+    𝚺ᴬ-[1].DefinableFunction (fun v : Fin k → V ↦ covTable step stepDef (v i)) :=
   DefinableFunction₁.comp (F := covTable step stepDef) (DefinableFunction.var i)
 
 private lemma def_covVal {k} (i : Fin k) :
-    𝚺-[1].DefinableFunction (fun v : Fin k → V ↦ covVal step stepDef (v i)) :=
+    𝚺ᴬ-[1].DefinableFunction (fun v : Fin k → V ↦ covVal step stepDef (v i)) :=
   DefinableFunction₁.comp (F := covVal step stepDef) (DefinableFunction.var i)
 
 @[simp] lemma covTable_seq (n : V) : Seq (covTable step stepDef n) := by
@@ -114,7 +118,7 @@ lemma znth_covTable :
     ∀ N : V, ∀ k ≤ N, znth (covTable step stepDef N) k = covVal step stepDef k := by
   intro N
   induction N using ISigma1.sigma1_succ_induction
-  · refine Definable.ball_le (by definability) ?_
+  · refine Definable.arithmetic_ball_le (by definability) ?_
     exact Definable.comp₂
       (DefinableFunction₂.comp (F := znth) (def_covTable step stepDef 1) (DefinableFunction.var 0))
       (def_covVal step stepDef 0)
@@ -190,9 +194,9 @@ instance bor_definable : 𝚺₀-Function₂ (bor : V → V → V) := bor_define
 instance band_definable : 𝚺₀-Function₂ (band : V → V → V) := band_defined.to_definable
 instance beq_definable : 𝚺₀-Function₂ (beq : V → V → V) := beq_defined.to_definable
 
-instance bor_definable' (Γ) : Γ-Function₂ (bor : V → V → V) := bor_definable.of_zero
-instance band_definable' (Γ) : Γ-Function₂ (band : V → V → V) := band_definable.of_zero
-instance beq_definable' (Γ) : Γ-Function₂ (beq : V → V → V) := beq_definable.of_zero
+instance bor_definable' (Γ : HierarchySymbol) : Γ-Function₂ (bor : V → V → V) := bor_definable.of_zero
+instance band_definable' (Γ : HierarchySymbol) : Γ-Function₂ (band : V → V → V) := band_definable.of_zero
+instance beq_definable' (Γ : HierarchySymbol) : Γ-Function₂ (beq : V → V → V) := beq_definable.of_zero
 
 @[simp] lemma bor_eq_one {a b : V} : bor a b = 1 ↔ a = 1 ∨ b = 1 := by
   unfold bor; split_ifs with h <;> simp [h]

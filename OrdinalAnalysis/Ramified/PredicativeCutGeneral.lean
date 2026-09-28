@@ -51,6 +51,7 @@
     at level `e` (`descend`), at a cost `φ_e^m(α)` that `φ_ξ(β)` absorbs because
     `φ_ξ(β)` is a fixed point of `φ_e`.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.PredicativeCut
 import OrdinalAnalysis.Ordinal.Veblen.RankSegments
 
@@ -60,7 +61,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 open Gamma0Note
 
 namespace OmegaDerivableR

@@ -58,6 +58,7 @@
                                      a numeral assignment passes through `succInd`
     `induction_axiom_derivable`     **Step 3/4** — every induction axiom of `RA Λ`
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.AxiomsLogic
 
 set_option autoImplicit false
@@ -66,8 +67,8 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
-open LO.FirstOrder.Rewriting LO.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
 
 /-! ### General identity, ported from `Omega/Identity.lean`
 

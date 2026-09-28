@@ -53,6 +53,7 @@
   `StandardLX.lean`'s `trueArithLits_xfree`, which excludes `X`-literals from
   the axioms for the same kind of reason.
 -/
+import OrdinalAnalysis.Compat
 import OrdinalAnalysis.Ramified.Rank
 
 set_option autoImplicit false
@@ -61,7 +62,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
 
 /-! ### The instantiation -/
 

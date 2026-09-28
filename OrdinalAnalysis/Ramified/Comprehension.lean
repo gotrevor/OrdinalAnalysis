@@ -34,13 +34,15 @@
 import OrdinalAnalysis.Ramified.Theory
 import OrdinalAnalysis.Gentzen.CodedVeblenJump
 
+open FFL.FirstOrder.Tarski
+
 set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
 namespace Ramified
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
 
 /-! ### The arithmetical reduct of a model -/
 
@@ -313,7 +315,7 @@ theorem eval_compr {M : Type*} [s : Structure LRA M] (μ : Lv) (A : Semiformula 
     Semiformula.Eval (s := s) ![] f (compr μ A) ↔
       ∀ z : M, ∃ w : M, ∀ x : M, memM μ x w ↔ Semiformula.Eval (s := s) ![x] (fun _ => z) A := by
   simp only [compr, Semiformula.eval_all, Semiformula.eval_ex, LogicalConnective.HomClass.map_iff,
-    LO.LogicalConnective.Prop.iff_eq, eval_memAt, eval_inst3]
+    FFL.LogicalConnective.Prop.iff_eq, eval_memAt, eval_inst3]
   rfl
 
 /-- **Comprehension, for any theory with the arithmetical part and the two naming

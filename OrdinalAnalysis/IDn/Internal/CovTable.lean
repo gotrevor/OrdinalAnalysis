@@ -22,13 +22,16 @@
   (`le_pair_right` again, chained through the `+1` of `tcTheta`) give the two "leveled reads from
   a plain position" directions.
 -/
+import OrdinalAnalysis.CompatArith
 import OrdinalAnalysis.ID1.Internal.CovTable
+
+open scoped FFL.FirstOrder.Bounding
 
 set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Internal
 
-open LO LO.FirstOrder LO.FirstOrder.Arithmetic LO.FirstOrder.Arithmetic.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
 open OrdinalAnalysis.ID1.Internal (bor band beq covVal covTable covVal_unfold covVal_zero
   covVal_succ covValDef covTableDef)
 
@@ -47,15 +50,17 @@ def tagPDef : 𝚺₀.Semisentence 2 := .mkSigma “y c. y = c + c”
 def tagLDef : 𝚺₁.Semisentence 3 := .mkSigma “y i c. ∃ p, !pairDef p i c ∧ y = p + p + 1”
 
 instance tagP_defined : 𝚺₀-Function₁ (tagP : V → V) via tagPDef := .mk fun v ↦ by
-  simp [tagPDef, tagP]
+  simp only [tagPDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tagP]
 
 instance tagL_defined : 𝚺₁-Function₂ (tagL : V → V → V) via tagLDef := .mk fun v ↦ by
-  simp [tagLDef, tagL, pair_defined.iff]
+  simp only [tagLDef, Bounding.HierarchySymbol.Semiformula.val_mkSigma]
+  simp [tagL, pair_defined.iff]
 
 instance tagP_definable : 𝚺₀-Function₁ (tagP : V → V) := tagP_defined.to_definable
 instance tagL_definable : 𝚺₁-Function₂ (tagL : V → V → V) := tagL_defined.to_definable
-instance tagP_definable' (Γ) : Γ-Function₁ (tagP : V → V) := tagP_definable.of_zero
-instance tagL_definable' (Γ) (m : ℕ) : Γ-[m + 1]-Function₂ (tagL : V → V → V) :=
+instance tagP_definable' (Γ : HierarchySymbol) : Γ-Function₁ (tagP : V → V) := tagP_definable.of_zero
+instance tagL_definable' (Γ) (m : ℕ) : Γᴬ-[m + 1]-Function₂ (tagL : V → V → V) :=
   tagL_definable.of_sigmaOne
 
 /-! ### The basic order facts about the tags -/
