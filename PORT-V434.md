@@ -185,10 +185,33 @@ W9. **the *kernel* — not the elaborator — runs out of memory on a big deriva
      costs nothing at run time (each step is used exactly once).
      `goodAllTI` → `goodAllTI_{branchA,hmain,hor1,hor2,hor3,hall1,hall2,branchB}`;
      `epsProg` → `epsProg_{hGamma0,hStepC,hStepE,hStepG}`.
+   * **The real root cause, isolated to a single defeq.**  After the split, the one surviving
+     offender was `goodAllTI_branchB := goodAllTI_hall2`, i.e. the defeq
+     `∼(goodBSO s g) ≟ ∀¹∀¹ (goodBNegBody …)`.  `Semiformula.neg` is a *structural recursion*;
+     the kernel has no `smartUnfolding` and no equation lemmas, so it reduces the `brecOn`
+     directly and pushes `∼` through the entire concrete coded formula.  **General rule: never
+     let the kernel apply a recursive syntax function (`∼`, `toSOAt`/`toSOAtB`,
+     `Semiformula.Eval`) to a concrete code by `rfl`/`show`/`exact`.**  State the step as a
+     lemma at a *variable* subformula and `rw` with it — the same fix-shape 2 as for the
+     elaborator, now needed for the kernel:
+     - `neg_goodBSO` (`Semiformula.neg_exs₁` + `LogicalConnective.DeMorgan.and`) and the
+       DeMorgan rewrites in `epsProg_key` → `ACA/EpsProg.lean`.
+     - `toSOAt_all₂`/`toSOAt_all₃` (`toSOAtB_all` at a variable matrix) in place of `exact h`
+       → `ACA/OmegaJumpDepth.lean` (61.7 s of `type checking`, >14 GB, for two 20-line proofs).
+     - `eval_arR_model` (`Semiformula.eval_lMap`/`eval_emb` at a variable
+       `σ : ArithmeticSemisentence k`) in place of the same two steps taken at the concrete
+       `precDef₁` → `Ramified/UpperBound.lean:eval_precCode₁R_model`.  `Ramified/TowerR.lean`'s
+       `eval_arAt` is the same lemma one `Rew.subst` out and was always fine — because it is
+       stated at a variable.
+   * **`-D maxHeartbeats=<n>` is the second half of the probe.**  A kernel blow-up that aborts
+     the *process* (`libc++abi: … memory_exception … at 'interpreter'`, rc 134) prints nothing,
+     because the exception escapes; bounding heartbeats converts it into a recoverable, named
+     `(kernel) deterministic timeout` / `(kernel) excessive memory consumption` per declaration.
+     `-M 13000 -D maxHeartbeats=100000` pinned `Ramified/UpperBound.lean` to one line.
    * Corollary for the port as a whole: the v4.34 `Bounding`-generalised hierarchy makes every
      coded formula term bigger, so proofs that were comfortably inside the kernel on v4.33 are
-     not any more.  Expect this wherever a single theorem assembles a long `PSeq`/`Derivation`
-     chain over concrete codes.
+     not any more.  Expect this wherever a theorem closes a goal about a concrete code by
+     `rfl`/`exact`, or assembles a long `PSeq`/`Derivation` chain over concrete codes.
 
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.

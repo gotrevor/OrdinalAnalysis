@@ -179,10 +179,20 @@ theorem eval_Xat_model {n : ℕ} (t : Semiterm LRA ℕ n) (e : Fin n → M) (f :
   rw [h]
   rfl
 
+/-- **W9.**  `arR` evaluated, at a *variable* `σ`.  Doing the `eval_lMap`/`eval_emb`
+step directly at the concrete `precDef₁` makes the v4.34 kernel reduce
+`Semiformula.Eval` through the whole coded formula: >13 GB, exit 137 for the module.
+`Ramified/TowerR.lean`'s `eval_arAt` is the same lemma one `Rew.subst` further out. -/
+private theorem eval_arR_model {k : ℕ} (σ : ArithmeticSemisentence k) (v : Fin k → M)
+    (f : ℕ → M) :
+    Semiformula.Eval (s := s) v f (Semiformula.lMap toLRA (Rewriting.emb σ)) ↔ arEval σ v := by
+  rw [Semiformula.eval_lMap]
+  exact Semiformula.eval_emb (s := s.lMap toLRA) σ
+
 theorem eval_precCode₁R_model (y x : M) (f : ℕ → M) :
     Semiformula.Eval (s := s) ![y, x] f precCode₁R ↔ precM y x := by
-  rw [precCode₁R, Semiformula.eval_lMap]
-  exact Semiformula.eval_emb (s := s.lMap toLRA) _
+  rw [precCode₁R]
+  exact eval_arR_model _ ![y, x] f
 
 theorem eval_precAt_model (prec : Semiformula LRA ℕ 2) {n : ℕ} (y x : Semiterm LRA ℕ n)
     (e : Fin n → M) (f : ℕ → M) :
