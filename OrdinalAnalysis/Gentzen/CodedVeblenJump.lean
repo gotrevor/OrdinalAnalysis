@@ -204,13 +204,12 @@ private lemma lMap_succ_four :
     Semiterm.lMap toLX (‘(#1 + 1)’ : ArithmeticSemiterm ℕ 4) =
       (‘(#1 + 1)’ : Semiterm LX ℕ 4) := by
   simp [Semiterm.Operator.operator, Semiterm.Operator.numeral,
-    Semiterm.Operator.One.term_eq, Semiterm.Operator.Add.term_eq, toLX]
-  apply funext
+    Semiterm.Operator.One.term_eq, Semiterm.Operator.Add.term_eq, toLX,
+    Rew.func, Semiterm.lMap_func, Matrix.empty_eq, Function.comp_def]
+  funext x
+  revert x
   rw [Fin.forall_fin_two]
-  constructor
-  · simp [Function.comp_def]
-  · simp [Function.comp_def]
-    exact Matrix.empty_eq _
+  exact ⟨rfl, by simp [Semiterm.lMap_func, Matrix.empty_eq]⟩
 
 private lemma map_iterZero_body :
     Semiformula.lMap toLX
@@ -220,15 +219,25 @@ private lemma map_iterZero_body :
       (∀¹ ∀¹ ∀¹
         (∼(iterAt iterCode₁ #0 #2 #1 ((0 : ℕ) : Semiterm LX ℕ 3)) ⋎
           (“#0 = #2” : Semiformula LX ℕ 3))) := by
-  simp [arithIterAt, iterAt, iterCode₁, liftCode,
+  simp only [arithIterAt, iterAt, iterCode₁, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
     Semiformula.lMap_subst]
-  constructor
-  · rw [lMap_zero]
-  · simp [Semiformula.Operator.operator,
-      Semiformula.Operator.Eq.sentence_eq, toLX]
-    apply funext
+  have hw : (Semiterm.lMap toLX ∘ ![#0, #2, #1, ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 3)]) =
+      ![#0, #2, #1, ((0 : ℕ) : Semiterm LX ℕ 3)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+    | 3 => exact lMap_zero
+  have hq : Semiformula.lMap toLX (“#0 = #2” : Semiformula ℒₒᵣ ℕ 3) =
+      (“#0 = #2” : Semiformula LX ℕ 3) := by
+    simp [Semiformula.Operator.operator, Semiformula.Operator.Eq.sentence_eq, toLX]
+    funext x
+    revert x
     rw [Fin.forall_fin_two]
     exact ⟨rfl, rfl⟩
+  rw [hw, hq]
 
 private lemma map_iterSucc_body :
     Semiformula.lMap toLX
@@ -239,9 +248,25 @@ private lemma map_iterSucc_body :
         (∼(iterAt iterCode₁ #0 #3 #2 (‘(#1 + 1)’ : Semiterm LX ℕ 4)) ⋎
           (∃¹ (iterAt iterCode₁ #0 #4 #3 #2 ⋏
             addAt addCode₁ #1 #0 #3)))) := by
-  simp [arithIterAt, arithAddAt, iterAt, addAt, addCode₁,
-    iterCode₁, liftCode, Semiformula.lMap_subst]
-  rw [lMap_succ_four]
+  simp only [arithIterAt, arithAddAt, iterAt, addAt, addCode₁,
+    iterCode₁, liftCode, Semiformula.lMap_all, Semiformula.lMap_exs,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    LogicalConnective.HomClass.map_and, Semiformula.lMap_subst]
+  have h1 : (Semiterm.lMap toLX ∘ ![#0, #3, #2, (‘(#1 + 1)’ : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![#0, #3, #2, (‘(#1 + 1)’ : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+    | 3 => exact lMap_succ_four
+  have h2 : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 5), #4, #3, #2]) =
+      ![(#0 : Semiterm LX ℕ 5), #4, #3, #2] := by
+    funext x; match x with | 0 => rfl | 1 => rfl | 2 => rfl | 3 => rfl
+  have h3 : (Semiterm.lMap toLX ∘ ![(#1 : Semiterm ℒₒᵣ ℕ 5), #0, #3]) =
+      ![(#1 : Semiterm LX ℕ 5), #0, #3] := by
+    funext x; match x with | 0 => rfl | 1 => rfl | 2 => rfl
+  rw [h1, h2, h3]
 
 private lemma map_noPredZero_body :
     Semiformula.lMap toLX
@@ -249,9 +274,15 @@ private lemma map_noPredZero_body :
           ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1))) =
       (∀¹ ∼(precAt precCode₁ (#0 : Semiterm LX ℕ 1)
         ((0 : ℕ) : Semiterm LX ℕ 1))) := by
-  simp [arithPrecAt, precAt, precCode₁, liftCode,
-    Semiformula.lMap_subst]
-  rw [lMap_zero]
+  simp only [arithPrecAt, precAt, precCode₁, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_neg, Semiformula.lMap_subst]
+  have hw : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 1), ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1)]) =
+      ![(#0 : Semiterm LX ℕ 1), ((0 : ℕ) : Semiterm LX ℕ 1)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_zero
+  rw [hw]
 
 private lemma map_zeroAdd_body :
     Semiformula.lMap toLX
@@ -259,9 +290,17 @@ private lemma map_zeroAdd_body :
           ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1) #0) =
       (∀¹ addAt addCode₁ (#0 : Semiterm LX ℕ 1)
         ((0 : ℕ) : Semiterm LX ℕ 1) #0) := by
-  simp [arithAddAt, addAt, addCode₁, liftCode,
+  simp only [arithAddAt, addAt, addCode₁, liftCode, Semiformula.lMap_all,
     Semiformula.lMap_subst]
-  rw [lMap_zero]
+  have hw : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 1), ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1), #0]) =
+      ![(#0 : Semiterm LX ℕ 1), ((0 : ℕ) : Semiterm LX ℕ 1), #0] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_zero
+    | 2 => rfl
+  rw [hw]
 
 lemma models_iterZero_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -272,7 +311,7 @@ lemma models_iterZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [iterZeroStatement, arithmeticIterZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_iterZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_iterSucc_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -283,7 +322,7 @@ lemma models_iterSucc_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [iterSuccStatement, arithmeticIterSuccStatement,
     Semiformula.eval_univCl]
   rw [← map_iterSucc_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_noPredZero_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -294,7 +333,7 @@ lemma models_noPredZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [noPredZeroStatement, arithmeticNoPredZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_noPredZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_zeroAdd_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -305,7 +344,7 @@ lemma models_zeroAdd_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [zeroAddStatement, arithmeticZeroAddStatement,
     Semiformula.eval_univCl]
   rw [← map_zeroAdd_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_omegaCover_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :

@@ -225,7 +225,7 @@ lemma models_coverGood_iff_arithmetic {M : Type*} [Nonempty M] [sLX : Structure 
   rw [models_iff, models_iff]
   simp only [coverGoodStatement, arithmeticCoverGoodStatement, Semiformula.eval_univCl]
   rw [← map_coverGood_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **The cover with the case split, in `PA[X]`.** -/
 theorem concrete_coverGood : paLX ⊢ coverGoodStatement := by

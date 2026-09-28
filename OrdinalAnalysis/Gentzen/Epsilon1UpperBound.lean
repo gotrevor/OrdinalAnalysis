@@ -361,7 +361,7 @@ lemma models_succ_iff_arithmetic {M : Type*} [Nonempty M]
   rw [models_iff, models_iff]
   simp only [succStatement, arithmeticSuccStatement, Semiformula.eval_univCl]
   rw [← map_succ_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 theorem concrete_succ : paLX ⊢ succStatement := by
   apply paLX_of_peano_semantic

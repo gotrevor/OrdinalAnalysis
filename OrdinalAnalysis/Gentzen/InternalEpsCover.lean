@@ -385,7 +385,7 @@ lemma models_coverZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [coverZeroStatement, arithmeticCoverZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_coverZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_cover_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -395,7 +395,7 @@ lemma models_cover_iff_arithmetic {M : Type*} [Nonempty M]
   rw [models_iff, models_iff]
   simp only [coverStatement, arithmeticCoverStatement, Semiformula.eval_univCl]
   rw [← map_cover_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **(COV) at the base `0`, in `PA[X]`.** -/
 theorem concrete_cover_zero : paLX ⊢ coverZeroStatement := by

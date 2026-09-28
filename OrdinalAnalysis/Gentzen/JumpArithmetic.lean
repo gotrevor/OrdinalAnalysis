@@ -172,9 +172,25 @@ private lemma map_iterSucc_body :
         (∼(iterAt safeIterCode #0 #3 #2 (‘(#1 + 1)’ : Semiterm LX ℕ 4)) ⋎
           (∃¹ (iterAt safeIterCode #0 #4 #3 #2 ⋏
             addAt safeAddCode #1 #0 #3)))) := by
-  simp [arithIterAt, arithAddAt, iterAt, addAt, safeAddCode,
-    safeIterCode, liftCode, Semiformula.lMap_subst]
-  rw [lMap_succ_four]
+  simp only [arithIterAt, arithAddAt, iterAt, addAt, safeAddCode,
+    safeIterCode, liftCode, Semiformula.lMap_all, Semiformula.lMap_exs,
+    LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+    LogicalConnective.HomClass.map_and, Semiformula.lMap_subst]
+  have h1 : (Semiterm.lMap toLX ∘ ![#0, #3, #2, (‘(#1 + 1)’ : Semiterm ℒₒᵣ ℕ 4)]) =
+      ![#0, #3, #2, (‘(#1 + 1)’ : Semiterm LX ℕ 4)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => rfl
+    | 2 => rfl
+    | 3 => exact lMap_succ_four
+  have h2 : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 5), #4, #3, #2]) =
+      ![(#0 : Semiterm LX ℕ 5), #4, #3, #2] := by
+    funext x; match x with | 0 => rfl | 1 => rfl | 2 => rfl | 3 => rfl
+  have h3 : (Semiterm.lMap toLX ∘ ![(#1 : Semiterm ℒₒᵣ ℕ 5), #0, #3]) =
+      ![(#1 : Semiterm LX ℕ 5), #0, #3] := by
+    funext x; match x with | 0 => rfl | 1 => rfl | 2 => rfl
+  rw [h1, h2, h3]
 
 private lemma map_noPredZero_body :
     Semiformula.lMap toLX
@@ -182,9 +198,15 @@ private lemma map_noPredZero_body :
           ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1))) =
       (∀¹ ∼(precAt precCode (#0 : Semiterm LX ℕ 1)
         ((0 : ℕ) : Semiterm LX ℕ 1))) := by
-  simp [arithPrecAt, precAt, precCode, liftCode,
-    Semiformula.lMap_subst]
-  rw [lMap_zero]
+  simp only [arithPrecAt, precAt, precCode, liftCode, Semiformula.lMap_all,
+    LogicalConnective.HomClass.map_neg, Semiformula.lMap_subst]
+  have hw : (Semiterm.lMap toLX ∘ ![(#0 : Semiterm ℒₒᵣ ℕ 1), ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1)]) =
+      ![(#0 : Semiterm LX ℕ 1), ((0 : ℕ) : Semiterm LX ℕ 1)] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_zero
+  rw [hw]
 
 private lemma map_zeroAdd_body :
     Semiformula.lMap toLX
@@ -192,9 +214,17 @@ private lemma map_zeroAdd_body :
           ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1) #0) =
       (∀¹ addAt safeAddCode (#0 : Semiterm LX ℕ 1)
         ((0 : ℕ) : Semiterm LX ℕ 1) #0) := by
-  simp [arithAddAt, addAt, safeAddCode, liftCode,
+  simp only [arithAddAt, addAt, safeAddCode, liftCode, Semiformula.lMap_all,
     Semiformula.lMap_subst]
-  rw [lMap_zero]
+  have hw : (Semiterm.lMap toLX ∘
+      ![(#0 : Semiterm ℒₒᵣ ℕ 1), ((0 : ℕ) : Semiterm ℒₒᵣ ℕ 1), #0]) =
+      ![(#0 : Semiterm LX ℕ 1), ((0 : ℕ) : Semiterm LX ℕ 1), #0] := by
+    funext x
+    match x with
+    | 0 => rfl
+    | 1 => exact lMap_zero
+    | 2 => rfl
+  rw [hw]
 
 /-! ### IΣ₁ proofs of the iteration equations -/
 
@@ -249,7 +279,7 @@ lemma models_iterZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [iterZeroStatement, arithmeticIterZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_iterZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_iterSucc_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -260,7 +290,7 @@ lemma models_iterSucc_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [iterSuccStatement, arithmeticIterSuccStatement,
     Semiformula.eval_univCl]
   rw [← map_iterSucc_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_noPredZero_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -271,7 +301,7 @@ lemma models_noPredZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [noPredZeroStatement, arithmeticNoPredZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_noPredZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_zeroAdd_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -282,7 +312,7 @@ lemma models_zeroAdd_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [zeroAddStatement, arithmeticZeroAddStatement,
     Semiformula.eval_univCl]
   rw [← map_zeroAdd_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- Concrete zero-step premise for Gentzen's Lemma A. -/
 theorem concrete_iterZero :

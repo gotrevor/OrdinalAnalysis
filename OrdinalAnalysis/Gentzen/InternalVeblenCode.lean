@@ -359,7 +359,7 @@ lemma models_vebMono_iff_arithmetic {M : Type*} [Nonempty M]
   rw [models_iff, models_iff]
   simp only [vebMonoStatement, arithmeticVebMonoStatement, Semiformula.eval_univCl]
   rw [← map_vebMono_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_vebCover_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -369,7 +369,7 @@ lemma models_vebCover_iff_arithmetic {M : Type*} [Nonempty M]
   rw [models_iff, models_iff]
   simp only [vebCoverStatement, arithmeticVebCoverStatement, Semiformula.eval_univCl]
   rw [← map_vebCover_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **(EPSMONO) at level `a`, with surjectivity folded in, in `PA[X]`.** -/
 theorem concrete_vebMono : paLX ⊢ vebMonoStatement := by

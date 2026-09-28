@@ -195,7 +195,7 @@ lemma models_epsMono_iff_arithmetic {M : Type*} [Nonempty M]
   rw [models_iff, models_iff]
   simp only [epsMonoStatement, arithmeticEpsMonoStatement, Semiformula.eval_univCl]
   rw [← map_epsMono_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **(EPSMONO) with surjectivity folded in, in `PA[X]`.** -/
 theorem concrete_epsMono : paLX ⊢ epsMonoStatement := by

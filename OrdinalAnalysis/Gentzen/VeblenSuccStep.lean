@@ -175,7 +175,7 @@ lemma models_succGeneral_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [succGeneralStatement, arithmeticSuccGeneralStatement,
     Semiformula.eval_univCl]
   rw [← map_succGeneral_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **The successor step of `Epsilon1UpperBound` with the `ε₀` numeral replaced by a
 variable.** -/

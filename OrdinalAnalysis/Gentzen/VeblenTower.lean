@@ -275,7 +275,7 @@ lemma models_towerZero_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [towerZeroStatement, arithmeticTowerZeroStatement,
     Semiformula.eval_univCl]
   rw [← map_towerZero_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 lemma models_towerSucc_iff_arithmetic {M : Type*} [Nonempty M]
     [sLX : Structure LX M] :
@@ -286,7 +286,7 @@ lemma models_towerSucc_iff_arithmetic {M : Type*} [Nonempty M]
   simp only [towerSuccStatement, arithmeticTowerSuccStatement,
     Semiformula.eval_univCl]
   rw [← map_towerSucc_body]
-  simp [Semiformula.eval_lMap]
+  simp only [Semiformula.eval_lMap]
 
 /-- **The zero step of the internal tower, in `PA[X]`.** -/
 theorem concrete_towerZero : paLX ⊢ towerZeroStatement towerCode₁ := by
