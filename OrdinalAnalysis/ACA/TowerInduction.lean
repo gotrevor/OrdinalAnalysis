@@ -238,7 +238,17 @@ the jump and for the `univCl`-unwrapping of `jumpBStatement`. -/
       (∼(addAt addCode₁ #0 #2 #1) ⋎
         (∼(belowAt precCode₁ (Xat (#0 : Semiterm LX ℕ 1)) #2) ⋎
           belowAt precCode₁ (Xat (#0 : Semiterm LX ℕ 1)) #0)))).freeVariables = ∅
-  simp [h1, h2, h3, h4]
+  -- keep the concrete coded formulas opaque (W5c): any `simp` that revisits them runs away,
+  -- so take the three quantifier/connective steps by `rw` against the four `have`s.
+  have h1' : (omegaPowAt omegaPowCode₁ (#1 : Semiterm LX ℕ 4)
+      (Rew.bShift (Rew.bShift (Rew.bShift (#0 : Semiterm LX ℕ 1))))).freeVariables = ∅ :=
+    freeVariables_omegaPowAt (by simp) (by simp)
+  rw [Semiformula.freeVariables_all, Semiformula.freeVariables_all,
+    Semiformula.freeVariables_all, Semiformula.freeVariables_or,
+    Semiformula.freeVariables_not, h1', Semiformula.freeVariables_or,
+    Semiformula.freeVariables_not, h2, Semiformula.freeVariables_or,
+    Semiformula.freeVariables_not, h3, h4, Finset.union_empty, Finset.union_empty,
+    Finset.union_empty]
 
 /-! ### `univCl` is a typing wrapper -/
 
