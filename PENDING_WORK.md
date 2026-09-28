@@ -1,10 +1,24 @@
 # PORT-V434 — state after lap 2 (2026-09-28)
 
-`lake build` reaches **1597/1599 jobs**.  Not green yet: exactly two modules remain, both
-OOM-killed (exit 137) *alone*, i.e. genuine runaways, not build concurrency:
+`lake build` reaches **1595/1599 jobs**; every module that was blocking is now green, and each
+newly-reached module exposes the next batch of the same runaway family.  Still open (all exit 137
+*alone*, all in the W7/W5c family — bisect and replace the offending `simp`):
 
-* `OrdinalAnalysis/Gentzen/InternalEpsMonoCode.lean`
-* `OrdinalAnalysis/Gentzen/InternalVeblenCode.lean`
+* `OrdinalAnalysis/ACA/OmegaJumpDepth.lean`
+* `OrdinalAnalysis/ACA/EpsProg.lean`
+* `OrdinalAnalysis/Ramified/UpperBound.lean`
+
+Cleared in lap 2 (each verified by its own `lake build <module>`): Gentzen/{InternalEpsMonoCode,
+InternalVeblenCode, ProgStep, VeblenTower, VeblenSuccStep, Epsilon1UpperBound},
+ACA/TowerInduction, ACAOmega/{CodedOrder₂, Gamma0Order₂}, IDn/LowerBoundAux2,
+Ramified/{LowerBound, TransfiniteLower, SemiformalLower, DescentBetaAux2}.
+
+Three shapes of the fix, all now proven repeatedly:
+1. `simp [<def>]` → `simp only [<def>, lMap_all/eval_all, HomClass.map_or/neg/and, lMap_subst]`
+   plus one `have` per substitution vector and a single `rw`.
+2. a `show` that asks the elaborator to unfold a definition **at a concrete term** → state the
+   unfolding as a `rfl` lemma **at a variable** (`thetaAt_eq`, `noXN_and`) and `rw` with it.
+3. a `freeVariables`/`NoXN` read-off → spell the syntax steps with `rw`, never `simp`.
 
 ## Closed this lap
 
