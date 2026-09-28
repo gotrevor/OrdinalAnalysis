@@ -36,7 +36,9 @@ pre-built `~/.lake-base/4.34.0` store and must never `lake update`.)
 ## Fidelity
 
 * `scripts/AxiomCheck.lean` is byte-identical to v4.33 — no guard was weakened, added or removed.
-* `src` contains **zero `sorry`**, **zero `admit`** and **zero declared `axiom`**.
+* `src` contains **no unproved obligation of any kind** — no placeholder tactic, no `native_decide`,
+  no `partial def`, and **zero declared `axiom`**.  (Grepping `OrdinalAnalysis/` for the two
+  placeholder keywords matches only prose inside docstrings.)
 * Every headline theorem still depends only on the trust base
   (`propext`, `Classical.choice`, `Quot.sound`, or a subset), including
   `Gentzen.UpperBound.gentzen_upper_bound`, `Gentzen.Epsilon1{Lower,Upper}Bound.*`,
