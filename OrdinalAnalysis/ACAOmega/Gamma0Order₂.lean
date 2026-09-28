@@ -90,7 +90,9 @@ theorem freeVariables_precSegVeb₀ (a b : Gamma0Note) :
     refine Fin.forall_fin_two.mpr ⟨by simp, ?_⟩
     simp only [FirstOrder.Rew.subst_bvar, Matrix.cons_val_one, Matrix.cons_val_fin_one]
     simp [numAt]
-  simp [precSegVeb₀, h]
+  -- keep the concrete formula opaque (W5c): a full `simp [precSegVeb₀]` runs away
+  rw [precSegVeb₀, FirstOrder.Semiformula.freeVariables_and, freeVariables_precFO₁, h,
+    Finset.union_empty]
 
 /-- `m ≺ₐ,ᵦ' n`: `m ≺₁ n` and `n ≺₁ (code of φ_a(b))`. -/
 def precNSegVeb (a b : Gamma0Note) (m n : ℕ) : Prop :=
