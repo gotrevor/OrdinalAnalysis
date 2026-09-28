@@ -347,15 +347,16 @@ call site. -/
 into a cut-free `LK` derivation of `σ` together with finitely many negated axioms of
 `T`, and replays it into `RA_∞` at cut rank `0` and at a height already known to be
 below `ε₀` (`ordN_lt_epsilonNote`). -/
-  obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp h
+private theorem replay_of_provable {T : Theory LRA} {σ : Sentence LRA} (h : T ⊢ σ) :
     ∃ (Δ : List (Sentence LRA)) (α : Gamma0Note), (∀ τ ∈ Δ, τ ∈ T) ∧ α < epsilonNote 0 ∧
       OmegaDerivableR trueArithLitsR evInstR 0 α
         (((σ : Proposition LRA) :: ∼Sequent.embed Δ).map evR) := by
   obtain ⟨Δ, hΔ, ⟨d₀⟩⟩ := Theory.Proof.provable_iff_list.mp h
   obtain ⟨d₁, hcf₁⟩ := hauptsatz d₀
   -- upstream's cut-free derivation, translated into the list calculus
-  have d' := FinDerivation.ofDerivation d₁ _ rfl
-  have hcf : FinDerivation.IsCutFree d' := FinDerivation.isCutFree_ofDerivation hcf₁ _ rfl
+  set d' := FinDerivation.ofDerivation d₁ ((σ : Proposition LRA) :: ∼Sequent.embed Δ) rfl with hd'
+  have hcf : FinDerivation.IsCutFree d' := by
+    rw [hd']; exact FinDerivation.isCutFree_ofDerivation hcf₁ _ rfl
   have hcr0 : cutRankR d' = 0 := cutRankR_eq_zero_of_isCutFree hcf
   have hclosed : ∀ φ ∈ ((σ : Proposition LRA) :: ∼Sequent.embed Δ), φ.freeVariables = ∅ := by
     intro φ hφ
