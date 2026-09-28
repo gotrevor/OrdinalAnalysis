@@ -54,7 +54,7 @@
 
   * **Finitary theorem to uniform-height numeral instances**,
     `uniformHeight_of_provable_all_of` (generic in the theory `T`) and its
-    `RAlt ν` corollary `uniformHeight_of_provable_all`: if `T ⊢! ∀¹ φ` (a
+    `RAlt ν` corollary `uniformHeight_of_provable_all`: if `T ⊢ ∀¹ φ` (a
     universally quantified sentence), then there is a *single* height `α` with
     `⊢^α_ρ [evR ((emb φ)/[num n])]` for every `n`.  This is
     `Ramified/LowerBound.lean`'s replay-and-cut chain (`provable_omegaDerivable_of`
@@ -431,7 +431,7 @@ theorem uniformHeight_of_provable_all_of (T : Theory LRA) {ρ : Gamma0Note}
     (hax : ∀ σ ∈ T, ∃ β : Gamma0Note, OmegaDerivableR trueArithLitsR evInstR 0 β
         [evR (Rewriting.emb σ : Proposition LRA)])
     (hrk : ∀ σ ∈ T, rank (evR (Rewriting.emb σ : Proposition LRA)) < ρ)
-    {φ : Semiformula LRA Empty 1} (h : T ⊢! (∀¹ φ : Sentence LRA)) :
+    {φ : Semiformula LRA Empty 1} (h : T ⊢ (∀¹ φ : Sentence LRA)) :
     ∃ α : Gamma0Note, ∀ n : ℕ,
       OmegaDerivableR trueArithLitsR evInstR ρ α
         [evR ((Rewriting.emb φ : Semiformula LRA ℕ 1)/[num n])] := by
@@ -443,7 +443,7 @@ theorem uniformHeight_of_provable_all_of (T : Theory LRA) {ρ : Gamma0Note}
 
 /-- **The `RAlt ν` instance of step 1.** -/
 theorem uniformHeight_of_provable_all {ν : Lv} (hν : 1 ≤ ν) {φ : Semiformula LRA Empty 1}
-    (h : RAlt ν ⊢! (∀¹ φ : Sentence LRA)) :
+    (h : RAlt ν ⊢ (∀¹ φ : Sentence LRA)) :
     ∃ α : Gamma0Note, ∀ n : ℕ,
       OmegaDerivableR trueArithLitsR evInstR (Gamma0Note.blkTop ν) α
         [evR ((Rewriting.emb φ : Semiformula LRA ℕ 1)/[num n])] := by

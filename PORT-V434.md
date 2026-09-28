@@ -140,6 +140,12 @@ W7. **anonymous constructors and `simp` against a *concrete* formula term run aw
    machinery: keep the big formula opaque and rewrite with small `have`s instead
    (`Gentzen/JumpArithmetic.lean:146`, `map_iterZero_body`).
 
+W8. `T ⊢! σ` no longer parses as provability (it elaborates the sentence at `Bool`) → upstream
+   collapsed the two entailment notations: `⊢!` was `Entailment.Prf` (the *type* of proofs) and
+   `⊢` was `Provable` (the Prop); now there is only `⊢` = `Entailment.Entails : Prop`.  So
+   `h : T ⊢! σ` becomes `h : T ⊢ σ`, and the `⟨h⟩`/`rintro ⟨h⟩` wrappers that turned a proof into
+   a `Provable` go away → `Ramified/InfTools.lean`, `Ramified/LowerBound.lean` (15 sites).
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 
