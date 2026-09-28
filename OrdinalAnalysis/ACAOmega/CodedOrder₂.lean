@@ -519,7 +519,9 @@ theorem freeVariables_precSeg₀ (a : Gamma0Note) : (precSeg₀ a).freeVariables
     refine Fin.forall_fin_two.mpr ⟨by simp, ?_⟩
     simp only [FirstOrder.Rew.subst_bvar, Matrix.cons_val_one, Matrix.cons_val_fin_one]
     simp [numAt]
-  simp [precSeg₀, h]
+  -- keep the concrete formula opaque: a full `simp [precSeg₀]` unfolds it and runs away
+  rw [precSeg₀, FirstOrder.Semiformula.freeVariables_and, freeVariables_precFO₁, h,
+    Finset.union_empty]
 
 theorem eval_precSeg₀ (a : Gamma0Note) (m n : ℕ) (f : ℕ → ℕ) :
     FirstOrder.Semiformula.Eval (M := ℕ) ![m, n] f (precSeg₀ a) ↔ precNSeg a m n := by

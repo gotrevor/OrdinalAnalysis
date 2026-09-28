@@ -156,6 +156,11 @@ W7b. the same runaway from an anonymous constructor in a *structurally recursive
    a `sorry`-truncated variant that prints no "declaration uses 'sorry'" warning was killed, not
    accepted.
 
+W5c. same divergence for a `freeVariables` read-off: `simp [precSeg₀, h]` on a concrete
+   two-conjunct formula OOMs the file → spell the syntax step,
+   `rw [precSeg₀, FirstOrder.Semiformula.freeVariables_and, freeVariables_precFO₁, h,
+   Finset.union_empty]` → `OrdinalAnalysis/ACAOmega/CodedOrder₂.lean:513`.
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 
