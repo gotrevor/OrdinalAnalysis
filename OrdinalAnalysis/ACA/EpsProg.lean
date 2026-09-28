@@ -1212,6 +1212,239 @@ theorem rew_goodInner (hb : ∀ i, unTerm (ω #i) = ω' #i) (hf : ∀ x, unTerm 
 
 end RewGood
 
+/-- Branch (A) of `goodAllTI`'s case split, split off as its own declaration:
+the v4.34 kernel needs >15 GB to check `goodAllTI` as a single term (W9). -/
+private theorem goodAllTI_branchA : PSeq ACA [∼(goodASO (&0 : FirstOrder.Semiterm LX ℕ 0)),
+    allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+  have hs := succ_inst (zeroLX : FirstOrder.Semiterm LX ℕ 0) (&0)
+  have g0 : PSeq ACA [∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
+      (∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX) ⋎
+        (∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ⋎
+          allTI (&0 : FirstOrder.Semiterm LX ℕ 0)))] :=
+    PSeq.orInv (PSeq.of_provable hs)
+  have g1 : PSeq ACA [∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
+      (∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ⋎
+        allTI (&0 : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0))] :=
+    PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g0)
+  have g2 : PSeq ACA [∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
+      allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
+      ∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0))] :=
+    PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g1)
+  have hcore : PSeq ACA [∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
+      allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+    refine PSeq.cut (allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
+    · exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto)
+        (PSeq.of_provable allTI_zero)
+    · exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g2
+  exact PSeq.or hcore
+
+/-- The innermost derivation of branch (B) of `goodAllTI` (W9 split). -/
+private theorem goodAllTI_hmain : PSeq ACA [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+    ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
+    ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
+    allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.cut (allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
+  · -- `allTI &0` from `Below(ψ₀, &3)` at `h := &1` and `u := &0`
+    refine PSeq.wk (Γ := [∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+      ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+      allTI (&0 : FirstOrder.Semiterm LX ℕ 0)])
+      (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) ?_
+    refine PSeq.exs₁ (&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
+    have e3 : (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+        (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+            (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+          psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
+        precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3) ⋏
+          ∼(psiAt (&1 : FirstOrder.Semiterm LX ℕ 0)) := by
+      show (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
+        (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+            (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+          psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) = _
+      show (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
+        ((∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+            (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0)))) ⋏
+          ∼(psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Semiproposition ℒₒᵣ 0 1) = _
+      rw [LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
+        LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
+        rew_precSOv (ω := FirstOrder.Rew.subst
+          ![(&1 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
+        rew_psiAt (ω := FirstOrder.Rew.subst
+          ![(&1 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
+        Semiformula.neg_neg]
+      simp
+    show PSeq ACA ((FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+      (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+          (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+        psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
+    rw [e3]
+    refine PSeq.and (PSeq.id (φ := precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3))
+      (by simp) (by simp)) ?_
+    refine PSeq.exs₁ (&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
+    have e4 : (FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+        (∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
+            (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+          allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
+        epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) ⋏
+          ∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) := by
+      show (FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
+        ((∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
+            (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))) ⋏
+          ∼(allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Semiproposition ℒₒᵣ 0 1) = _
+      rw [LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
+        LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
+        rew_epsSO (ω := FirstOrder.Rew.subst
+          ![(&0 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
+        rew_allTI (ω := FirstOrder.Rew.subst
+          ![(&0 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
+        Semiformula.neg_neg]
+      simp
+    show PSeq ACA ((FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+      (∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
+          (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+        allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
+    rw [e4]
+    exact PSeq.and (PSeq.id (φ := epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1))
+      (by simp) (by simp))
+      (PSeq.id (φ := allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) (by simp) (by simp))
+  · -- the successor step at `e := &0`, `s := &2`
+    have hs := succ_inst (&0 : FirstOrder.Semiterm LX ℕ 0) (&2)
+    have g0 : PSeq ACA [∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
+        (∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX) ⋎
+          (∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
+            allTI (&2 : FirstOrder.Semiterm LX ℕ 0)))] :=
+      PSeq.orInv (PSeq.of_provable hs)
+    have g1 : PSeq ACA [∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
+        (∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
+          allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
+        ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
+      PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g0)
+    have g2 : PSeq ACA [∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)),
+        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
+        ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
+      PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g1)
+    exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g2
+
+/-- Steps of branch (B) of `goodAllTI`, each its own declaration (W9 split). -/
+private theorem goodAllTI_hor1 : PSeq ACA [(∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
+      ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX)),
+    ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+    ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
+    allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
+  PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) goodAllTI_hmain)
+
+private theorem goodAllTI_hor2 : PSeq ACA [(∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
+      (∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
+        ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX))),
+    ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+    allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
+  PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) goodAllTI_hor1)
+
+private theorem goodAllTI_hor3 : PSeq ACA [
+    goodBNegBody (&2 : FirstOrder.Semiterm LX ℕ 0) (&3) (&0) (&1),
+    allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
+  PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) goodAllTI_hor2)
+
+private theorem goodAllTI_hall1 : PSeq ACA [∀¹ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
+    (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)),
+    allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hfree : Semiproposition.free₀ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
+      (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)) =
+      goodBNegBody (&2 : FirstOrder.Semiterm LX ℕ 0) (&3) (&0) (&1) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (goodBNegBody _ _ _ _) = _
+    rw [rew_goodBNegBody (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
+      hb_free hf_free]
+    simp
+  have hsh : SecondOrder.Sequent.shift₀
+      [allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] =
+      [allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_allTI, shift₀_belowPsi]
+    norm_num
+  rw [hfree, hsh]
+  exact goodAllTI_hor3
+
+private theorem goodAllTI_hall2 : PSeq ACA [∀¹ (∀¹ (goodBNegBody
+      (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0)))
+      (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))
+      (#0 : FirstOrder.Semiterm LX ℕ 2) (#1))),
+    allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hfree : Semiproposition.free₀ (∀¹ (goodBNegBody
+      (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0)))
+      (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))
+      (#0 : FirstOrder.Semiterm LX ℕ 2) (#1))) =
+      ∀¹ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
+        (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹
+      (∀¹ (goodBNegBody _ _ _ _)) = _
+    have hfr : (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 2 ℕ 1)
+        (#1 : FirstOrder.Semiterm LX ℕ 2) = (&0 : FirstOrder.Semiterm LX ℕ 1) := by
+      have hl : (1 : Fin 2) = Fin.last 1 := rfl
+      show (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 2 ℕ 1)
+        (#(1 : Fin 2) : FirstOrder.Semiterm LX ℕ 2) = _
+      rw [hl]
+      exact FirstOrder.Rew.free_bvar_last
+    rw [Semiformula.rew_all₀,
+      rew_goodBNegBody (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0).q)
+        (q_hb hb_free) (q_hf hf_free)]
+    simp [hfr]
+  have hsh : SecondOrder.Sequent.shift₀
+      [allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
+      [allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_allTI, shift₀_belowPsi]
+    norm_num
+  rw [hfree, hsh]
+  exact goodAllTI_hall1
+
+/-- **`∼Good_B` as an explicit `∀¹∀¹` formula.**  `goodAllTI_hall2` proves exactly this
+sequent, but closing `∼(goodBSO s g)` against it by `rfl` makes the *kernel* push
+`Semiformula.neg` through the concrete coded subformulas (`precSOv`, `baseSO`, …) — that is
+the W9 blow-up, >10 GB on this one step.  Taking the four DeMorgan steps by `rw`, at
+*variable* subformulas, keeps them folded. -/
+private theorem neg_goodBSO {n : ℕ} (s g : FirstOrder.Semiterm LX ℕ n) :
+    ∼(goodBSO s g) =
+      ∀¹ (∀¹ (goodBNegBody (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift s))
+        (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift g))
+        (#0 : FirstOrder.Semiterm LX ℕ (n + 2)) #1)) := by
+  show ∼(∃¹ ∃¹
+    (precSOv (#1 : FirstOrder.Semiterm LX ℕ (n + 2))
+        (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift g)) ⋏
+      (baseSO (#0 : FirstOrder.Semiterm LX ℕ (n + 2)) ⋏
+        (epsSO (#0 : FirstOrder.Semiterm LX ℕ (n + 2)) #1 ⋏
+          addSO (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift s))
+            (#0 : FirstOrder.Semiterm LX ℕ (n + 2)) oneLX)))) = _
+  rw [Semiformula.neg_exs₁, Semiformula.neg_exs₁,
+    LogicalConnective.DeMorgan.and, LogicalConnective.DeMorgan.and,
+    LogicalConnective.DeMorgan.and]
+  rfl
+
+/-- Branch (B) of `goodAllTI`'s case split (W9 split). -/
+private theorem goodAllTI_branchB : PSeq ACA [∼(goodBSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+  rw [neg_goodBSO]
+  exact goodAllTI_hall2
+
 /-- **`Good(s,g)` and `Below(ψ₀,g)` give `∀²X TI(≺₁,s,X)`.**  This is the whole
 case split of the cover, and the only place `Below(ψ₀, g)` is consumed. -/
 theorem goodAllTI : Provable ACA goodAll := by
@@ -1238,205 +1471,8 @@ theorem goodAllTI : Provable ACA goodAll := by
     simp
   rw [e2]
   -- `g = &1`, `s = &0`
-  have hbranchA : PSeq ACA [∼(goodASO (&0 : FirstOrder.Semiterm LX ℕ 0)),
-      allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-    have hs := succ_inst (zeroLX : FirstOrder.Semiterm LX ℕ 0) (&0)
-    have g0 : PSeq ACA [∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
-        (∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX) ⋎
-          (∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ⋎
-            allTI (&0 : FirstOrder.Semiterm LX ℕ 0)))] :=
-      PSeq.orInv (PSeq.of_provable hs)
-    have g1 : PSeq ACA [∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
-        (∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ⋎
-          allTI (&0 : FirstOrder.Semiterm LX ℕ 0)),
-        ∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0))] :=
-      PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g0)
-    have g2 : PSeq ACA [∼(allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
-        allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
-        ∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0))] :=
-      PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g1)
-    have hcore : PSeq ACA [∼(baseSO (zeroLX : FirstOrder.Semiterm LX ℕ 0)),
-        ∼(addSO (&0 : FirstOrder.Semiterm LX ℕ 0) zeroLX oneLX),
-        allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-      refine PSeq.cut (allTI (zeroLX : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
-      · exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto)
-          (PSeq.of_provable allTI_zero)
-      · exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g2
-    exact PSeq.or hcore
-  have hbranchB : PSeq ACA [∼(goodBSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-      allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-    -- innermost: `v = &0`, `h = &1`, `s = &2`, `g = &3`
-    have hmain : PSeq ACA [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-        ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
-        ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-        ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
-        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
-      refine PSeq.cut (allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
-      · -- `allTI &0` from `Below(ψ₀, &3)` at `h := &1` and `u := &0`
-        refine PSeq.wk (Γ := [∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0)),
-          ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-          ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          allTI (&0 : FirstOrder.Semiterm LX ℕ 0)])
-          (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) ?_
-        refine PSeq.exs₁ (&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
-        have e3 : (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-            (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-              psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
-            precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3) ⋏
-              ∼(psiAt (&1 : FirstOrder.Semiterm LX ℕ 0)) := by
-          show (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
-            (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-              psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) = _
-          show (FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
-            ((∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0)))) ⋏
-              ∼(psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Semiproposition ℒₒᵣ 0 1) = _
-          rw [LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
-            LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
-            rew_precSOv (ω := FirstOrder.Rew.subst
-              ![(&1 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
-            rew_psiAt (ω := FirstOrder.Rew.subst
-              ![(&1 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
-            Semiformula.neg_neg]
-          simp
-        show PSeq ACA ((FirstOrder.Rew.subst ![(&1 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-          (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-              (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-            psiAt (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
-        rw [e3]
-        refine PSeq.and (PSeq.id (φ := precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3))
-          (by simp) (by simp)) ?_
-        refine PSeq.exs₁ (&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
-        have e4 : (FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-            (∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
-                (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-              allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
-            epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) ⋏
-              ∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) := by
-          show (FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
-            ((∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
-                (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))) ⋏
-              ∼(allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Semiproposition ℒₒᵣ 0 1) = _
-          rw [LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
-            LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
-            rew_epsSO (ω := FirstOrder.Rew.subst
-              ![(&0 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
-            rew_allTI (ω := FirstOrder.Rew.subst
-              ![(&0 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp) (fun x => by simp),
-            Semiformula.neg_neg]
-          simp
-        show PSeq ACA ((FirstOrder.Rew.subst ![(&0 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-          (∼(∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
-              (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-            allTI (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
-        rw [e4]
-        exact PSeq.and (PSeq.id (φ := epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1))
-          (by simp) (by simp))
-          (PSeq.id (φ := allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) (by simp) (by simp))
-      · -- the successor step at `e := &0`, `s := &2`
-        have hs := succ_inst (&0 : FirstOrder.Semiterm LX ℕ 0) (&2)
-        have g0 : PSeq ACA [∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
-            (∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX) ⋎
-              (∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
-                allTI (&2 : FirstOrder.Semiterm LX ℕ 0)))] :=
-          PSeq.orInv (PSeq.of_provable hs)
-        have g1 : PSeq ACA [∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
-            (∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
-              allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
-            ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
-          PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g0)
-        have g2 : PSeq ACA [∼(allTI (&0 : FirstOrder.Semiterm LX ℕ 0)),
-            allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX),
-            ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
-          PSeq.orInv (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g1)
-        exact PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) g2
-    -- fold the four literals into the matrix
-    have hor1 : PSeq ACA [(∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
-          ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX)),
-        ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-        ∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
-        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
-      PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hmain)
-    have hor2 : PSeq ACA [(∼(baseSO (&0 : FirstOrder.Semiterm LX ℕ 0)) ⋎
-          (∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
-            ∼(addSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0) oneLX))),
-        ∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
-      PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hor1)
-    have hor3 : PSeq ACA [goodBNegBody (&2 : FirstOrder.Semiterm LX ℕ 0) (&3) (&0) (&1),
-        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] :=
-      PSeq.or (PSeq.wk (by intro x hx; simp only [List.mem_cons] at hx ⊢; tauto) hor2)
-    -- two eigenvariable steps
-    have hall1 : PSeq ACA [∀¹ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
-        (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)),
-        allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
-      refine PSeq.all₁ ACA_shift₀_invariant ?_
-      have hfree : Semiproposition.free₀ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
-          (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)) =
-          goodBNegBody (&2 : FirstOrder.Semiterm LX ℕ 0) (&3) (&0) (&1) := by
-        show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (goodBNegBody _ _ _ _) = _
-        rw [rew_goodBNegBody (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
-          hb_free hf_free]
-        simp
-      have hsh : SecondOrder.Sequent.shift₀
-          [allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] =
-          [allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
-        simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-          LogicalConnective.HomClass.map_neg, shift₀_allTI, shift₀_belowPsi]
-        norm_num
-      rw [hfree, hsh]
-      exact hor3
-    have hall2 : PSeq ACA [∀¹ (∀¹ (goodBNegBody
-          (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0)))
-          (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))
-          (#0 : FirstOrder.Semiterm LX ℕ 2) (#1))),
-        allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-      refine PSeq.all₁ ACA_shift₀_invariant ?_
-      have hfree : Semiproposition.free₀ (∀¹ (goodBNegBody
-          (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0)))
-          (FirstOrder.Rew.bShift (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0)))
-          (#0 : FirstOrder.Semiterm LX ℕ 2) (#1))) =
-          ∀¹ (goodBNegBody (&1 : FirstOrder.Semiterm LX ℕ 1) (&2)
-            (#0 : FirstOrder.Semiterm LX ℕ 1) (&0)) := by
-        show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹
-          (∀¹ (goodBNegBody _ _ _ _)) = _
-        have hfr : (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 2 ℕ 1)
-            (#1 : FirstOrder.Semiterm LX ℕ 2) = (&0 : FirstOrder.Semiterm LX ℕ 1) := by
-          have hl : (1 : Fin 2) = Fin.last 1 := rfl
-          show (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 2 ℕ 1)
-            (#(1 : Fin 2) : FirstOrder.Semiterm LX ℕ 2) = _
-          rw [hl]
-          exact FirstOrder.Rew.free_bvar_last
-        rw [Semiformula.rew_all₀,
-          rew_goodBNegBody (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0).q)
-            (q_hb hb_free) (q_hf hf_free)]
-        simp [hfr]
-      have hsh : SecondOrder.Sequent.shift₀
-          [allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
-          [allTI (&1 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
-        simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-          LogicalConnective.HomClass.map_neg, shift₀_allTI, shift₀_belowPsi]
-        norm_num
-      rw [hfree, hsh]
-      exact hall1
-    exact hall2
+  have hbranchA := goodAllTI_branchA
+  have hbranchB := goodAllTI_branchB
   have hsplit : PSeq ACA [∼(goodSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
       allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
       ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
@@ -1684,6 +1720,337 @@ theorem progCover_inst (tg tu tx : FirstOrder.Semiterm LX ℕ 0) :
 
 /-! ### (Prog) -/
 
+/-- The comprehension step inside `epsProg_hcore` (W9 split). -/
+private theorem epsProg_key : PSeq ACA
+    (Semiproposition.subst₁ (∼(toSOAtB boundWitness
+        (tiX (&0 : FirstOrder.Semiterm LX ℕ 0)))) ![freeWitness] ::
+      [∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
+        ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)),
+        xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
+        ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+        ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+        ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))]) := by
+  rw [neg_subst₁_tiBody_free]
+  have hneg : ∼(tiSO (&0 : FirstOrder.Semiterm LX ℕ 0)) =
+      (progSOX : Proposition ℒₒᵣ) ⋏
+        ∼(belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0)) := by
+    -- W9: take the `∼` through by DeMorgan, never by `rfl`/`show` at the concrete code.
+    rw [tiSO_eq, LogicalConnective.DeMorgan.or, Semiformula.neg_neg]
+  rw [hneg]
+  refine PSeq.and (PSeq.id (φ := (progSOX : Proposition ℒₒᵣ))
+    (by simp) (by simp)) ?_
+  have hb : ∼(belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0)) =
+      ∃¹ (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+          (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+        xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) := by
+    rw [belowSOX_eq, Semiformula.neg_all₁]
+  rw [hb]
+  refine PSeq.exs₁ (&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
+  have e5 : (FirstOrder.Rew.subst ![(&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+      (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+          (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+        xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
+      precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0) ⋏
+        ∼(xSO (&3 : FirstOrder.Semiterm LX ℕ 0)) := by
+    rw [LogicalConnective.DeMorgan.or,
+      LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
+      LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
+      rew_precSOv (ω := FirstOrder.Rew.subst
+        ![(&3 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp)
+        (fun y => by simp),
+      rew_xSO (ω := FirstOrder.Rew.subst
+        ![(&3 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp)
+        (fun y => by simp),
+      Semiformula.neg_neg]
+    simp
+  show PSeq ACA ((FirstOrder.Rew.subst ![(&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
+    (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+        (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+      xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
+  rw [e5]
+  exact PSeq.and
+    (PSeq.id (φ := precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0))
+      (by simp) (by simp))
+    (PSeq.id (φ := xSO (&3 : FirstOrder.Semiterm LX ℕ 0)) (by simp) (by simp))
+
+/-- The core of `epsProg_hyp` (W9 split). -/
+private theorem epsProg_hcore : PSeq ACA [∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)),
+    xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
+    ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+    ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+    xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(progSOX : Proposition ℒₒᵣ),
+    ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+    ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.cut (allTI (&2 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
+  · -- `allTI &2` from `goodAllTI`
+    have hg := good_inst (&5 : FirstOrder.Semiterm LX ℕ 0) (&2)
+    have g0 : PSeq ACA [∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0)),
+        (∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)) ⋎
+          allTI (&2 : FirstOrder.Semiterm LX ℕ 0))] :=
+      PSeq.orInv (PSeq.of_provable hg)
+    have g1 : PSeq ACA [∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+        allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
+      PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
+    exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1
+  · refine PSeq.cut (allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
+    · -- `allTI &0` from the tower induction
+      have ht := towerInd_inst (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)
+      have g0 : PSeq ACA [∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
+          (∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)) ⋎
+            allTI (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
+        PSeq.orInv (PSeq.of_provable ht)
+      have g1 : PSeq ACA [∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
+          allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+          ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2))] :=
+        PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
+      exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1
+    · -- comprehension: instantiate the `∀²` at the free set variable
+      exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto)
+        (PSeq.exs₂ arith_freeWitness epsProg_key)
+
+/-- The cut hypothesis `W` of `epsProg_hGamma0` (W9 split). -/
+private theorem epsProg_hyp : PSeq ACA [hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0),
+    ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(progSOX : Proposition ℒₒᵣ),
+    ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+    ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
+  -- prove the universal hypothesis
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hf1 : Semiproposition.free₀ (hypInner₂
+      (FirstOrder.Rew.bShift (&2 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
+      (#0 : FirstOrder.Semiterm LX ℕ 1)) =
+      hypInner₂ (&3 : FirstOrder.Semiterm LX ℕ 0) (&1) (&0) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypInner₂ _ _ _) = _
+    rw [rew_hypInner₂ (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
+      hb_free hf_free]
+    simp
+  have hs1 : SecondOrder.Sequent.shift₀
+      [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+        xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+        ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+        xSO (&1 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
+      shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
+    norm_num
+  rw [hf1, hs1]
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hf2 : Semiproposition.free₀ (hypInner₁
+      (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
+      (#0 : FirstOrder.Semiterm LX ℕ 1)) =
+      hypInner₁ (&4 : FirstOrder.Semiterm LX ℕ 0) (&2) (&1) (&0) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypInner₁ _ _ _ _) = _
+    rw [rew_hypInner₁ (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
+      hb_free hf_free]
+    simp
+  have hs2 : SecondOrder.Sequent.shift₀
+      [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+        xSO (&1 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+        ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(precSOv (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+        xSO (&2 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+        ∼(belowPsi (&4 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
+      shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
+    norm_num
+  rw [hf2, hs2]
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hf3 : Semiproposition.free₀ (hypMatrix
+      (FirstOrder.Rew.bShift (&4 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&2 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))
+      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
+      (#0 : FirstOrder.Semiterm LX ℕ 1)) =
+      hypMatrix (&5 : FirstOrder.Semiterm LX ℕ 0) (&3) (&2) (&1) (&0) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypMatrix _ _ _ _ _) = _
+    rw [rew_hypMatrix (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
+      hb_free hf_free]
+    simp
+  have hs3 : SecondOrder.Sequent.shift₀
+      [∼(precSOv (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
+        xSO (&2 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+        ∼(belowPsi (&4 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+        xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+        ∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+        ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
+      shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
+    norm_num
+  rw [hf3, hs3]
+  -- `w = &0`, `k = &1`, `s = &2`, `x = &3`, `u = &4`, `g = &5`
+  have hcore := epsProg_hcore
+  have o1 : PSeq ACA [(∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+        xSO (&3 : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
+      ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+      xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(progSOX : Proposition ℒₒᵣ),
+      ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := PSeq.or hcore
+  have o2 : PSeq ACA [∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
+      (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+        xSO (&3 : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+      xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(progSOX : Proposition ℒₒᵣ),
+      ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
+    PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) o1
+  have o3 : PSeq ACA [(∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)) ⋎
+        (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+          xSO (&3 : FirstOrder.Semiterm LX ℕ 0))),
+      ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+      xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(progSOX : Proposition ℒₒᵣ),
+      ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := PSeq.or o2
+  have o4 : PSeq ACA [∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      (∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)) ⋎
+        (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+          xSO (&3 : FirstOrder.Semiterm LX ℕ 0))),
+      ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
+      xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(progSOX : Proposition ℒₒᵣ),
+      ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
+      ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
+    PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) o3
+  exact PSeq.or o4
+
+/-- The lifted cover supplies `∼W` (W9 split). -/
+private theorem epsProg_cover : PSeq ACA [∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)),
+    ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(progSOX : Proposition ℒₒᵣ),
+    ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+    ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
+  have hc := progCover_inst (&2 : FirstOrder.Semiterm LX ℕ 0) (&1) (&0)
+  have g0 : PSeq ACA [∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+      (∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
+        (∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+          xSO (&0 : FirstOrder.Semiterm LX ℕ 0)))] :=
+    PSeq.orInv (PSeq.of_provable hc)
+  have g1 : PSeq ACA [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+      (∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
+        xSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
+      ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2))] :=
+    PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
+  have g2 : PSeq ACA [∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)),
+      xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
+      ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+      ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2))] :=
+    PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1)
+  exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g2
+
+/-- The core sequent of `epsProg`, split off as its own declaration: the v4.34 kernel
+needs >15 GB to check `epsProg` as a single term (W9). -/
+private theorem epsProg_hGamma0 : PSeq ACA [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(progSOX : Proposition ℒₒᵣ),
+    ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+    ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] :=
+  PSeq.cut (hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) epsProg_hyp epsProg_cover
+
+/-- `epsProg`, wrapping up: `∀x`, `∀²X`, `∀u`, `∀g` (W9 split). -/
+private theorem epsProg_hStepC : PSeq ACA [belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(progSOX : Proposition ℒₒᵣ),
+    ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+  rw [belowSOX_eq]
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hfree : Semiproposition.free₀ (∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
+      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+    xSO (#0 : FirstOrder.Semiterm LX ℕ 1)) =
+      ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
+        xSO (&0 : FirstOrder.Semiterm LX ℕ 0) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ _ = _
+    rw [LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+      rew_precSOv (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
+        hb_free hf_free,
+      rew_xSO (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free]
+    simp
+  have hsh : SecondOrder.Sequent.shift₀
+      [∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(progSOX : Proposition ℒₒᵣ),
+        ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
+        ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
+    norm_num
+  rw [hfree, hsh]
+  exact PSeq.or epsProg_hGamma0
+
+private theorem epsProg_hStepE : PSeq ACA [allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+    ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.all₂ ACA_shift₁_invariant ?_
+  have hshift₁ : SecondOrder.Sequent.shift₁
+      [∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+        ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₁, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg,
+      shift₁_eq_self_of_noSetFvar
+        (noSetFvar_epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
+      shift₁_eq_self_of_noSetFvar
+        (noSetFvar_belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))]
+  rw [hshift₁, free₁_tiBody, tiSO_eq]
+  exact PSeq.or (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) epsProg_hStepC)
+
+private theorem epsProg_hStepG : PSeq ACA [psiAt (&0 : FirstOrder.Semiterm LX ℕ 0),
+    ∼(belowPsi (&0 : FirstOrder.Semiterm LX ℕ 0))] := by
+  refine PSeq.all₁ ACA_shift₀_invariant ?_
+  have hfree : Semiproposition.free₀ (∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
+      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
+    allTI (#0 : FirstOrder.Semiterm LX ℕ 1)) =
+      ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
+        allTI (&0 : FirstOrder.Semiterm LX ℕ 0) := by
+    show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ _ = _
+    rw [LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
+      rew_epsSO (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free,
+      rew_allTI (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free]
+    simp
+  have hsh : SecondOrder.Sequent.shift₀
+      [∼(belowPsi (&0 : FirstOrder.Semiterm LX ℕ 0))] =
+      [∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
+    simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
+      LogicalConnective.HomClass.map_neg, shift₀_belowPsi]
+    norm_num
+  rw [hfree, hsh]
+  exact PSeq.or (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) epsProg_hStepE)
+
+
 /-- **(Prog).**  `ACA ⊢ Prog(≺₁, ψ₀)`: the `Π¹₁` formula
 `ψ₀(g) :≡ ∀u (Eps(u,g) → ∀²X TI(≺₁,u,X))` is `≺₁`-progressive.
 
@@ -1693,317 +2060,6 @@ introductions, and three `cut`s against the closed theorems `goodAllTI`,
 `towerInduction` and the lifted cover. -/
 theorem epsProg : Provable ACA (progPsi : Proposition ℒₒᵣ) := by
   -- `x = &0`, `u = &1`, `g = &2`
-  have hΓ₀ : PSeq ACA [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-      xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(progSOX : Proposition ℒₒᵣ),
-      ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-      ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
-    refine PSeq.cut (hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) ?_ ?_
-    · -- prove the universal hypothesis
-      refine PSeq.all₁ ACA_shift₀_invariant ?_
-      have hf1 : Semiproposition.free₀ (hypInner₂
-          (FirstOrder.Rew.bShift (&2 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
-          (#0 : FirstOrder.Semiterm LX ℕ 1)) =
-          hypInner₂ (&3 : FirstOrder.Semiterm LX ℕ 0) (&1) (&0) := by
-        show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypInner₂ _ _ _) = _
-        rw [rew_hypInner₂ (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
-          hb_free hf_free]
-        simp
-      have hs1 : SecondOrder.Sequent.shift₀
-          [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-            xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-            ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] =
-          [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-            xSO (&1 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-            ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] := by
-        simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-          LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
-          shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
-        norm_num
-      rw [hf1, hs1]
-      refine PSeq.all₁ ACA_shift₀_invariant ?_
-      have hf2 : Semiproposition.free₀ (hypInner₁
-          (FirstOrder.Rew.bShift (&3 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
-          (#0 : FirstOrder.Semiterm LX ℕ 1)) =
-          hypInner₁ (&4 : FirstOrder.Semiterm LX ℕ 0) (&2) (&1) (&0) := by
-        show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypInner₁ _ _ _ _) = _
-        rw [rew_hypInner₁ (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
-          hb_free hf_free]
-        simp
-      have hs2 : SecondOrder.Sequent.shift₀
-          [∼(precSOv (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-            xSO (&1 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-            ∼(belowPsi (&3 : FirstOrder.Semiterm LX ℕ 0))] =
-          [∼(precSOv (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-            xSO (&2 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-            ∼(belowPsi (&4 : FirstOrder.Semiterm LX ℕ 0))] := by
-        simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-          LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
-          shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
-        norm_num
-      rw [hf2, hs2]
-      refine PSeq.all₁ ACA_shift₀_invariant ?_
-      have hf3 : Semiproposition.free₀ (hypMatrix
-          (FirstOrder.Rew.bShift (&4 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&2 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&1 : FirstOrder.Semiterm LX ℕ 0))
-          (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))
-          (#0 : FirstOrder.Semiterm LX ℕ 1)) =
-          hypMatrix (&5 : FirstOrder.Semiterm LX ℕ 0) (&3) (&2) (&1) (&0) := by
-        show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ (hypMatrix _ _ _ _ _) = _
-        rw [rew_hypMatrix (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
-          hb_free hf_free]
-        simp
-      have hs3 : SecondOrder.Sequent.shift₀
-          [∼(precSOv (&2 : FirstOrder.Semiterm LX ℕ 0) (&3)),
-            xSO (&2 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-            ∼(belowPsi (&4 : FirstOrder.Semiterm LX ℕ 0))] =
-          [∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-            xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-            ∼(progSOX : Proposition ℒₒᵣ),
-            ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-            ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := by
-        simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-          LogicalConnective.HomClass.map_neg, shift₀_precSOv, shift₀_xSO,
-          shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
-        norm_num
-      rw [hf3, hs3]
-      -- `w = &0`, `k = &1`, `s = &2`, `x = &3`, `u = &4`, `g = &5`
-      have hcore : PSeq ACA [∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
-          ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := by
-        refine PSeq.cut (allTI (&2 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
-        · -- `allTI &2` from `goodAllTI`
-          have hg := good_inst (&5 : FirstOrder.Semiterm LX ℕ 0) (&2)
-          have g0 : PSeq ACA [∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0)),
-              (∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)) ⋎
-                allTI (&2 : FirstOrder.Semiterm LX ℕ 0))] :=
-            PSeq.orInv (PSeq.of_provable hg)
-          have g1 : PSeq ACA [∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-              allTI (&2 : FirstOrder.Semiterm LX ℕ 0),
-              ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
-            PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
-          exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1
-        · refine PSeq.cut (allTI (&0 : FirstOrder.Semiterm LX ℕ 0)) ?_ ?_
-          · -- `allTI &0` from the tower induction
-            have ht := towerInd_inst (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)
-            have g0 : PSeq ACA [∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
-                (∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)) ⋎
-                  allTI (&0 : FirstOrder.Semiterm LX ℕ 0))] :=
-              PSeq.orInv (PSeq.of_provable ht)
-            have g1 : PSeq ACA [∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
-                allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-                ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2))] :=
-              PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
-            exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1
-          · -- comprehension: instantiate the `∀²` at the free set variable
-            have key : PSeq ACA
-                (Semiproposition.subst₁ (∼(toSOAtB boundWitness
-                    (tiX (&0 : FirstOrder.Semiterm LX ℕ 0)))) ![freeWitness] ::
-                  [∼(allTI (&2 : FirstOrder.Semiterm LX ℕ 0)),
-                    ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)),
-                    xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-                    ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
-                    ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-                    ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-                    ∼(progSOX : Proposition ℒₒᵣ),
-                    ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-                    ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))]) := by
-              rw [neg_subst₁_tiBody_free]
-              have hneg : ∼(tiSO (&0 : FirstOrder.Semiterm LX ℕ 0)) =
-                  (progSOX : Proposition ℒₒᵣ) ⋏
-                    ∼(belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0)) := by
-                rw [tiSO_eq]
-                show (∼(∼(progSOX : Proposition ℒₒᵣ))) ⋏
-                  ∼(belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0)) = _
-                rw [Semiformula.neg_neg]
-              rw [hneg]
-              refine PSeq.and (PSeq.id (φ := (progSOX : Proposition ℒₒᵣ))
-                (by simp) (by simp)) ?_
-              have hb : ∼(belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0)) =
-                  ∃¹ (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-                    xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) := by
-                rw [belowSOX_eq]
-                rfl
-              rw [hb]
-              refine PSeq.exs₁ (&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0) ?_
-              have e5 : (FirstOrder.Rew.subst ![(&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-                  (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-                    xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) =
-                  precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0) ⋏
-                    ∼(xSO (&3 : FirstOrder.Semiterm LX ℕ 0)) := by
-                show (FirstOrder.Rew.subst ![(&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)]) ▹
-                  ((∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                      (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0)))) ⋏
-                    ∼(xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) :
-                      Semiproposition ℒₒᵣ 0 1) = _
-                rw [LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
-                  LogicalConnective.HomClass.map_neg, LogicalConnective.HomClass.map_neg,
-                  rew_precSOv (ω := FirstOrder.Rew.subst
-                    ![(&3 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp)
-                    (fun y => by simp),
-                  rew_xSO (ω := FirstOrder.Rew.subst
-                    ![(&3 : FirstOrder.Semiterm LX ℕ 0)]) (fun i => by simp)
-                    (fun y => by simp),
-                  Semiformula.neg_neg]
-                simp
-              show PSeq ACA ((FirstOrder.Rew.subst ![(&3 : FirstOrder.Semiterm ℒₒᵣ ℕ 0)] ▹
-                (∼(∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-                    (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-                  xSO (#0 : FirstOrder.Semiterm LX ℕ 1))) : Proposition ℒₒᵣ) :: _)
-              rw [e5]
-              exact PSeq.and
-                (PSeq.id (φ := precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0))
-                  (by simp) (by simp))
-                (PSeq.id (φ := xSO (&3 : FirstOrder.Semiterm LX ℕ 0)) (by simp) (by simp))
-            exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto)
-              (PSeq.exs₂ arith_freeWitness key)
-      have o1 : PSeq ACA [(∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-            xSO (&3 : FirstOrder.Semiterm LX ℕ 0)),
-          ∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
-          ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := PSeq.or hcore
-      have o2 : PSeq ACA [∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)),
-          (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-            xSO (&3 : FirstOrder.Semiterm LX ℕ 0)),
-          ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
-        PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) o1
-      have o3 : PSeq ACA [(∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)) ⋎
-            (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-              xSO (&3 : FirstOrder.Semiterm LX ℕ 0))),
-          ∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] := PSeq.or o2
-      have o4 : PSeq ACA [∼(goodSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          (∼(towerSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1) (&2)) ⋎
-            (∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-              xSO (&3 : FirstOrder.Semiterm LX ℕ 0))),
-          ∼(precSOv (&3 : FirstOrder.Semiterm LX ℕ 0) (&4)),
-          xSO (&3 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&4 : FirstOrder.Semiterm LX ℕ 0) (&5)),
-          ∼(belowPsi (&5 : FirstOrder.Semiterm LX ℕ 0))] :=
-        PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) o3
-      exact PSeq.or o4
-    · -- the lifted cover supplies `∼W`
-      have hc := progCover_inst (&2 : FirstOrder.Semiterm LX ℕ 0) (&1) (&0)
-      have g0 : PSeq ACA [∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-          (∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
-            (∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-              xSO (&0 : FirstOrder.Semiterm LX ℕ 0)))] :=
-        PSeq.orInv (PSeq.of_provable hc)
-      have g1 : PSeq ACA [∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          (∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)) ⋎
-            xSO (&0 : FirstOrder.Semiterm LX ℕ 0)),
-          ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2))] :=
-        PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g0)
-      have g2 : PSeq ACA [∼(hypSO (&2 : FirstOrder.Semiterm LX ℕ 0) (&0)),
-          xSO (&0 : FirstOrder.Semiterm LX ℕ 0),
-          ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2))] :=
-        PSeq.orInv (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g1)
-      exact PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) g2
-  -- wrap up: `∀x`, `∀²X`, `∀u`, `∀g`
-  have hStepC : PSeq ACA [belowSOX (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(progSOX : Proposition ℒₒᵣ),
-      ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-      ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-    rw [belowSOX_eq]
-    refine PSeq.all₁ ACA_shift₀_invariant ?_
-    have hfree : Semiproposition.free₀ (∼(precSOv (#0 : FirstOrder.Semiterm LX ℕ 1)
-        (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-      xSO (#0 : FirstOrder.Semiterm LX ℕ 1)) =
-        ∼(precSOv (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
-          xSO (&0 : FirstOrder.Semiterm LX ℕ 0) := by
-      show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ _ = _
-      rw [LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
-        rew_precSOv (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0))
-          hb_free hf_free,
-        rew_xSO (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free]
-      simp
-    have hsh : SecondOrder.Sequent.shift₀
-        [∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
-        [∼(progSOX : Proposition ℒₒᵣ),
-          ∼(epsSO (&1 : FirstOrder.Semiterm LX ℕ 0) (&2)),
-          ∼(belowPsi (&2 : FirstOrder.Semiterm LX ℕ 0))] := by
-      simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-        LogicalConnective.HomClass.map_neg, shift₀_progSOX, shift₀_epsSO, shift₀_belowPsi]
-      norm_num
-    rw [hfree, hsh]
-    exact PSeq.or hΓ₀
-  have hStepE : PSeq ACA [allTI (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-      ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-    refine PSeq.all₂ ACA_shift₁_invariant ?_
-    have hshift₁ : SecondOrder.Sequent.shift₁
-        [∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] =
-        [∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-          ∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-      simp only [SecondOrder.Sequent.shift₁, List.map_cons, List.map_nil,
-        LogicalConnective.HomClass.map_neg,
-        shift₁_eq_self_of_noSetFvar
-          (noSetFvar_epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)),
-        shift₁_eq_self_of_noSetFvar
-          (noSetFvar_belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))]
-    rw [hshift₁, free₁_tiBody, tiSO_eq]
-    exact PSeq.or (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) hStepC)
-  have hStepG : PSeq ACA [psiAt (&0 : FirstOrder.Semiterm LX ℕ 0),
-      ∼(belowPsi (&0 : FirstOrder.Semiterm LX ℕ 0))] := by
-    refine PSeq.all₁ ACA_shift₀_invariant ?_
-    have hfree : Semiproposition.free₀ (∼(epsSO (#0 : FirstOrder.Semiterm LX ℕ 1)
-        (FirstOrder.Rew.bShift (&0 : FirstOrder.Semiterm LX ℕ 0))) ⋎
-      allTI (#0 : FirstOrder.Semiterm LX ℕ 1)) =
-        ∼(epsSO (&0 : FirstOrder.Semiterm LX ℕ 0) (&1)) ⋎
-          allTI (&0 : FirstOrder.Semiterm LX ℕ 0) := by
-      show (FirstOrder.Rew.free : FirstOrder.Rew ℒₒᵣ ℕ 1 ℕ 0) ▹ _ = _
-      rw [LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_neg,
-        rew_epsSO (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free,
-        rew_allTI (ω := (FirstOrder.Rew.free : FirstOrder.Rew LX ℕ 1 ℕ 0)) hb_free hf_free]
-      simp
-    have hsh : SecondOrder.Sequent.shift₀
-        [∼(belowPsi (&0 : FirstOrder.Semiterm LX ℕ 0))] =
-        [∼(belowPsi (&1 : FirstOrder.Semiterm LX ℕ 0))] := by
-      simp only [SecondOrder.Sequent.shift₀, List.map_cons, List.map_nil,
-        LogicalConnective.HomClass.map_neg, shift₀_belowPsi]
-      norm_num
-    rw [hfree, hsh]
-    exact PSeq.or (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) hStepE)
   show Provable ACA (∀¹ (∼(belowPsi (#0 : FirstOrder.Semiterm LX ℕ 1)) ⋎
     psiAt (#0 : FirstOrder.Semiterm LX ℕ 1)))
   refine gen₁ ACA_shift₀_invariant ?_
@@ -2018,7 +2074,7 @@ theorem epsProg : Provable ACA (progPsi : Proposition ℒₒᵣ) := by
     simp
   rw [e0]
   exact PSeq.to_provable (PSeq.or
-    (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) hStepG))
+    (PSeq.wk (by intro y hy; simp only [List.mem_cons] at hy ⊢; tauto) epsProg_hStepG))
 
 /-! ## (Final): `ACA ⊢ ∀²X TI(≺₁, ε̄_c, X)` -/
 

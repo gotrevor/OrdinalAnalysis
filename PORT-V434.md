@@ -167,6 +167,29 @@ W7c. third instance of the `lMap`-body runaway, in a file whose *other* `map_…
    Semiformula.lMap_subst]` then `have hw₁/hw₂/hq` for the three leaves and one `rw`
    (the `map_iterZero_body` template) → `Gentzen/Epsilon1UpperBound.lean:330` (`map_succ_body`).
 
+W9. **the *kernel* — not the elaborator — runs out of memory on a big derivation-assembly
+   proof, and the OOM kill carries no message at all.**  `ACA/EpsProg.lean` elaborates in ~10 s
+   (`tactic execution 9.5 s`) and then spends >15 GB in `type checking` on two declarations,
+   `goodAllTI` and `epsProg`; `lake build` shows only `error: Lean exited with code 137`.
+   * **Diagnosis** (replaces truncation-bisect; that cost lap 2 an hour): run
+     `lake env lean -M <MB> -j 2 --profile <file>`.  Lean's `-M` converts the kill into a *named*
+     per-declaration error, `<file>:<line>:<col>: error: (kernel) excessive memory consumption
+     detected`, and keeps going, so one run localises **every** offender at once; `--profile`
+     then says whether the cost is `elaboration`/`tactic execution` (a W5b/W7-style runaway) or
+     `type checking` (this pattern).
+   * **Fix: split the declaration.**  The kernel's whnf/defeq cache is per-declaration, and these
+     proofs chain ~20 `PSeq.cut`/`.or`/`.wk`/`.all₁` steps whose *indices* are concrete coded
+     `Semiproposition`s (`toSOAt segWitness (…)`), so one monolith re-derives the same
+     normalisations inside one cache.  Lifting each `have` of the tactic block to a
+     `private theorem` with its sequent spelled out cuts the peak by an order of magnitude and
+     costs nothing at run time (each step is used exactly once).
+     `goodAllTI` → `goodAllTI_{branchA,hmain,hor1,hor2,hor3,hall1,hall2,branchB}`;
+     `epsProg` → `epsProg_{hGamma0,hStepC,hStepE,hStepG}`.
+   * Corollary for the port as a whole: the v4.34 `Bounding`-generalised hierarchy makes every
+     coded formula term bigger, so proofs that were comfortably inside the kernel on v4.33 are
+     not any more.  Expect this wherever a single theorem assembles a long `PSeq`/`Derivation`
+     chain over concrete codes.
+
 W5. `WellFoundedRelation.wf` survives (`(measure f).wf.induction` still works); it is only
    `WellFoundedLT`/`IsWellFounded` that lost their wrapper → don't blanket-rewrite `.wf`.
 

@@ -1,55 +1,72 @@
-# PORT-V434 — state after lap 2 (2026-09-28)
+# PORT-V434 — state during lap 3 (2026-09-28)
 
-`lake build` reaches **1595/1599 jobs**; every module that was blocking is now green, and each
-newly-reached module exposes the next batch of the same runaway family.  Still open (all exit 137
-*alone*, all in the W7/W5c family — bisect and replace the offending `simp`):
+`lake build` reaches **1594/1599 jobs**.  Three modules are OOM-killed (exit 137):
+`ACA/OmegaJumpDepth`, `ACA/EpsProg`, `Ramified/UpperBound`.
 
-* `OrdinalAnalysis/ACA/OmegaJumpDepth.lean`
-* `OrdinalAnalysis/ACA/EpsProg.lean`
-* `OrdinalAnalysis/Ramified/UpperBound.lean`
+## The lap-3 finding: **W9 — it is the KERNEL, not the elaborator**
 
-Cleared in lap 2 (each verified by its own `lake build <module>`): Gentzen/{InternalEpsMonoCode,
-InternalVeblenCode, ProgStep, VeblenTower, VeblenSuccStep, Epsilon1UpperBound},
-ACA/TowerInduction, ACAOmega/{CodedOrder₂, Gamma0Order₂}, IDn/LowerBoundAux2,
-Ramified/{LowerBound, TransfiniteLower, SemiformalLower, DescentBetaAux2}.
+`lake env lean -M 9000 -j 2 --profile OrdinalAnalysis/ACA/EpsProg.lean` turns the silent
+exit-137 into named, per-declaration errors and keeps going:
 
-Three shapes of the fix, all now proven repeatedly:
-1. `simp [<def>]` → `simp only [<def>, lMap_all/eval_all, HomClass.map_or/neg/and, lMap_subst]`
-   plus one `have` per substitution vector and a single `rw`.
-2. a `show` that asks the elaborator to unfold a definition **at a concrete term** → state the
-   unfolding as a `rfl` lemma **at a variable** (`thetaAt_eq`, `noXN_and`) and `rw` with it.
-3. a `freeVariables`/`NoXN` read-off → spell the syntax steps with `rw`, never `simp`.
+```
+OrdinalAnalysis/ACA/EpsProg.lean:1217:8: error: (kernel) excessive memory consumption detected
+OrdinalAnalysis/ACA/EpsProg.lean:1694:8: error: (kernel) excessive memory consumption detected
+…  elaboration 199ms · tactic execution 9.48s · type checking 33.7s
+```
 
-## Closed this lap
+So the file **elaborates fine**; two declarations (`goodAllTI`, `epsProg`) blow up in kernel
+type checking, and they still blow at `-M 15000`.  This is a *different* family from
+W5b/W7 (diverging `simp`), and truncation-bisect is the wrong tool for it — `-M` localises
+every offender in one run.
 
-* `Ramified/LowerBound.lean` — a lap-1 sed had eaten the `replay_of_provable` header line;
-  restored, plus `set d' := FinDerivation.ofDerivation …` (a `have` forgets the body, so
-  `isCutFree_ofDerivation` no longer typechecked against `d'`).
-* `IDn/LowerBoundAux2.lean` — **W7b**, new: an anonymous constructor in the *structurally
-  recursive* `noXN_DF`/`noXN_wForm` proofs unfolds `NoXN` through a concrete coded formula and
-  OOMs the whole file (even a `#check` after it dies).  Added `noXN_and`/`noXN_all` (`Iff.rfl`,
-  variable subformulas) and used `.mpr` at each node.
-* `ACAOmega/CodedOrder₂.lean`, `ACAOmega/Gamma0Order₂.lean` — **W5c**: `simp [precSeg₀, h]` for a
-  `freeVariables` read-off → spelled `rw [precSeg₀, …freeVariables_and, …, Finset.union_empty]`.
-* `Gentzen/Epsilon1UpperBound.lean` (`map_succ_body`), `Gentzen/VeblenTower.lean`
-  (`map_towerZero_body`, `map_towerSucc_body`), `Gentzen/VeblenSuccStep.lean`
-  (`map_succGeneral_body`) — **W7c**: the `lMap`-body family; `simp only [… lMap_all,
-  HomClass.map_or/neg/and, lMap_subst]` + one `have` per substitution vector + one `rw`.
-* `Ramified/{TransfiniteLower,SemiformalLower,DescentBetaAux2}.lean` — W8 leftovers
-  (`rintro ⟨h⟩` → `intro h`, drop `obtain ⟨h⟩ := h`).
+### Root cause, pinned by bisecting the split
+
+After lifting each `have` of `goodAllTI` to a `private theorem`, the surviving offender was
+
+```lean
+private theorem goodAllTI_branchB : PSeq ACA [∼(goodBSO (&0) (&1)), allTI (&0), ∼(belowPsi (&1))] :=
+  goodAllTI_hall2          -- >10 GB, in the kernel, on this ONE defeq
+```
+
+i.e. a **single defeq** `∼(goodBSO s g) ≟ ∀¹∀¹ (goodBNegBody …)`.  `Semiformula.neg` is a
+structural recursion, so the kernel (which has no `smartUnfolding`/equation lemmas — it
+reduces `brecOn` directly) pushes `∼` *through the whole concrete coded formula*
+(`precSOv`/`baseSO`/`epsSO`/`addSO`, each a `toSOAt segWitness (…)` of a blueprint code).
+v4.34's `Bounding`-generalised hierarchy made those codes bigger, so what the v4.33 kernel
+survived it no longer does.
+
+### The two fixes, in order of preference
+
+1. **Never let the kernel push a recursive syntax function through a concrete code.**
+   State the unfolding as a lemma proved by `rw` with DeMorgan/neg lemmas *at variable
+   subformulas* (`Semiformula.neg_exs₁`, `LogicalConnective.DeMorgan.and`), then `rw` with it:
+   `neg_goodBSO` in `ACA/EpsProg.lean`.  This is fix-shape 2 of lap 2, now known to apply to
+   the KERNEL as well as the elaborator.
+2. **Split the declaration.**  The kernel's whnf cache is per-declaration; lifting each `have`
+   of a long `PSeq` assembly to a `private theorem` with its sequent spelled out cut the peak
+   by an order of magnitude and localises what is left.
+
+Done this lap in `ACA/EpsProg.lean`:
+`goodAllTI` → `goodAllTI_{branchA,hmain,hor1,hor2,hor3,hall1,hall2,branchB}` + `neg_goodBSO`;
+`epsProg` → `epsProg_{hyp,cover,hGamma0,hStepC,hStepE,hStepG}`.
 
 ## Next attack
 
-1. Bisect the two remaining files by truncation.  **Read `$?` of an *unpiped* `lake env lean`** —
-   piping into `tail` hides the kill, and a `sorry`-truncated variant that prints no
-   "declaration uses 'sorry'" warning was killed, not accepted (this cost an hour of this lap).
-   Expect the same two shapes: a full `simp` unfolding a `𝚺₁.Semisentence`/`PR.Blueprint`, or an
-   anonymous constructor / `Iff.rfl` against a concrete coded formula.
-2. Then `lake build` whole repo, then `lake env lean scripts/AxiomCheck.lean` (frozen).
-3. Only once both are green: create `PORT-V434-GREEN.md` (host stop condition), delete
-   `PORT-REF-gi-Compat.lean.txt`, commit.
+1. Finish `ACA/EpsProg.lean` under `-M 10000`; then the same `-M` probe on
+   `ACA/OmegaJumpDepth.lean` (83 lines, two `emb_univCl_of_closed (by simp […])`
+   `freeVariables` read-offs — may be a W5c elaborator runaway instead) and
+   `Ramified/UpperBound.lean` (330 lines; `simp [Prog, below, precAt, precBelowR, precCode₁R,
+   lvlOf_lMap_toLRA]` inside `ramified_upper_bound` is the W5b-shaped suspect).
+2. Then whole-repo `lake build`; expect one more wave as the unlocked dependents
+   (`ACA/OmegaJumpInduction`, `ACA/OmegaJumpProg`, `ACA/UpperBound`,
+   `Ramified/{FefermanSchutte,LimitTheorem,CopyR}`) are reached.
+3. Then `lake env lean scripts/AxiomCheck.lean` (frozen, 538 guards).
+4. Only once both are green: create `PORT-V434-GREEN.md`, delete `PORT-REF-gi-Compat.lean.txt`.
 
-## Box note
+## Box notes
 
-~20 GB RAM, no `-j` on Lake 5 — never two `lake build`s at once.  Verify green from scalars in
-their own call: `grep -c 'Build completed successfully'` (want 1), `grep -cE '^error'` (want 0).
+* ~19 GB RAM, no `-j` on Lake 5 — never two `lake build`s at once.  Verify green from scalars
+  in their own call: `grep -c 'Build completed successfully'` (want 1), `grep -cE '^error'` (0).
+* `lake env lean -M <MB>` is the diagnostic of choice; `--profile`'s `type checking` vs
+  `tactic execution` line says which family (W9 vs W5b/W7) you are in.
+* Never `lake update`, never `lake exe cache get`, never push.
