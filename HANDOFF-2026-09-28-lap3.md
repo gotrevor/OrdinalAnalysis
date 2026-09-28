@@ -1,6 +1,6 @@
 # HANDOFF 2026-09-28 — PORT-V434 lap 3 — **GREEN**
 
-**Branch** `v4.34`   **Status: both gates green.**
+**Branch** `v4.34`   **HEAD** `3ad159b`   **Working tree clean.**   **Status: both gates green; stop sentinel signalled and confirmed honored.**
 
 ```
 $ taskset -c 0-2 lake build           → Build completed successfully (1599 jobs).   rc 0
