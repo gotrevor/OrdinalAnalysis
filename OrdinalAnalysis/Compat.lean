@@ -23,7 +23,9 @@
 -/
 import Foundation.FirstOrder.LK.CutFree
 
-namespace FFL.FirstOrder
+open FFL FFL.FirstOrder
+
+namespace OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 
@@ -36,9 +38,11 @@ formula in the list. -/
 def Rewriting.lshifts {F : ℕ → Type*} {n : ℕ} [LCWQ F] [Rewriting L ℕ F ℕ F]
     (Γ : List (F n)) : List (F n) := Γ.map Rewriting.shift
 
-@[inherit_doc] postfix:max "ˡ⁺" => FFL.FirstOrder.Rewriting.lshifts
+@[inherit_doc] scoped postfix:max "ˡ⁺" => OrdinalAnalysis.Compat.FirstOrder.Rewriting.lshifts
 
 namespace Rewriting
+
+open FFL.FirstOrder.Rewriting
 
 variable {F : ℕ → Type*} {n : ℕ} [LCWQ F] [Rewriting L ℕ F ℕ F]
 
@@ -97,7 +101,7 @@ def embed (Γ : List (Sentence L)) : Sequent L := List.map Rewriting.emb Γ
 
 end Sequent
 
-end FFL.FirstOrder
+end OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### Bridging list sequents and upstream's multiset sequents
 
@@ -105,7 +109,7 @@ end FFL.FirstOrder
 here by list sequents.  These are the coercion lemmas that translate between the
 two, plus the membership bookkeeping the bridge files need. -/
 
-namespace FFL.FirstOrder
+namespace OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 
@@ -126,23 +130,26 @@ variable {L : Language}
 /-- Upstream derivation of the multiset underlying a *list* sequent.  This is
 the shape the bridge files use: the derivation is upstream's, the sequent is
 written as a list. -/
-abbrev ListDerivation (Γ : FFL.FirstOrder.Sequent L) : Type _ :=
-  ⊢ᴸᴷ¹ ((Γ : FFL.FirstOrder.Sequent L) : LK.Sequent L)
+abbrev ListDerivation (Γ : Sequent L) : Type _ :=
+  ⊢ᴸᴷ¹ ((Γ : Sequent L) : LK.Sequent L)
 
-@[inherit_doc] notation:45 "⊢ᴸᴷˡ " Γ => FFL.FirstOrder.ListDerivation Γ
+@[inherit_doc] scoped notation:45 "⊢ᴸᴷˡ " Γ => OrdinalAnalysis.Compat.FirstOrder.ListDerivation Γ
 
 /-- Every multiset sequent has a list representative. -/
 lemma exists_list_rep (Δ : LK.Sequent L) : ∃ Γ : Sequent L, (Γ : LK.Sequent L) = Δ :=
   ⟨Δ.toList, by simp⟩
 
-end FFL.FirstOrder
+end OrdinalAnalysis.Compat.FirstOrder
 
-namespace FFL.FirstOrder.LawfulSyntacticRewriting
+namespace OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 
 variable {L : Language} {n : ℕ} {S : ℕ → Type*} [LCWQ S] [SyntacticRewriting L S S]
   [LawfulSyntacticRewriting L S]
 
 open FFL.FirstOrder.Rewriting
+open scoped OrdinalAnalysis.Compat.FirstOrder
+open OrdinalAnalysis.Compat.FirstOrder.Rewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting
 
 /-- List analogue of upstream's `mem_shifts_iff`. -/
 @[simp] lemma mem_lshifts_iff {φ : S n} {Γ : List (S n)} :
@@ -159,9 +166,9 @@ open FFL.FirstOrder.Rewriting
     exact mem_lshifts_iff.mp this
   · exact Rewriting.lshifts_subset
 
-end FFL.FirstOrder.LawfulSyntacticRewriting
+end OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 
-namespace FFL.FirstOrder
+namespace OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 
@@ -181,7 +188,7 @@ lemma coe_sequent_singleton (φ : Proposition L) :
     (([φ] : Sequent L) : LK.Sequent L) = ⦃φ⦄ := by
   simpa using coe_sequent_cons φ []
 
-end FFL.FirstOrder
+end OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### `provable_iff` with a list of axioms
 
@@ -189,7 +196,7 @@ Upstream's `Theory.Proof.provable_iff` now hands back a *multiset* of axioms and
 a multiset sequent.  This is the same statement with the list sequents used here;
 it is proved from upstream's, not assumed. -/
 
-namespace FFL.FirstOrder
+namespace OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 
@@ -210,7 +217,7 @@ variable {T : Theory L} {φ : Sentence L}
 lemma provable_iff_list :
     T ⊢ φ ↔ ∃ Γ : List (Sentence L), (∀ ψ ∈ Γ, ψ ∈ T) ∧
       Nonempty (⊢ᴸᴷ¹ (((φ : Proposition L) :: ∼Sequent.embed Γ : Sequent L) : LK.Sequent L)) := by
-  rw [provable_iff]
+  rw [FFL.FirstOrder.Theory.Proof.provable_iff]
   constructor
   · rintro ⟨Γ, hΓ, ⟨d⟩⟩
     refine ⟨Γ.toList, fun ψ hψ ↦ hΓ ψ (by simpa using hψ), ⟨?_⟩⟩
@@ -225,4 +232,4 @@ lemma provable_iff_list :
 
 end Theory.Proof
 
-end FFL.FirstOrder
+end OrdinalAnalysis.Compat.FirstOrder

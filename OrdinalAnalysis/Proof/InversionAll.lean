@@ -16,8 +16,8 @@ import OrdinalAnalysis.Proof.Substitution
 
 namespace OrdinalAnalysis
 
-open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 open ONote
 
 variable {L : Language}

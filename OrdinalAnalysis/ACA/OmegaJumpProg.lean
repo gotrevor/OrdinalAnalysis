@@ -43,7 +43,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA.ColumnTower
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 open OrdinalAnalysis.Gentzen.CodedVeblenJump (addCode₁ omegaPowCode₁)
@@ -237,10 +237,10 @@ end OrdinalAnalysis.ACA.ColumnTower
 
 namespace OrdinalAnalysis.ACA
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term)

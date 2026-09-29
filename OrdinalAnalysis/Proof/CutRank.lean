@@ -15,7 +15,7 @@ import OrdinalAnalysis.FinLK
 
 namespace OrdinalAnalysis
 
-open FFL FFL.FirstOrder OrdinalAnalysis.FinDerivation
+open FFL FFL.FirstOrder OrdinalAnalysis.FinDerivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 

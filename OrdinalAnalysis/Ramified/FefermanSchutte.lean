@@ -86,7 +86,7 @@ theorem le_onePlusNote_self (β : Gamma0Note) : β ≤ Gamma0Note.onePlusNote β
   rw [Gamma0Note.le_def, Gamma0Note.repr_onePlusNote]
   exact le_add_self
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### Transfinite induction along an initial segment -/

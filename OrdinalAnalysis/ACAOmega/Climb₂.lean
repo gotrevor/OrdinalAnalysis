@@ -68,9 +68,9 @@ set_option maxHeartbeats 400000
 
 namespace OrdinalAnalysis.ACAOmega.Climb₂
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.ACA
 open OrdinalAnalysis.Gentzen.CodedVeblen (precN₁ precN₁_dom lt_of_precN₁_code)
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)

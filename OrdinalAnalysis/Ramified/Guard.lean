@@ -30,7 +30,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /-- **The guard**, with arguments `c p s m e k`:
 `c = ⟨m, s, e, p⟩ ∧ k + stage p < s`, where `stage p` is the first component of

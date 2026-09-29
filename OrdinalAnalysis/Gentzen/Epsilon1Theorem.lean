@@ -54,7 +54,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gamma0Note
 
 /-- **`|PA + TI(ε₀)| = ε₁`.**

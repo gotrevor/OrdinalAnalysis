@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.OmegaDerivable
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 variable {O O' : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O]

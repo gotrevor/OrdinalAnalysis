@@ -44,10 +44,10 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁ freeVariables_precCode₁)
 
@@ -750,7 +750,7 @@ end OrdinalAnalysis.ACA
 
 namespace OrdinalAnalysis.ACA.SegBridgeE
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen
 open OrdinalAnalysis.Gentzen.CodedVeblenJump
@@ -881,10 +881,10 @@ end OrdinalAnalysis.ACA.SegBridgeE
 
 namespace OrdinalAnalysis.ACA
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat TIupto paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.Gentzen.Epsilon1UpperBound (gamma0Term)

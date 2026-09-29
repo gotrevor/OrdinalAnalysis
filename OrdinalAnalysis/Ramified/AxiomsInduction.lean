@@ -67,8 +67,8 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
 
 /-! ### General identity, ported from `Omega/Identity.lean`
 

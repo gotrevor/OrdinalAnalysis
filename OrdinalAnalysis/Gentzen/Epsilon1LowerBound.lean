@@ -41,7 +41,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### No derivation of the empty sequent, generically -/
 
@@ -78,7 +78,7 @@ end OmegaDerivable
 
 namespace Gentzen.Epsilon1LowerBound
 
-open FFL.FirstOrder.Arithmetic
+open FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.StandardLX (trueArithLits)
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.EvInst

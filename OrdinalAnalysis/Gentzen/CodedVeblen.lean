@@ -20,7 +20,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.CodedVeblen
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.CodedNotation (liftCode)
 open OrdinalAnalysis.Gentzen.VNoteBridge

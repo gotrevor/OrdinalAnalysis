@@ -53,7 +53,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### Levels
 

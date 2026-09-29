@@ -107,7 +107,7 @@ theorem veblenIter_one_le_succ (n : ℕ) (x : Gamma0Note) :
   rw [veblenIter_succ']
   exact Gamma0Note.le_veblenNote_right 1 _
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### The finite levels

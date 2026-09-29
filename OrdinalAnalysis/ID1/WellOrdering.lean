@@ -52,7 +52,7 @@ namespace InductiveDef
 
 namespace WellOrdering
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.ID1.Internal OrdinalAnalysis.InductiveDef.Lift
 
 /-! ### Definability in `LXI` -/

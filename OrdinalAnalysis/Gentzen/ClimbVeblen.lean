@@ -31,7 +31,7 @@ set_option maxHeartbeats 400000
 
 namespace OrdinalAnalysis.Gentzen.ClimbVeblen
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.StandardLX (trueArithLits stdLX)
 open OrdinalAnalysis.Gentzen.LowerSyntax OrdinalAnalysis.Gentzen.LowerClass

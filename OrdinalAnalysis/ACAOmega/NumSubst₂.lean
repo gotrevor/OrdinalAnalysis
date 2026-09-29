@@ -73,11 +73,11 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega.NumSubst₂
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
 open OrdinalAnalysis.ACA OrdinalAnalysis.ACAOmega
 
 /-! ### The base substitution -/

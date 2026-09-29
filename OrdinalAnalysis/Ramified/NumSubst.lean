@@ -40,9 +40,9 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
-open FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 
 /-- `k̄` is a closed term. -/
 @[simp] theorem freeVariables_num (k : ℕ) : (num k).freeVariables = ∅ := by

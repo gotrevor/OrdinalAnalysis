@@ -41,7 +41,7 @@ namespace InductiveDef
 
 namespace Lift
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /-! ### Arithmetically standard structures -/
 

@@ -50,7 +50,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /-! ### Closing a variable-free proposition is the identity -/
 

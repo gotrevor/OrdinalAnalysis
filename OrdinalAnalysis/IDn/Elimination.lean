@@ -63,7 +63,7 @@ variable {n : ℕ} (k : Fin n)
 
 namespace IDn
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### Exercise 7.1 (c) -/
 

@@ -32,7 +32,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Internal
 
 /-- **The internal facts about the order used by the well-ordering proof**, for predicates

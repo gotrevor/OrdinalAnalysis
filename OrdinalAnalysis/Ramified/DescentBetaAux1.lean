@@ -18,7 +18,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-- Close a goal `l₁ ⊆ l₂` between explicit lists. -/
 macro "subset_tac" : tactic =>

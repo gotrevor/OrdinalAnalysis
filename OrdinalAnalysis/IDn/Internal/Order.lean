@@ -49,7 +49,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Internal
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.ThetaWTerm
 open OrdinalAnalysis.ID1.Internal (bor band beq borDef bandDef beqDef bor_defined band_defined
   beq_defined bor_eq_one band_eq_one beq_eq_one covVal covVal_unfold covVal_zero covVal_succ

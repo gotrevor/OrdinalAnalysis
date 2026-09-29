@@ -62,7 +62,7 @@ namespace InductiveDef
 
 namespace StageSem
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### Structures reading the stages by given sets -/
 

@@ -25,7 +25,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Internal
 open OrdinalAnalysis.ID1.Internal (bor beq bor_eq_one beq_eq_one)
 

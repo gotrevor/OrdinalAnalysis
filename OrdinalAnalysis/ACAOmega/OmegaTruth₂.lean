@@ -62,7 +62,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat
 open FFL.SecondOrder.Semiformula
 open scoped FFL.FirstOrder
 open OrdinalAnalysis.ACA

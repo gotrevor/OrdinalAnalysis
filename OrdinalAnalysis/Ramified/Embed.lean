@@ -62,7 +62,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### The ordinal cut rank of an `LK` derivation -/
 

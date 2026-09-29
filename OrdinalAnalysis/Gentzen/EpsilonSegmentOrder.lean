@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.EpsilonSegmentOrder
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.LowerSyntax
 open OrdinalAnalysis.Gentzen.CodedVeblen OrdinalAnalysis.Gentzen.VNoteBridge

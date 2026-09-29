@@ -140,7 +140,7 @@ theorem exists_index_of_lt_omegaPow {a ρ : Gamma0Note} (ha : (1 : Gamma0Note) <
 
 end Notation
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 open OrdinalAnalysis.Ramified.OmegaDerivableR (veblenIter veblenIter_lt_veblen)
 

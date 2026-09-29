@@ -34,7 +34,7 @@ namespace InductiveDef
 
 namespace UpperBound
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.ID1.Internal
 open Lift (ArithStd precM Imem Xmem provable_of_models models_iSigma₁ ind_definable definable_xmem)
 open LowerBound (precLXI progX tiFieldSentence)

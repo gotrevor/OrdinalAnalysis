@@ -62,7 +62,7 @@ namespace IDn
 
 namespace StageSem
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 variable {n : ℕ}
 

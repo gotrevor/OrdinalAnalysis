@@ -50,7 +50,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.LowerClassEv
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 -- `Gentzen.belowAt` (Jump.lean) is a *different* formula of the same name, and it
 -- is visible here through the enclosing namespace, which no `open … hiding` can
 -- suppress.  So `belowAt` is written `LowerClass.belowAt` throughout.

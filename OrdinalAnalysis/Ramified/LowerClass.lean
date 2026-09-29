@@ -55,7 +55,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /- `numAtR` is a plain `def` (not an `abbrev`), and `numAtR_zero` — the fact
 that it agrees with `num` at level `0` — is a `simp` lemma pointed the wrong

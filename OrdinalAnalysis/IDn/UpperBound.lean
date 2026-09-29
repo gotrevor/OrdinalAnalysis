@@ -29,7 +29,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.IDn.Upper
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Internal OrdinalAnalysis.IDn.Lift InternalOrderFacts
 open ThetaWNoteD (omegaTower)
 

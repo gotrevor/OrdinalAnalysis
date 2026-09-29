@@ -26,7 +26,7 @@ set_option maxHeartbeats 1000000
 
 namespace OrdinalAnalysis.ACA.SegBridge
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis OrdinalAnalysis.Gentzen
 open OrdinalAnalysis.Gentzen.CodedVeblen
 open OrdinalAnalysis.Gentzen.CodedVeblenJump
@@ -165,10 +165,10 @@ end OrdinalAnalysis.ACA.SegBridge
 
 namespace OrdinalAnalysis.ACA
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.Gentzen (LX Xat TIupto paLX)
 open OrdinalAnalysis.Gentzen.CodedVeblen (precCode₁)
 open OrdinalAnalysis.ACA.TowerSyntax (emb_univCl_of_closed)

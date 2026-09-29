@@ -72,7 +72,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### The true literals of arithmetic -/
 

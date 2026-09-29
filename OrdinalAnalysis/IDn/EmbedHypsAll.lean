@@ -68,10 +68,10 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open FFL FFL.FirstOrder
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
-open FFL.FirstOrder.LawfulSyntacticRewriting
-open FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
+open FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.IDn.Upper
 
 variable {n : ℕ}

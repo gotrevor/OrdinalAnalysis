@@ -16,7 +16,7 @@ import OrdinalAnalysis.Proof.Weakening
 
 namespace OrdinalAnalysis
 
-open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 open ONote
 
 variable {L : Language}

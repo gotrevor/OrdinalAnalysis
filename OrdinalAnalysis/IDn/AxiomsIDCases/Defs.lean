@@ -59,9 +59,9 @@ variable {n : ℕ} (k : Fin n)
 
 namespace IDn
 
-open FFL FFL.FirstOrder
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
-open FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 
 /-! ### Predicates plugged into an operator form -/
 

@@ -65,7 +65,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder Gamma0Note
+open FFL FFL.FirstOrder Gamma0Note OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### `ω ^ ν` at a finite level
 

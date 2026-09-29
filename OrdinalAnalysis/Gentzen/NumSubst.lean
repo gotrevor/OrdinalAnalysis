@@ -34,8 +34,8 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.NumSubst
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 open OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 
 /-- Every rewriter fixes a numeral. -/

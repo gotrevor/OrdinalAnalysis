@@ -38,7 +38,7 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open OrdinalAnalysis.ACA
 
 /-- The cut rank of an `ACA.Derivation`: `0` if it uses no `cut`, and otherwise

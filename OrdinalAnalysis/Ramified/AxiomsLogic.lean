@@ -90,8 +90,8 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
 
 /-- **A rewriting fixes a numeral, one level up.**  `numAtR_zero` identifies
 `num m` with `numAtR m` only at arity `0`; the ω-rule's substitutions and the

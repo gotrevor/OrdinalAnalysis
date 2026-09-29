@@ -16,7 +16,7 @@ set_option autoImplicit false
 namespace OrdinalAnalysis
 namespace IDn
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 -- case_skeleton: generated header ends here
 
 theorem predCut_aux

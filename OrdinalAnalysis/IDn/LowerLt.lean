@@ -35,7 +35,7 @@ namespace OrdinalAnalysis
 
 namespace IDn
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.IDn.Upper
 
 variable {n : ℕ}

@@ -43,9 +43,9 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACAOmega
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.ACA
 
 variable {O : Type} [LinearOrder O] [WellFoundedLT O] [OrdinalNotation O] {C : CodedOrder₂ O}

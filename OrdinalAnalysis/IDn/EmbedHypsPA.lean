@@ -67,9 +67,9 @@ end ThetaWNoteD
 
 namespace IDn
 
-open FFL FFL.FirstOrder
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
-open FFL.FirstOrder.LawfulSyntacticRewriting
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
+open FFL.FirstOrder.LawfulSyntacticRewriting OrdinalAnalysis.Compat.FirstOrder.LawfulSyntacticRewriting
 open FFL.FirstOrder.Arithmetic
 
 variable {n : ℕ} {A : Fin n → Semisentence (LXIn n) 1}

@@ -15,9 +15,10 @@
 import Foundation.SecondOrder.LK.Basic
 import OrdinalAnalysis.Compat
 
-namespace FFL.SecondOrder
+open FFL FFL.SecondOrder
+open FFL.FirstOrder (Language)
 
-open FirstOrder
+namespace OrdinalAnalysis.Compat.SecondOrder
 
 variable {L : Language}
 
@@ -79,4 +80,4 @@ lemma coe_singleton (φ : Proposition L) :
 
 end Sequent
 
-end FFL.SecondOrder
+end OrdinalAnalysis.Compat.SecondOrder

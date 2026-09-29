@@ -65,8 +65,8 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.Gentzen.AxiomsInduction
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
-open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
+open FFL.FirstOrder.Rewriting FFL.FirstOrder.TransitiveRewriting OrdinalAnalysis.Compat.FirstOrder.Rewriting
 open OrdinalAnalysis.Gentzen OrdinalAnalysis.Gentzen.StandardLX
 open OrdinalAnalysis.Gentzen.Evaluate OrdinalAnalysis.Gentzen.OmegaTruth
 open OrdinalAnalysis.Gentzen.EvInst

@@ -50,7 +50,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /- See `Ramified/LowerClass.lean`: `numAtR` is a plain `def`, and
 `numAtR_zero` is a `simp` lemma that fights every other fact about `numAtR`

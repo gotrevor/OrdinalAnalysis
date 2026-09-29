@@ -20,10 +20,10 @@ set_option autoImplicit false
 
 namespace OrdinalAnalysis.ACA
 
-open FFL FFL.SecondOrder
+open FFL FFL.SecondOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.SecondOrder
 open FFL.SecondOrder.Semiformula
 open FFL.SecondOrder.Semiproposition
-open scoped FFL.FirstOrder
+open scoped FFL.FirstOrder OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.Gentzen (LX TI TIupto)
 
 /-- **The witness recovering the free set variable `0`**, over `ξ := Empty`

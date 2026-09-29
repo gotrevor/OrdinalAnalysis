@@ -29,7 +29,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 open OrdinalAnalysis.ID1.Internal
 
 /-- A formula in which `X` does not occur is `X`-free (the two predicates have the same

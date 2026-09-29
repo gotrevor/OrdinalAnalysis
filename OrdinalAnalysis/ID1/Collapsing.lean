@@ -49,7 +49,7 @@ namespace OrdinalAnalysis
 
 namespace InductiveDef
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### Preliminaries -/
 

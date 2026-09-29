@@ -34,7 +34,7 @@ set_option maxHeartbeats 1600000
 namespace OrdinalAnalysis.Gentzen.InternalEpsMono
 
 open Classical
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder

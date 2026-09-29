@@ -31,7 +31,7 @@ namespace IDn
 
 namespace Collapsing
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 variable {n : ℕ} {A : Fin n → Semisentence (LXIn n) 1}
 

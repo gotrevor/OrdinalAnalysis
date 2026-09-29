@@ -39,7 +39,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen (LX paLX)
 open OrdinalAnalysis.Gentzen.CodedNotation (liftCode)
 open OrdinalAnalysis.Gentzen.InternalVNote (precDef₁)

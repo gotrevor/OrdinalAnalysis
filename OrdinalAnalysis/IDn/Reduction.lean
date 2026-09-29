@@ -52,7 +52,7 @@ variable {n : ℕ}
 
 namespace IDn
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-! ### The shapes of the cut formula -/
 

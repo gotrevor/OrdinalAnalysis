@@ -4,7 +4,7 @@ import OrdinalAnalysis.Proof.Inversion
 import OrdinalAnalysis.Proof.InversionAll
 
 namespace OrdinalAnalysis
-open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 variable {L : Language}
 

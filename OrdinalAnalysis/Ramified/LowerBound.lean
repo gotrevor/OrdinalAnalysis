@@ -65,7 +65,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.FinDerivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open FFL.FirstOrder.LK.Derivation.Canonical (hauptsatz)
 open OrdinalAnalysis.Gamma0Note (veblenNote epsilonNote VeblenBelow)
 open OrdinalAnalysis.Ramified.OmegaDerivableR (Chain chain_nadd_ofNat veblenIter veblenIter_succ

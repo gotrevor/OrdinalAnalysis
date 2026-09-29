@@ -32,7 +32,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder
+open FFL FFL.FirstOrder OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 /-- `Γ` is derivable in `RA_∞` with the junk literals, at cut rank `ρ`, below the
 height `H`. -/

@@ -190,7 +190,7 @@ theorem endsIn_chain {e P : Gamma0Note} (hP : Gamma0Note.PowClosed e P) (m : ℕ
 
 end Notation
 
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.VNoteBridge (gamma0Code)
 
 /-! ### Heights -/

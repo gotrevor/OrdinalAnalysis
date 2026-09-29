@@ -51,7 +51,7 @@ namespace OrdinalAnalysis
 
 namespace Ramified
 
-open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation
+open FFL FFL.FirstOrder FFL.FirstOrder.LK.Derivation OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder
 
 namespace OmegaDerivableR
 

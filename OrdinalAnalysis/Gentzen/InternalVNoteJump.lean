@@ -32,7 +32,7 @@ set_option maxHeartbeats 2000000
 namespace OrdinalAnalysis.Gentzen.InternalVNoteJump
 
 open Classical
-open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic FFL.FirstOrder.Bounding.HierarchySymbol OrdinalAnalysis.Compat OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 open OrdinalAnalysis.Gentzen.InternalONote
 open OrdinalAnalysis.Gentzen.InternalVNote
 open OrdinalAnalysis.Gentzen.InternalVNoteOrder

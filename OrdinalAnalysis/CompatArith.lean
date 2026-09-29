@@ -14,7 +14,9 @@
 import Foundation.FirstOrder.Arithmetic.Schemata
 import Foundation.FirstOrder.Arithmetic.HFS
 
-namespace FFL.FirstOrder.Arithmetic
+open FFL FFL.FirstOrder FFL.FirstOrder.Arithmetic
+
+namespace OrdinalAnalysis.Compat.FirstOrder.Arithmetic
 
 /-- The hierarchy symbols of *arithmetic*: upstream's `Bounding.HierarchySymbol`
 at the arithmetical bounding `ℬ[<, ℒₒᵣ]`. -/
@@ -54,12 +56,12 @@ hierarchy term ambiguous and the elaborator explores both readings at every
 nesting level -- `Gentzen/CodedNotation.lean` went from seconds to >13 GB of
 elaboration before being OOM-killed.  The `Γ-[m]` call sites are spelled
 `Γᴬ-[m]` instead. -/
-notation "𝚺₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚺 0)
-notation "𝚷₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚷 0)
-notation "𝚫₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚫 0)
-notation "𝚺₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚺 1)
-notation "𝚷₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚷 1)
-notation "𝚫₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚫 1)
+scoped notation "𝚺₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚺 0)
+scoped notation "𝚷₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚷 0)
+scoped notation "𝚫₀" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚫 0)
+scoped notation "𝚺₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚺 1)
+scoped notation "𝚷₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚷 1)
+scoped notation "𝚫₁" => (@FFL.FirstOrder.Bounding.HierarchySymbol.mk _ ℬ[<, ℒₒᵣ] 𝚫 1)
 
 /-- The old name of the arithmetical hierarchy predicate. -/
 abbrev Hierarchy {L : Language} [L.LT] {ξ : Type*} {n : ℕ}
@@ -75,4 +77,4 @@ export FFL.FirstOrder.Bounding.Hierarchy
   (rew exs and_iff or_iff imp_iff sigma_of_sigma_ex)
 end Hierarchy
 
-end FFL.FirstOrder.Arithmetic
+end OrdinalAnalysis.Compat.FirstOrder.Arithmetic
